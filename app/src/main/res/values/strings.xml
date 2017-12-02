@@ -31,17 +31,5 @@
     <string name="action_filter">filter</string>
     <string name="action_search">Search</string>
     <string name="action_all_posts">All Posts</string>
-    <string name="btn_sign_in_with_email">Sign In with Email</string>
-    <string name="btn_sign_in_with_google">Sign In with Google</string>
-    <string name="btn_sign_in_with_facebook">Sign In with Facebook</string>
-    <string name="btn_create_a_new_account">Create A New Account</string>
-    <string name="btn_save">Save</string>
-    <string name="or">Or</string>
 
-    <string name="hint_email">Email</string>
-    <string name="hint_username">Username</string>
-    <string name="hint_display_name">Display Name</string>
-    <string name="hint_password">Password</string>
-    <string name="btn_sign_in_as_guest">Sign in as Guest</string>
-    <string name="btn_skip">Skip</string>
 </resources>

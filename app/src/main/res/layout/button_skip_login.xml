@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.example.prakh.footballblog.utils.SupportVectorDrawablesButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/button_skip"
-    style="@style/LoginActivityTheme.Button.AuthMethod.AnonymousButton"
-    android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
-    android:text="@string/btn_skip" />

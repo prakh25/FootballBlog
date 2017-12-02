@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+
+    <string name="default_web_client_id" translatable="false">
+        427371146557-4qsljtq1r0sbbiu8vm5ubs4egu26otah.apps.googleusercontent.com</string>
+
+</resources>

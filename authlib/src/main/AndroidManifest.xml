@@ -2,4 +2,14 @@
     package="com.example.authlib" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:name=".KickoffActivity"/>
+        <activity
+            android:name=".ui.AuthMethodPickerActivity"
+            android:theme="@style/LoginActivityTheme"
+            android:exported="false"/>
+    </application>
 </manifest>

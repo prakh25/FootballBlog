@@ -12,7 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity"/>
+        <activity android:name=".HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".post_detail.DetailActivity"
@@ -26,20 +32,6 @@
             android:name=".search.SearchActivity"
             android:theme="@style/DetailThemeLight"
             android:windowSoftInputMode="stateVisible" />
-
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/LoginActivityTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".NewUserRegistrationActivity"
-            android:theme="@style/NewUserActivityTheme" />
 
         <meta-data
             android:name="preloaded_fonts"
