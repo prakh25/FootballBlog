@@ -1,4 +1,4 @@
-package com.example.authlib;
+package com.example.authlib.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 
 import com.example.authlib.AuthLibUi.IdpConfig;
-import com.example.authlib.ui.ExtraConstants;
 import com.example.authlib.utils.Precondition;
 
 import java.util.Collections;

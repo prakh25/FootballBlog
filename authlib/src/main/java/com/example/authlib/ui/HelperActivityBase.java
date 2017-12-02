@@ -9,7 +9,6 @@ import android.support.annotation.RestrictTo;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.authlib.utils.AuthHelper;
-import com.example.authlib.FlowParameters;
 
 import static com.example.authlib.utils.Precondition.checkNotNull;
 

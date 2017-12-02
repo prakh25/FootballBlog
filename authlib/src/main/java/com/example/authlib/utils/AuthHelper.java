@@ -2,7 +2,7 @@ package com.example.authlib.utils;
 
 import android.support.annotation.Nullable;
 
-import com.example.authlib.FlowParameters;
+import com.example.authlib.ui.FlowParameters;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.CredentialsApi;
 import com.google.firebase.FirebaseApp;

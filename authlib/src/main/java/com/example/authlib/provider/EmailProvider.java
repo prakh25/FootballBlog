@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.LayoutRes;
 
-import com.example.authlib.FlowParameters;
+import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.R;
 
 /**

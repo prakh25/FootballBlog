@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.utils.GoogleSignInHelper;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;

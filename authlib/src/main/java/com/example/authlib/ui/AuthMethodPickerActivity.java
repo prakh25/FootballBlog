@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.example.authlib.AuthLibUi;
 import com.example.authlib.AuthLibUi.IdpConfig;
-import com.example.authlib.FlowParameters;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.provider.EmailProvider;
