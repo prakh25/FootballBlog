@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ff4081</color>
+
+    <color name="statusBarColorHome">#80000000</color>
+
+    <color name="navigationHeaderBackground">#cfd8dc</color>
+    <color name="navigationMenuBackground">#eceff1</color>
+
+    <color name="buttonShadow">#64BEBEBE</color>
+    <color name="bgEmail">#00E676</color>
+    <color name="bgFacebook">#3B5998</color>
+    <color name="bgGoogle">#ffffff</color>
+    <color name="bgSignUp">#FBC02D</color>
+    <color name="bgSave">#69f0ae</color>
+    <color name="bgAnonymous">#c62828</color>
+
+
+    <color name="newUserActivityPrimaryColorDark">#2ECBFF</color>
+    <color name="textInputEditText">#000</color>
+</resources>

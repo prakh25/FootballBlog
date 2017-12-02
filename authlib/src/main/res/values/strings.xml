@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false" tools:ignore="ResourceName">AuthLib</string>
+
+    <string name="auth_btn_sign_in_with_email">Sign In with Email</string>
+    <string name="auth_btn_sign_in_with_google">Sign In with Google</string>
+    <string name="auth_btn_sign_in_with_facebook">Sign In with Facebook</string>
+    <string name="auth_btn_create_a_new_account">Create A New Account</string>
+    <string name="auth_btn_save">Save</string>
+    <string name="auth_or">Or</string>
+
+    <string name="auth_hint_email">Email</string>
+    <string name="auth_hint_username">Username</string>
+    <string name="auth_hint_display_name">Display Name</string>
+    <string name="auth_hint_password">Password</string>
+
+    <string name="auth_skip">Skip</string>
+</resources>

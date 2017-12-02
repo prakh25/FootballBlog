@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="NewUserActivityTheme.TextInputEditText.EmailField">
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:autofillHints">emailAddress</item>
+    </style>
+</resources>

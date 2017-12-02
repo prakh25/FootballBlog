@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_group_title_notifications">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_title_new_notification"
+            android:title="@string/pref_title_new_notification" />
+
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="@string/pref_title_new_notification"
+            android:key="@string/pref_title_ringtone"
+            android:ringtoneType="notification"
+            android:summary="@string/summary_choose_ringtone"
+            android:title="@string/pref_title_ringtone" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_title_vibrate"
+            android:summary="@string/summary_vibrate"
+            android:title="@string/pref_title_vibrate"
+            android:dependency="@string/pref_title_new_notification"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

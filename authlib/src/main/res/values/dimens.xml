@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="auth_button_inset_top">0dp</dimen>
+    <dimen name="auth_button_inset_bottom">3dp</dimen>
+    <dimen name="auth_button_inset_left">1dp</dimen>
+    <dimen name="auth_button_inset_right">2dp</dimen>
+
+    <dimen name="auth_login_method_button_width">208dp</dimen>
+    <dimen name="auth_login_method_button_margin">4dp</dimen>
+    <dimen name="auth_login_method_button_drawablePadding">12dp</dimen>
+
+</resources>

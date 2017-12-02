@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ResourceName">
+
+    <style name="LoginActivityTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/auth_background_login_activity</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="LoginActivityTheme.Logo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:drawablePadding">@dimen/auth_login_method_button_drawablePadding</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_marginTop">@dimen/auth_login_method_button_margin</item>
+        <item name="android:layout_marginBottom">@dimen/auth_login_method_button_margin</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:layout_marginLeft">32dp</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod.EmailButton">
+        <item name="drawableStartCompat">@drawable/auth_ic_email_white_24dp</item>
+        <item name="android:background">@drawable/auth_button_email_bg</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod.GoogleButton">
+        <item name="drawableStartCompat">@drawable/auth_ic_google_color_24dp</item>
+        <item name="android:background">@drawable/auth_button_google_bg</item>
+        <item name="android:textColor">#757575</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod.FacebookButton">
+        <item name="drawableStartCompat">@drawable/auth_ic_facebook_white_22dp</item>
+        <item name="android:background">@drawable/auth_button_facebook_bg</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod.AnonymousButton">
+        <item name="android:background">@drawable/auth_button_skip_bg</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="LoginActivityTheme.Button.AuthMethod.SignUpButton">
+        <item name="drawableStartCompat">@drawable/auth_ic_new_user_white_24dp</item>
+        <item name="android:background">@drawable/auth_button_new_user_bg</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="NewUserActivityTheme" parent="LoginActivityTheme">
+        <item name="colorPrimaryDark">@color/auth_newUserActivityPrimaryColorDark</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/auth_background_new_user</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputLayout.EmailField">
+        <item name="android:hint">@string/auth_hint_email</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputLayout.UsernameField">
+        <item name="android:hint">@string/auth_hint_username</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputLayout.DisplayNameField">
+        <item name="android:hint">@string/auth_hint_display_name</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputLayout.PasswordField">
+        <item name="android:hint">@string/auth_hint_password</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/auth_textInputEditText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/auth_work_sans</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputEditText.EmailField">
+        <item name="android:inputType">textEmailAddress</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputEditText.UserNameField">
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputEditText.DisplayNameField">
+        <item name="android:inputType">textCapWords</item>
+    </style>
+
+    <style name="NewUserActivityTheme.TextInputEditText.PasswordField">
+        <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="NewUserActivityTheme.SaveButton" parent="LoginActivityTheme.Button">
+        <item name="android:background">@drawable/auth_button_save_bg</item>
+        <item name="android:text">@string/auth_btn_save</item>
+        <item name="android:drawablePadding">@dimen/auth_login_method_button_drawablePadding</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_marginTop">@dimen/auth_login_method_button_margin</item>
+        <item name="android:layout_marginBottom">@dimen/auth_login_method_button_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+</resources>

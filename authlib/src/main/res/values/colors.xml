@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="auth_buttonShadow">#64BEBEBE</color>
+    <color name="auth_bgEmail">#00E676</color>
+    <color name="auth_bgFacebook">#3B5998</color>
+    <color name="auth_bgGoogle">#ffffff</color>
+    <color name="auth_bgSignUp">#FBC02D</color>
+    <color name="auth_bgSave">#69f0ae</color>
+    <color name="auth_bgAnonymous">#c62828</color>
+
+
+    <color name="auth_newUserActivityPrimaryColorDark">#2ECBFF</color>
+    <color name="auth_textInputEditText">#000</color>
+</resources>
