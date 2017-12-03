@@ -3,6 +3,7 @@ package com.example.authlib.ui;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +18,11 @@ import android.widget.EditText;
 import com.example.authlib.R;
 import com.example.authlib.User;
 import com.example.authlib.ui.fieldvalidators.EmailFieldValidator;
-import com.example.authlib.ui.fieldvalidators.PasswordFieldValidator;
 import com.example.authlib.utils.GoogleApiHelper;
 import com.example.authlib.utils.ImeHelper;
 import com.example.corelib.network.DataManager;
-import com.example.corelib.ui.authui.RegisterEmailAndPasswordContract;
-import com.example.corelib.ui.authui.RegisterEmailAndPasswordPresenter;
+import com.example.corelib.ui.authui.CheckEmailContract;
+import com.example.corelib.ui.authui.CheckEmailPresenter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
@@ -33,13 +33,13 @@ import com.google.firebase.auth.EmailAuthProvider;
 /**
  * Created by prakh on 03-12-2017.
  */
-public class RegisterEmailAndPasswordFragment extends FragmentBase implements View.OnClickListener,
+public class CheckEmailFragment extends FragmentBase implements View.OnClickListener,
         View.OnFocusChangeListener, ImeHelper.DonePressedListener,
-        RegisterEmailAndPasswordContract.RegisterEmailAndPasswordView {
+        CheckEmailContract.CheckEmailView {
 
-    public static final String TAG = "EmailAndPasswordFrag";
+    public static final String TAG = "CheckEmailFragment";
 
-    interface EmailAndPasswordListener {
+    interface CheckEmailListener {
         void newUser(User user);
     }
 
@@ -49,23 +49,19 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
     private TextInputLayout emailLayout;
     private EditText emailField;
 
-    private TextInputLayout passwordLayout;
-    private EditText passwordField;
-
     private Credential lastCredentials;
 
     private EmailFieldValidator emailFieldValidator;
-    private PasswordFieldValidator passwordFieldValidator;
 
-    private EmailAndPasswordListener listener;
+    private CheckEmailListener listener;
 
-    private RegisterEmailAndPasswordPresenter presenter;
+    private CheckEmailPresenter presenter;
 
-    public static RegisterEmailAndPasswordFragment newInstance(FlowParameters flowParams) {
+    public static CheckEmailFragment newInstance(FlowParameters flowParams) {
 
         Bundle args = new Bundle();
         args.putParcelable(ExtraConstants.EXTRA_FLOW_PARAMS, flowParams);
-        RegisterEmailAndPasswordFragment fragment = new RegisterEmailAndPasswordFragment();
+        CheckEmailFragment fragment = new CheckEmailFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,7 +69,7 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new RegisterEmailAndPasswordPresenter(DataManager.getInstance());
+        presenter = new CheckEmailPresenter(DataManager.getInstance());
     }
 
     @Nullable
@@ -89,14 +85,10 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
     private void init(View view) {
         emailLayout = view.findViewById(R.id.email_field_layout);
         emailField = view.findViewById(R.id.email_field);
-        passwordLayout = view.findViewById(R.id.password_field_layout);
-        passwordField = view.findViewById(R.id.password_field);
 
         emailFieldValidator = new EmailFieldValidator(emailLayout);
-        passwordFieldValidator = new PasswordFieldValidator(passwordLayout,
-                getResources().getInteger(R.integer.auth_min_password_length));
 
-        ImeHelper.setImeOnDoneListener(passwordField, this);
+        ImeHelper.setImeOnDoneListener(emailField, this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && getFlowParams().enableHints) {
             emailField.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
@@ -104,11 +96,8 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
 
         emailLayout.setOnClickListener(this);
         emailField.setOnClickListener(this);
-        passwordField.setOnClickListener(this);
-        passwordLayout.setOnClickListener(this);
 
         emailField.setOnFocusChangeListener(this);
-        passwordField.setOnFocusChangeListener(this);
 
         view.findViewById(R.id.button_next).setOnClickListener(this);
     }
@@ -117,10 +106,10 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (!(getActivity() instanceof EmailAndPasswordListener)) {
-            throw new IllegalStateException("Activity must implement EmailAndPasswordListener");
+        if (!(getActivity() instanceof CheckEmailListener)) {
+            throw new IllegalStateException("Activity must implement CheckEmailListener");
         }
-        listener = (EmailAndPasswordListener) getActivity();
+        listener = (CheckEmailListener) getActivity();
 
         if (savedInstanceState != null) {
             return;
@@ -192,9 +181,6 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
         int id = view.getId();
         if(id == R.id.email_field) {
             emailFieldValidator.validate(emailField.getText());
-            presenter.checkEmail(emailField.getText().toString());
-        } else if(id == R.id.password_field) {
-            passwordFieldValidator.validate(passwordField.getText());
         }
     }
 
@@ -206,8 +192,6 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
             validateAndProceed();
         } else if (id == R.id.email_field_layout || id == R.id.email_field) {
             emailLayout.setError(null);
-        } else if (id == R.id.password_field_layout || id == R.id.password_field) {
-            passwordLayout.setError(null);
         }
     }
 
@@ -218,12 +202,10 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
 
     private void validateAndProceed() {
         String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
 
         boolean emailValid = emailFieldValidator.validate(email);
-        boolean passwordValid = passwordFieldValidator.validate(password);
 
-        if (emailValid && passwordValid) {
+        if (emailValid) {
             presenter.checkEmail(email);
         }
     }
@@ -231,11 +213,30 @@ public class RegisterEmailAndPasswordFragment extends FragmentBase implements Vi
     @Override
     public void isEmailPresent(boolean emailExists) {
         if(!emailExists) {
-            String email = emailField.getText().toString();
-            String password = passwordField.getText().toString();
-            listener.newUser(new User.Builder(EmailAuthProvider.PROVIDER_ID,
-                    email, password).build());
+            createNewUser();
         }
         emailLayout.setError(getString(R.string.auth_email_already_exists));
+    }
+
+    private void createNewUser() {
+        String email = emailField.getText().toString();
+
+        String name = null;
+        Uri photoUri = null;
+        if(lastCredentials != null && lastCredentials.getId().equals(email)) {
+            name = lastCredentials.getName();
+            photoUri = lastCredentials.getProfilePictureUri();
+        }
+
+        listener.newUser(new User.Builder(EmailAuthProvider.PROVIDER_ID, email)
+                .setName(name)
+                .setPhotoUri(photoUri)
+                .build());
+    }
+
+    @Override
+    public void onDestroyView() {
+        presenter.detachView();
+        super.onDestroyView();
     }
 }

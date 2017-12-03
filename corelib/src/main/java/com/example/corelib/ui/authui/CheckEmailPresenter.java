@@ -1,6 +1,6 @@
 package com.example.corelib.ui.authui;
 
-import com.example.corelib.model.email_validator.EmailExists;
+import com.example.corelib.model.auth.emailvalidator.EmailExists;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;
 import com.example.corelib.ui.BasePresenter;
@@ -9,15 +9,15 @@ import com.example.corelib.ui.BasePresenter;
  * Created by prakh on 03-12-2017.
  */
 
-public class RegisterEmailAndPasswordPresenter extends
-        BasePresenter<RegisterEmailAndPasswordContract.RegisterEmailAndPasswordView>
-        implements RegisterEmailAndPasswordContract.viewActions {
+public class CheckEmailPresenter extends
+        BasePresenter<CheckEmailContract.CheckEmailView>
+        implements CheckEmailContract.viewActions {
 
     private static final String INSECURE = "cool";
 
     private final DataManager dataManager;
 
-    public RegisterEmailAndPasswordPresenter(DataManager dataManager) {
+    public CheckEmailPresenter(DataManager dataManager) {
         this.dataManager = dataManager;
     }
 

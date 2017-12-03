@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.authlib.IdpResponse;
 import com.example.authlib.utils.AuthHelper;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.authlib.utils.Precondition.checkNotNull;
 
@@ -69,4 +72,12 @@ public class HelperActivityBase extends AppCompatActivity {
         finish();
     }
 
+    public void setResultAndFinish(FirebaseUser firebaseUser, IdpResponse response) {
+        setResultAndFinish(firebaseUser, null, response);
+    }
+
+    public void setResultAndFinish(FirebaseUser firebaseUser, @Nullable String password,
+                                   IdpResponse response) {
+        finish(Activity.RESULT_OK, response.toIntent());
+    }
 }

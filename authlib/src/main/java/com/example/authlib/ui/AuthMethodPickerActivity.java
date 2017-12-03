@@ -29,6 +29,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
     private static final String TAG = "AuthMethodPicker";
 
     private static final int RC_ACCOUNT_LINK = 3;
+    private static final int RC_EMAIL_FLOW = 5;
 
     private List<Provider> mProviders;
 
@@ -45,9 +46,9 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
 
         SupportVectorDrawablesButton newUserButton = findViewById(R.id.new_user_button);
 
-        newUserButton.setOnClickListener(view -> {
-
-        });
+        newUserButton.setOnClickListener(view ->
+                startActivityForResult(RegisterUserActivity.createIntent(this, getFlowParams()),
+                RC_EMAIL_FLOW));
     }
 
     @SuppressLint("WrongConstant")
@@ -88,7 +89,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_ACCOUNT_LINK) {
+        if (requestCode == RC_ACCOUNT_LINK || requestCode == RC_EMAIL_FLOW) {
             finish(resultCode, data);
         } else {
             for (Provider provider : mProviders) {
@@ -104,6 +105,18 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
 
     @Override
     public void onFailure() {
+        getDialogHolder().dismissDialog();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProviders != null) {
+            for (Provider provider : mProviders) {
+                if (provider instanceof GoogleProvider) {
+                    ((GoogleProvider) provider).disconnect();
+                }
+            }
+        }
     }
 }

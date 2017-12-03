@@ -13,7 +13,7 @@ import com.example.authlib.User;
  */
 
 public class RegisterUserActivity extends HelperActivityBase
-        implements RegisterEmailAndPasswordFragment.EmailAndPasswordListener {
+        implements CheckEmailFragment.CheckEmailListener {
 
     private static final int RC_SIGN_IN = 17;
 
@@ -30,16 +30,33 @@ public class RegisterUserActivity extends HelperActivityBase
             return;
         }
 
-        Fragment fragment = RegisterEmailAndPasswordFragment.newInstance(getFlowParams());
+        Fragment fragment = CheckEmailFragment.newInstance(getFlowParams());
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_new_user, fragment, RegisterEmailAndPasswordFragment.TAG)
+                .replace(R.id.fragment_new_user, fragment, CheckEmailFragment.TAG)
                 .disallowAddToBackStack()
                 .commit();
     }
 
     @Override
     public void newUser(User user) {
+        if(getFlowParams().allowNewEmailAccounts) {
+            RegisterEmailFragment fragment = RegisterEmailFragment.newInstance(getFlowParams(),
+                    user);
 
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_new_user, fragment, RegisterEmailFragment.TAG)
+                    .disallowAddToBackStack()
+                    .commit();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case RC_SIGN_IN:
+                finish(resultCode, data);
+        }
     }
 }

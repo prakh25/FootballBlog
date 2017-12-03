@@ -4,12 +4,12 @@ package com.example.corelib.ui.authui;
  * Created by prakh on 03-12-2017.
  */
 
-public interface RegisterEmailAndPasswordContract {
+public interface CheckEmailContract {
     interface viewActions {
         void checkEmail(String email);
     }
 
-    interface RegisterEmailAndPasswordView {
+    interface CheckEmailView {
         void isEmailPresent(boolean emailExists);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.corelib.model.auth.username_validator;
+package com.example.corelib.model.auth.usernamevalidator;
 
 import com.google.gson.annotations.Expose;
 

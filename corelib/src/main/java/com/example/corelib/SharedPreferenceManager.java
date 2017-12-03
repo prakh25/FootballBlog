@@ -65,4 +65,12 @@ public class SharedPreferenceManager {
     public boolean isSecondLaunch() {
         return customPreferences.getBoolean("FIRST_LAUNCH", false);
     }
+
+    public void setCookie(String cookie) {
+        customPreferences.edit().putString("AUTH_COOKIE", cookie).apply();
+    }
+
+    public void getCookie() {
+        customPreferences.getString("AUTH_COOKIE", null);
+    }
 }

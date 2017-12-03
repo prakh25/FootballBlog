@@ -37,18 +37,18 @@ public class User implements Parcelable {
 
     private final String mProviderId;
     private final String mEmail;
+    private final String mUsername;
     private final String mPhoneNumber;
     private final String mName;
-    private final String mPassword;
     private final Uri mPhotoUri;
 
-    private User(String providerId, String email, String phoneNumber, String name, String password,
-                 Uri photoUri) {
+    private User(String providerId, String email, String username,
+                 String phoneNumber, String name, Uri photoUri) {
         mProviderId = providerId;
         mEmail = email;
+        mUsername = username;
         mPhoneNumber = phoneNumber;
         mName = name;
-        mPassword = password;
         mPhotoUri = photoUri;
     }
 
@@ -72,6 +72,11 @@ public class User implements Parcelable {
     }
 
     @Nullable
+    public String getmUsername() {
+        return mUsername;
+    }
+
+    @Nullable
     public String getPhoneNumber() {
         return mPhoneNumber;
     }
@@ -79,11 +84,6 @@ public class User implements Parcelable {
     @Nullable
     public String getName() {
         return mName;
-    }
-
-    @Nullable
-    public String getPassword() {
-        return mPassword;
     }
 
     @Nullable
@@ -140,16 +140,20 @@ public class User implements Parcelable {
     public static class Builder {
         private String mProviderId;
         private String mEmail;
+        private String mUsername;
         private String mPhoneNumber;
         private String mName;
-        private String mPassword;
         private Uri mPhotoUri;
 
         public Builder(@AuthLibUi.SupportedProviders @NonNull String providerId,
-                       @Nullable String email, @Nullable String password) {
+                       @Nullable String email) {
             mProviderId = providerId;
             mEmail = email;
-            mPassword = password;
+        }
+
+        public Builder setUsername(String username) {
+            mUsername = username;
+            return this;
         }
 
         public Builder setPhoneNumber(String phoneNumber) {
@@ -168,7 +172,7 @@ public class User implements Parcelable {
         }
 
         public User build() {
-            return new User(mProviderId, mEmail, mPhoneNumber, mName, mPassword,
+            return new User(mProviderId, mEmail, mUsername, mPhoneNumber, mName,
                     mPhotoUri);
         }
     }

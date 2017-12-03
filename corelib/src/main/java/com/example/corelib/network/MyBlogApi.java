@@ -1,8 +1,10 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
-import com.example.corelib.model.auth.username_validator.UsernameExists;
-import com.example.corelib.model.email_validator.EmailExists;
+import com.example.corelib.model.auth.RegisterUserWithEmail;
+import com.example.corelib.model.auth.UserRegisterNonce;
+import com.example.corelib.model.auth.emailvalidator.EmailExists;
+import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
@@ -63,5 +65,21 @@ public interface MyBlogApi {
 
     @GET("?json=user/if_username_exists")
     Call<UsernameExists> getIfUsernameExists(@Query("insecure") String insecure,
-                                          @Query("username") String username);
+                                             @Query("username") String username);
+
+    @GET("?json=get-nonce")
+    Call<UserRegisterNonce> getRegisterNonce(@Query("controller") String controller,
+                                             @Query("method") String method);
+
+    @GET("?json=user/register")
+    Call<RegisterUserWithEmail> registerUser(@Query("insecure") String insecure,
+                                             @Query("email") String email,
+                                             @Query("username") String username,
+                                             @Query("nonce") String nonce,
+                                             @Query("user_pass") String password,
+                                             @Query("first_name") String firstName,
+                                             @Query("last_name") String lastName,
+                                             @Query("display_name") String displayName,
+                                             @Query("seconds") Integer seconds,
+                                             @Query("provider") String providerId);
 }

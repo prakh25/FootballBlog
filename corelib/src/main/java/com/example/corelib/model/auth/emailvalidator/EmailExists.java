@@ -1,4 +1,4 @@
-package com.example.corelib.model.email_validator;
+package com.example.corelib.model.auth.emailvalidator;
 
 import com.google.gson.annotations.Expose;
 

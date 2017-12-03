@@ -1,8 +1,10 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
-import com.example.corelib.model.auth.username_validator.UsernameExists;
-import com.example.corelib.model.email_validator.EmailExists;
+import com.example.corelib.model.auth.RegisterUserWithEmail;
+import com.example.corelib.model.auth.UserRegisterNonce;
+import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
+import com.example.corelib.model.auth.emailvalidator.EmailExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
@@ -82,5 +84,18 @@ public class DataManager {
     public void ifUsernameExists(String insecure, String username,
                               RemoteCallback<UsernameExists> callback) {
         myBlogApi.getIfUsernameExists(insecure, username).enqueue(callback);
+    }
+
+    public void getRegisterNonce(String controller, String method,
+                                 RemoteCallback<UserRegisterNonce> callback) {
+        myBlogApi.getRegisterNonce(controller, method).enqueue(callback);
+    }
+
+    public void registerUser(String insecure, String email, String username, String nonce,
+                             String user_pass, String firstName, String lastName,
+                             String displayName, Integer seconds, String providerId,
+                             RemoteCallback<RegisterUserWithEmail> callback) {
+        myBlogApi.registerUser(insecure, email, username, nonce, user_pass, firstName, lastName,
+                displayName, seconds, providerId).enqueue(callback);
     }
 }
