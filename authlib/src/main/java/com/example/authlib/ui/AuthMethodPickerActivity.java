@@ -41,8 +41,13 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.auth_activity_method_picker);
-
         populateIdpList(getFlowParams().providerInfo);
+
+        SupportVectorDrawablesButton newUserButton = findViewById(R.id.new_user_button);
+
+        newUserButton.setOnClickListener(view -> {
+
+        });
     }
 
     @SuppressLint("WrongConstant")

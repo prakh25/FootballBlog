@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_gravity="center">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/username_field_layout"
+        style="@style/NewUserActivityTheme.TextInputLayout.UsernameField"
+        app:errorEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/username_field"
+            style="@style/NewUserActivityTheme.TextInputEditText.UserNameField" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/NewUserActivityTheme.TextInputLayout.DisplayNameField"
+        android:hint="@string/auth_hint_first_name"
+        app:errorEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+            style="@style/NewUserActivityTheme.TextInputEditText.DisplayNameField" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/NewUserActivityTheme.TextInputLayout.DisplayNameField"
+        android:hint="@string/auth_hint_last_name"
+        app:errorEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+            style="@style/NewUserActivityTheme.TextInputEditText.DisplayNameField" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <com.example.authlib.ui.SupportVectorDrawablesButton
+        android:id="@+id/button_save"
+        style="@style/NewUserActivityTheme.Button"
+        android:text="@string/auth_btn_save"/>
+</LinearLayout>

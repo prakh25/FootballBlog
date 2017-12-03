@@ -25,6 +25,7 @@ public class User implements Parcelable {
                     in.readString(),
                     in.readString(),
                     in.readString(),
+                    in.readString(),
                     in.<Uri>readParcelable(Uri.class.getClassLoader()));
         }
 
@@ -38,13 +39,16 @@ public class User implements Parcelable {
     private final String mEmail;
     private final String mPhoneNumber;
     private final String mName;
+    private final String mPassword;
     private final Uri mPhotoUri;
 
-    private User(String providerId, String email, String phoneNumber, String name, Uri photoUri) {
+    private User(String providerId, String email, String phoneNumber, String name, String password,
+                 Uri photoUri) {
         mProviderId = providerId;
         mEmail = email;
         mPhoneNumber = phoneNumber;
         mName = name;
+        mPassword = password;
         mPhotoUri = photoUri;
     }
 
@@ -75,6 +79,11 @@ public class User implements Parcelable {
     @Nullable
     public String getName() {
         return mName;
+    }
+
+    @Nullable
+    public String getPassword() {
+        return mPassword;
     }
 
     @Nullable
@@ -133,12 +142,14 @@ public class User implements Parcelable {
         private String mEmail;
         private String mPhoneNumber;
         private String mName;
+        private String mPassword;
         private Uri mPhotoUri;
 
         public Builder(@AuthLibUi.SupportedProviders @NonNull String providerId,
-                       @Nullable String email) {
+                       @Nullable String email, @Nullable String password) {
             mProviderId = providerId;
             mEmail = email;
+            mPassword = password;
         }
 
         public Builder setPhoneNumber(String phoneNumber) {
@@ -157,7 +168,8 @@ public class User implements Parcelable {
         }
 
         public User build() {
-            return new User(mProviderId, mEmail, mPhoneNumber, mName, mPhotoUri);
+            return new User(mProviderId, mEmail, mPhoneNumber, mName, mPassword,
+                    mPhotoUri);
         }
     }
 }

@@ -16,4 +16,17 @@
     <string name="auth_skip">Skip</string>
     <string name="auth_provider_name_email">Email</string>
     <string name="auth_progress_dialog_loading">Loading....</string>
+    <string name="auth_invalid_email_address">That email address is not correct</string>
+    <string name="auth_missing_email_address">Email Fireld cannot be empty</string>
+    <string name="auth_required_field">You can\'t leave this empty</string>
+
+    <string name="auth_button_next">Next</string>
+    <string name="auth_hint_first_name">First Name</string>
+    <string name="auth_hint_last_name">Last Name</string>
+    <string name="auth_email_already_exists">We\'re Sorry but this Email is already taken</string>
+
+    <plurals name="auth_error_weak_password" translation_description="Inline error for weak password">
+        <item quantity="one" translation_description="Inline error for weak password">Password not strong enough. Use at least %1$d character and a mix of letters and numbers</item>
+        <item quantity="other" translation_description="Inline error for weak password">Password not strong enough. Use at least %1$d characters and a mix of letters and numbers</item>
+    </plurals>
 </resources>

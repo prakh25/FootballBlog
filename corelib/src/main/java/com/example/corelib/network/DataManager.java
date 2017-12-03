@@ -1,6 +1,8 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
+import com.example.corelib.model.auth.username_validator.UsernameExists;
+import com.example.corelib.model.email_validator.EmailExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
@@ -70,5 +72,15 @@ public class DataManager {
     public void getCategoriesFromSearch(String includeFields, String searchQuery,
                                RemoteCallback<List<CategoriesOrTag>> callback) {
         myBlogApi.getCategoriesFromSearch(searchQuery, includeFields).enqueue(callback);
+    }
+
+    public void ifEmailExists(String insecure, String email,
+                              RemoteCallback<EmailExists> callback) {
+        myBlogApi.getIfEmailExists(insecure, email).enqueue(callback);
+    }
+
+    public void ifUsernameExists(String insecure, String username,
+                              RemoteCallback<UsernameExists> callback) {
+        myBlogApi.getIfUsernameExists(insecure, username).enqueue(callback);
     }
 }

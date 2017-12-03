@@ -96,7 +96,7 @@
     </style>
 
     <style name="NewUserActivityTheme.TextInputLayout.DisplayNameField">
-        <item name="android:hint">@string/auth_hint_display_name</item>
+
     </style>
 
     <style name="NewUserActivityTheme.TextInputLayout.PasswordField">
@@ -128,9 +128,8 @@
         <item name="android:inputType">textPassword</item>
     </style>
 
-    <style name="NewUserActivityTheme.SaveButton" parent="LoginActivityTheme.Button">
+    <style name="NewUserActivityTheme.Button" parent="LoginActivityTheme.Button">
         <item name="android:background">@drawable/auth_button_save_bg</item>
-        <item name="android:text">@string/auth_btn_save</item>
         <item name="android:drawablePadding">@dimen/auth_login_method_button_drawablePadding</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>

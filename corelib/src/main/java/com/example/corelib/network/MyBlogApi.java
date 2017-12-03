@@ -1,6 +1,8 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
+import com.example.corelib.model.auth.username_validator.UsernameExists;
+import com.example.corelib.model.email_validator.EmailExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
@@ -54,4 +56,12 @@ public interface MyBlogApi {
     @GET("wp-json/wp/v2/tags")
     Call<List<CategoriesOrTag>> getTagsFromSearch(@Query("search") String searchQuery,
                                             @Query("fields") String includeFields);
+
+    @GET("?json=user/if_email_exists")
+    Call<EmailExists> getIfEmailExists(@Query("insecure") String insecure,
+                                       @Query("email") String email);
+
+    @GET("?json=user/if_username_exists")
+    Call<UsernameExists> getIfUsernameExists(@Query("insecure") String insecure,
+                                          @Query("username") String username);
 }
