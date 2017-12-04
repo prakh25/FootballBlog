@@ -46,6 +46,7 @@ public class RegisterUserActivity extends HelperActivityBase
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_new_user, fragment, RegisterEmailFragment.TAG)
+                    .setCustomAnimations(R.anim.auth_slide_in_right, R.anim.auth_slide_out_left)
                     .disallowAddToBackStack()
                     .commit();
         }

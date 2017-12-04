@@ -67,7 +67,7 @@ public interface MyBlogApi {
     Call<UsernameExists> getIfUsernameExists(@Query("insecure") String insecure,
                                              @Query("username") String username);
 
-    @GET("?json=get-nonce")
+    @GET("?json=get_nonce")
     Call<UserRegisterNonce> getRegisterNonce(@Query("controller") String controller,
                                              @Query("method") String method);
 

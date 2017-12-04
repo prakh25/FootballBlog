@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,6 @@ public class RegisterEmailFragment extends FragmentBase implements
 
     private RegisterEmailPresenter presenter;
 
-    private String username;
-    private String fullName;
-    private String password;
-
     public static RegisterEmailFragment newInstance(FlowParameters flowParameters,
                                                     User user) {
 
@@ -89,7 +86,6 @@ public class RegisterEmailFragment extends FragmentBase implements
                 container, false);
         presenter.attachView(this);
         init(view);
-        presenter.onIntialisedRequest();
         if (savedInstanceState != null) {
             return view;
         }
@@ -109,7 +105,7 @@ public class RegisterEmailFragment extends FragmentBase implements
         usernameFieldValidator = new RequiredFieldValidator(userNameFieldLayout);
         fullNameFieldValidator = new RequiredFieldValidator(fullNameFieldLayout);
 
-        ImeHelper.setImeOnDoneListener(fullNameField, this);
+        ImeHelper.setImeOnDoneListener(usernameField, this);
 
         usernameField.setOnFocusChangeListener(this);
         fullNameField.setOnFocusChangeListener(this);
@@ -132,14 +128,8 @@ public class RegisterEmailFragment extends FragmentBase implements
             fullNameField.setText(name);
         }
 
-        safeRequestFocus(usernameField);
-
         view.findViewById(R.id.button_save).setOnClickListener(this);
 
-    }
-
-    private void safeRequestFocus(final View v) {
-        v.post(v::requestFocus);
     }
 
     @Override
@@ -197,9 +187,9 @@ public class RegisterEmailFragment extends FragmentBase implements
     }
 
     private void validateAndRegisterUser() {
-        username = usernameField.getText().toString();
-        fullName = fullNameField.getText().toString();
-        password = passwordField.getText().toString();
+        String username = usernameField.getText().toString();
+        String fullName = fullNameField.getText().toString();
+        String password = passwordField.getText().toString();
 
         boolean usernameValid = usernameFieldValidator.validate(username);
         boolean fullNameValid = fullNameFieldValidator.validate(fullName);
@@ -212,49 +202,27 @@ public class RegisterEmailFragment extends FragmentBase implements
 
     @Override
     public void isUsernameExists(boolean usernameExists) {
+        Log.d(TAG, "username exists "+ usernameExists);
         if (!usernameExists) {
-            String email = user.getEmail();
-            registerUser(email);
+            presenter.acquireNonce();
         }
         userNameFieldLayout.setError(getString(R.string.auth_username_exists));
     }
 
-    private void registerUser(final String email) {
-        getDialogHolder().showLoadingDialog(R.string.auth_sign_up);
-
-        registerUserWordpress();
-
-        IdpResponse response = new IdpResponse.Builder(
-                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
-                        .setUsername(username)
-                        .setName(fullName)
-                        .setPhotoUri(user.getPhotoUri())
-                        .build())
-                .build();
-        getAuthHelper().getFirebaseAuth()
-                .createUserWithEmailAndPassword(email, password)
-                .continueWithTask(new ProfileMerger(response))
-                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
-                .addOnSuccessListener(getActivity(), authResult -> {
-                    activityBase.setResultAndFinish(authResult.getUser(),
-                            password, response);
-                })
-                .addOnFailureListener(getActivity(), e -> {
-                    if (e instanceof FirebaseAuthWeakPasswordException) {
-                        // Password too weak
-                        passwordLayout.setError(getResources().getQuantityString(
-                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
-                    } else {
-                        Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                    getDialogHolder().dismissDialog();
-                });
-
+    @Override
+    public void nonceAcquired(String nonce) {
+        Log.d(TAG,"nonce:" + nonce);
+        registerUser(nonce);
     }
 
-    private void registerUserWordpress() {
+    private void registerUser(String nonce) {
+
+        getDialogHolder().showLoadingDialog(R.string.auth_sign_up);
+
         String email = user.getEmail();
+        String username = usernameField.getText().toString();
+        String fullName = fullNameField.getText().toString();
+        String password = passwordField.getText().toString();
 
         String firstName;
         String lastName = "";
@@ -267,8 +235,54 @@ public class RegisterEmailFragment extends FragmentBase implements
             firstName = fullName;
         }
 
-        presenter.registerNewUser(username, email, password, fullName, firstName, lastName,
-                EmailAuthProvider.PROVIDER_ID);
+        Log.d(TAG, "Firstname: "+ firstName);
+        Log.d(TAG, "last name: " + lastName);
+
+        presenter.registerNewUser(email, username, nonce, password, firstName, lastName,
+                fullName, EmailAuthProvider.PROVIDER_ID);
+
+    }
+
+    @Override
+    public void userRegistered(String status) {
+        if(status.equalsIgnoreCase("ok")) {
+            String email = user.getEmail();
+            String username = usernameField.getText().toString();
+            String fullName = fullNameField.getText().toString();
+            String password = passwordField.getText().toString();
+
+            registerUserFirebase(email, username, fullName, password);
+        }
+    }
+
+    private void registerUserFirebase(String email, String username,
+                                      String fullName, String password) {
+
+        IdpResponse response = new IdpResponse.Builder(
+                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
+                        .setUsername(username)
+                        .setName(fullName)
+                        .setPhotoUri(user.getPhotoUri())
+                        .build())
+                .build();
+        getAuthHelper().getFirebaseAuth()
+                .createUserWithEmailAndPassword(email, password)
+                .continueWithTask(new ProfileMerger(response))
+                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
+                .addOnSuccessListener(getActivity(), authResult ->
+                        activityBase.setResultAndFinish(authResult.getUser(),
+                        password, response))
+                .addOnFailureListener(getActivity(), e -> {
+                    if (e instanceof FirebaseAuthWeakPasswordException) {
+                        // Password too weak
+                        passwordLayout.setError(getResources().getQuantityString(
+                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
+                    } else {
+                        Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                    getDialogHolder().dismissDialog();
+                });
     }
 
     @Override

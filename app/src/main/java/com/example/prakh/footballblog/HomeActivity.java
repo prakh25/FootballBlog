@@ -3,6 +3,8 @@ package com.example.prakh.footballblog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -14,9 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.authlib.AuthLibUi;
+import com.example.authlib.IdpResponse;
+import com.example.corelib.SharedPreferenceManager;
 import com.example.prakh.footballblog.interests.InterestsFragment;
 import com.example.prakh.footballblog.search.SearchActivity;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +32,7 @@ import butterknife.ButterKnife;
 public class HomeActivity extends BaseActivity {
 
     private static final Integer ANIM_DURATION = 700;
+    private static final Integer RC_SIGN_IN = 100;
 
     @BindView(R.id.homeToolbar)
     Toolbar toolbar;
@@ -34,9 +43,11 @@ public class HomeActivity extends BaseActivity {
     @BindView(R.id.home_nav_view)
     NavigationView navigationView;
 
-    private ImageView auhtorAvatar;
+    private ImageView authorAvatar;
     private TextView userName;
     private TextView userEmail;
+
+    private SharedPreferenceManager sharedPreferenceManager;
 
     public static boolean active = false;
 
@@ -49,10 +60,15 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        sharedPreferenceManager = SharedPreferenceManager.getInstance();
+
+        checkIsFirstLaunch();
+
         initToolbar();
         initDrawerMenu();
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             displayFragments(R.id.nav_home, getString(R.string.nav_home));
         }
     }
@@ -60,7 +76,7 @@ public class HomeActivity extends BaseActivity {
     private void initToolbar() {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
@@ -84,7 +100,7 @@ public class HomeActivity extends BaseActivity {
                 }
         );
 
-        auhtorAvatar = navigationView.getHeaderView(0)
+        authorAvatar = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_author_avatar);
         userName = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_author_name);
@@ -112,7 +128,7 @@ public class HomeActivity extends BaseActivity {
                 break;
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.home_container, fragment)
                     .commitAllowingStateLoss();
@@ -135,7 +151,7 @@ public class HomeActivity extends BaseActivity {
                 .load(R.mipmap.ic_launcher_round)
                 .centerCrop()
                 .circleCrop()
-                .into(auhtorAvatar);
+                .into(authorAvatar);
 
         super.onResume();
     }
@@ -171,5 +187,50 @@ public class HomeActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkIsFirstLaunch() {
+        if (sharedPreferenceManager.isSecondLaunch()) {
+            return;
+        }
+
+        sharedPreferenceManager.setFirstLaunch();
+        startActivityForResult(AuthLibUi.getInstance().createSignInIntentBuilder()
+                .setAvailableProviders(Arrays.asList(
+                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.EMAIL_PROVIDER).build(),
+                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.GOOGLE_PROVIDER).build(),
+                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.FACEBOOK_PROVIDER).build()))
+                .setAllowNewEmailAccounts(true)
+                .setIsSmartLockEnabled(true)
+                .build(), RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN) {
+            handleSignInResponse(resultCode, data);
+            return;
+        }
+    }
+
+    private void handleSignInResponse(int resultCode, Intent data) {
+        IdpResponse response = IdpResponse.fromResultIntent(data);
+        if (resultCode == RESULT_OK) {
+            startActivity(HomeActivity.createNewIntent(getApplicationContext()));
+            finishAffinity();
+        } else {
+            // Sign in failed
+            if (response == null) {
+                // User pressed back button
+                showSnackbar(R.string.cancelled);
+                return;
+            }
+        }
+    }
+
+    @MainThread
+    private void showSnackbar(@StringRes int errorMessageRes) {
+        Toast.makeText(this, errorMessageRes, Toast.LENGTH_LONG).show();
     }
 }

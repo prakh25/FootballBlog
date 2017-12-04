@@ -3,8 +3,8 @@ package com.example.corelib.network;
 import com.example.corelib.model.Post;
 import com.example.corelib.model.auth.RegisterUserWithEmail;
 import com.example.corelib.model.auth.UserRegisterNonce;
-import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
+import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 

@@ -70,13 +70,18 @@ public class KickoffActivity extends HelperActivityBase {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PLAY_SERVICES) {
-            if (resultCode == RESULT_OK) {
-                start();
-            } else {
-                finish(RESULT_CANCELED,
-                        IdpResponse.getErrorCodeIntent(ErrorCodes.UNKNOWN_ERROR));
-            }
+        switch (requestCode) {
+            case RC_PLAY_SERVICES:
+                if (resultCode == RESULT_OK) {
+                    start();
+                } else {
+                    finish(RESULT_CANCELED,
+                            IdpResponse.getErrorCodeIntent(ErrorCodes.UNKNOWN_ERROR));
+                }
+                break;
+            case RC_AUTH_METHOD_PICKER:
+                finish(resultCode, data);
+                break;
         }
     }
 

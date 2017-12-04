@@ -31,5 +31,6 @@
     <string name="action_filter">filter</string>
     <string name="action_search">Search</string>
     <string name="action_all_posts">All Posts</string>
+    <string name="cancelled">Cancelled</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.example.corelib.ui.authui;
 
+import android.util.Log;
+
 import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.model.auth.RegisterUserWithEmail;
 import com.example.corelib.model.auth.UserRegisterNonce;
@@ -32,37 +34,22 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
     }
 
     @Override
-    public void onIntialisedRequest() {
-        getRegisterNonce();
-    }
-
-    private void getRegisterNonce() {
-        dataManager.getRegisterNonce(CONTROLLER, METHOD, new RemoteCallback<UserRegisterNonce>() {
-            @Override
-            public void onSuccess(UserRegisterNonce response) {
-                if (response.getStatus().equalsIgnoreCase("ok")) {
-                    nonce = response.getNonce();
-                }
-            }
-
-            @Override
-            public void onFailed(Throwable throwable) {
-
-            }
-        });
-    }
-
-    @Override
     public void checkUsername(String username) {
         checkIfUsernameExists(username);
     }
 
     @Override
-    public void registerNewUser(String username, String email,
-                                String password, String displayName, String fistName,
-                                String lastName, String providerId) {
-        registerUserWithEmail(username, email, password, fistName,
-                lastName, displayName, providerId);
+    public void acquireNonce() {
+        getRegisterNonce();
+    }
+
+    @Override
+    public void registerNewUser(String email, String username, String nonce,
+                                String password,  String fistName, String lastName,
+                                String displayName, String providerId) {
+
+        registerUserWithEmail(email, username, password, nonce, fistName, lastName,
+                displayName, providerId);
     }
 
     private void checkIfUsernameExists(String username) {
@@ -76,27 +63,45 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
 
             @Override
             public void onFailed(Throwable throwable) {
-
+                Log.d("RegisterEmail_1","" + throwable.getMessage());
             }
         });
     }
 
-    private void registerUserWithEmail(String username, String email,
+    private void getRegisterNonce() {
+        dataManager.getRegisterNonce(CONTROLLER, METHOD, new RemoteCallback<UserRegisterNonce>() {
+            @Override
+            public void onSuccess(UserRegisterNonce response) {
+                if (response.getStatus().equalsIgnoreCase("ok")) {
+                    Log.d("RegisterEmail","nonce:" + response.getNonce());
+                    mView.nonceAcquired(response.getNonce());
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                Log.d("RegisterEmail_2","" + throwable.getMessage());
+            }
+        });
+    }
+
+    private void registerUserWithEmail(String email, String username, String nonce,
                                        String password, String fistName, String lastName,
                                        String displayName, String providerId) {
-
-        dataManager.registerUser(INSECURE, email, username, nonce, password, fistName, lastName,
+        Log.d("RegisterEmail_3","nonce:" + nonce);
+        dataManager.registerUser(INSECURE, email, username, password, nonce, fistName, lastName,
                 displayName, SECONDS, providerId, new RemoteCallback<RegisterUserWithEmail>() {
                     @Override
                     public void onSuccess(RegisterUserWithEmail response) {
                         if (response.getStatus().equalsIgnoreCase("ok")) {
                             sharedPreferencesManager.setCookie(response.getCookie());
+                            mView.userRegistered(response.getStatus());
                         }
                     }
 
                     @Override
                     public void onFailed(Throwable throwable) {
-
+                        Log.d("RegisterEmail_3","" + throwable.getMessage());
                     }
                 });
     }

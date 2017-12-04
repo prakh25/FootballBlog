@@ -7,16 +7,21 @@ package com.example.corelib.ui.authui;
 public interface RegisterEmailContract {
 
     interface ViewActions {
-        void onIntialisedRequest();
 
         void checkUsername(String username);
 
-        void registerNewUser(String username, String email,
-                             String password, String displayName,
-                             String fistName, String lastName, String providerId);
+        void acquireNonce();
+
+        void registerNewUser(String email, String username, String nonce,
+                             String password, String fistName, String lastName,
+                             String displayName, String providerId);
     }
 
     interface RegisterEmailView {
         void isUsernameExists(boolean usernameExists);
+
+        void nonceAcquired(String nonce);
+
+        void userRegistered(String status);
     }
 }
