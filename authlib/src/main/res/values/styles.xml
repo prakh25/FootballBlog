@@ -3,8 +3,10 @@
     tools:ignore="ResourceName">
 
     <style name="LoginActivityTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/auth_background_login_activity</item>
+        <item name="android:windowBackground">@color/auth_loginActivityBackground</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
     </style>
 
     <style name="LoginActivityTheme.Transparent" parent="LoginActivityTheme">
@@ -76,8 +78,8 @@
 
     <style name="NewUserActivityTheme" parent="LoginActivityTheme">
         <item name="colorPrimaryDark">@color/auth_newUserActivityPrimaryColorDark</item>
-        <item name="colorAccent">@android:color/white</item>
-        <item name="android:windowBackground">@drawable/auth_background_new_user</item>
+        <item name="colorAccent">@color/auth_bgSave</item>
+        <item name="android:windowBackground">@color/auth_newUserBackground</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 

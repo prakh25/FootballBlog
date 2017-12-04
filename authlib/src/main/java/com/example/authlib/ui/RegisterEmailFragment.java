@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,18 +104,11 @@ public class RegisterEmailFragment extends FragmentBase implements
         usernameFieldValidator = new RequiredFieldValidator(userNameFieldLayout);
         fullNameFieldValidator = new RequiredFieldValidator(fullNameFieldLayout);
 
-        ImeHelper.setImeOnDoneListener(usernameField, this);
+        ImeHelper.setImeOnDoneListener(passwordField, this);
 
         usernameField.setOnFocusChangeListener(this);
         fullNameField.setOnFocusChangeListener(this);
         passwordField.setOnFocusChangeListener(this);
-
-        usernameField.setOnClickListener(this);
-        userNameFieldLayout.setOnClickListener(this);
-        fullNameField.setOnClickListener(this);
-        fullNameFieldLayout.setOnClickListener(this);
-        passwordField.setOnClickListener(this);
-        passwordLayout.setOnClickListener(this);
 
         String username = user.getmUsername();
         if (!TextUtils.isEmpty(username)) {
@@ -130,6 +122,12 @@ public class RegisterEmailFragment extends FragmentBase implements
 
         view.findViewById(R.id.button_save).setOnClickListener(this);
 
+        safeRequestFocus(usernameField);
+
+    }
+
+    private void safeRequestFocus(final View v) {
+        v.post(v::requestFocus);
     }
 
     @Override
@@ -172,12 +170,6 @@ public class RegisterEmailFragment extends FragmentBase implements
 
         if (id == R.id.button_save) {
             validateAndRegisterUser();
-        } else if (id == R.id.username_field_layout || id == R.id.username_field) {
-            userNameFieldLayout.setError(null);
-        } else if (id == R.id.full_name_field_layout || id == R.id.full_name_field) {
-            fullNameFieldLayout.setError(null);
-        } else if (id == R.id.password_field_layout || id == R.id.password_field) {
-            passwordLayout.setError(null);
         }
     }
 
@@ -202,16 +194,15 @@ public class RegisterEmailFragment extends FragmentBase implements
 
     @Override
     public void isUsernameExists(boolean usernameExists) {
-        Log.d(TAG, "username exists "+ usernameExists);
         if (!usernameExists) {
             presenter.acquireNonce();
+        } else {
+            userNameFieldLayout.setError(getString(R.string.auth_username_exists));
         }
-        userNameFieldLayout.setError(getString(R.string.auth_username_exists));
     }
 
     @Override
     public void nonceAcquired(String nonce) {
-        Log.d(TAG,"nonce:" + nonce);
         registerUser(nonce);
     }
 
@@ -235,9 +226,6 @@ public class RegisterEmailFragment extends FragmentBase implements
             firstName = fullName;
         }
 
-        Log.d(TAG, "Firstname: "+ firstName);
-        Log.d(TAG, "last name: " + lastName);
-
         presenter.registerNewUser(email, username, nonce, password, firstName, lastName,
                 fullName, EmailAuthProvider.PROVIDER_ID);
 
@@ -245,7 +233,7 @@ public class RegisterEmailFragment extends FragmentBase implements
 
     @Override
     public void userRegistered(String status) {
-        if(status.equalsIgnoreCase("ok")) {
+        if (status.equalsIgnoreCase("ok")) {
             String email = user.getEmail();
             String username = usernameField.getText().toString();
             String fullName = fullNameField.getText().toString();
@@ -271,7 +259,7 @@ public class RegisterEmailFragment extends FragmentBase implements
                 .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
                 .addOnSuccessListener(getActivity(), authResult ->
                         activityBase.setResultAndFinish(authResult.getUser(),
-                        password, response))
+                                password, response))
                 .addOnFailureListener(getActivity(), e -> {
                     if (e instanceof FirebaseAuthWeakPasswordException) {
                         // Password too weak

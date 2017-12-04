@@ -9,6 +9,9 @@
     <color name="auth_bgAnonymous">#c62828</color>
 
 
-    <color name="auth_newUserActivityPrimaryColorDark">#2ECBFF</color>
-    <color name="auth_textInputEditText">#000</color>
+    <color name="auth_newUserActivityPrimaryColorDark">#004c8c</color>
+    <color name="auth_textInputEditText">#FFF</color>
+
+    <color name="auth_loginActivityBackground">#004c8c</color>
+    <color name="auth_newUserBackground">#0277bd</color>
 </resources>
