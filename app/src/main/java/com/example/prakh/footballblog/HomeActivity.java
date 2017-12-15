@@ -190,9 +190,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void checkIsFirstLaunch() {
-        if (sharedPreferenceManager.isSecondLaunch()) {
-            return;
-        }
+//        if (sharedPreferenceManager.isSecondLaunch()) {
+//            return;
+//        }
 
         sharedPreferenceManager.setFirstLaunch();
         startActivityForResult(AuthLibUi.getInstance().createSignInIntentBuilder()
@@ -210,15 +210,14 @@ public class HomeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode, data);
-            return;
         }
     }
 
     private void handleSignInResponse(int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if (resultCode == RESULT_OK) {
-            startActivity(HomeActivity.createNewIntent(getApplicationContext()));
-            finishAffinity();
+           Toast.makeText(this, "Signed in as" + response.getEmail(), Toast.LENGTH_SHORT)
+                   .show();
         } else {
             // Sign in failed
             if (response == null) {

@@ -3,7 +3,6 @@ package com.example.authlib.ui;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -222,10 +221,10 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
         String email = emailField.getText().toString();
 
         String name = null;
-        Uri photoUri = null;
+        String photoUri = null;
         if(lastCredentials != null && lastCredentials.getId().equals(email)) {
             name = lastCredentials.getName();
-            photoUri = lastCredentials.getProfilePictureUri();
+            photoUri = String.valueOf(lastCredentials.getProfilePictureUri());
         }
 
         listener.newUser(new User.Builder(EmailAuthProvider.PROVIDER_ID, email)

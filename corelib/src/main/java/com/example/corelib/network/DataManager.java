@@ -4,6 +4,7 @@ import com.example.corelib.model.Post;
 import com.example.corelib.model.auth.RegisterUserWithEmail;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
+import com.example.corelib.model.auth.signinwithemail.GenerateAuthCookie;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
@@ -97,5 +98,18 @@ public class DataManager {
                              RemoteCallback<RegisterUserWithEmail> callback) {
         myBlogApi.registerUser(insecure, email, username, nonce, user_pass, firstName, lastName,
                 displayName, seconds, providerId).enqueue(callback);
+    }
+
+    public void loginUser(String insecure, String email, String password,
+                          RemoteCallback<GenerateAuthCookie> callback) {
+        myBlogApi.loginUserWithEmail(insecure, email, password).enqueue(callback);
+    }
+
+    public void loginUsingIdp(String insecure, String email, String username,
+                              String nonce, String firstName, String lastName,
+                              String displayName, String providerId,
+                              String avatarUrl, RemoteCallback<GenerateAuthCookie> callback) {
+        myBlogApi.loginUserWithIdp(insecure, email, username, nonce, firstName,
+                lastName, displayName, providerId, avatarUrl).enqueue(callback);
     }
 }

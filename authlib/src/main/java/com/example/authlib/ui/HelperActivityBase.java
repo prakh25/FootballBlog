@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.authlib.IdpResponse;
 import com.example.authlib.utils.AuthHelper;
-import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.authlib.utils.Precondition.checkNotNull;
 
@@ -72,11 +71,11 @@ public class HelperActivityBase extends AppCompatActivity {
         finish();
     }
 
-    public void setResultAndFinish(FirebaseUser firebaseUser, IdpResponse response) {
-        setResultAndFinish(firebaseUser, null, response);
+    public void setResultAndFinish(IdpResponse response) {
+        finish(Activity.RESULT_OK, response.toIntent());
     }
 
-    public void setResultAndFinish(FirebaseUser firebaseUser, @Nullable String password,
+    public void setResultAndFinish(@Nullable String password,
                                    IdpResponse response) {
         finish(Activity.RESULT_OK, response.toIntent());
     }

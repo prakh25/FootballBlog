@@ -25,8 +25,6 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
     private final DataManager dataManager;
     private final SharedPreferenceManager sharedPreferencesManager;
 
-    private String nonce;
-
     public RegisterEmailPresenter(DataManager dataManager,
                                   SharedPreferenceManager sharedPreferencesManager) {
         this.dataManager = dataManager;

@@ -22,5 +22,10 @@
             android:exported="false"
             android:theme="@style/NewUserActivityTheme"/>
 
+        <activity android:name=".ui.SignInEmailActivity"
+            android:label=""
+            android:exported="false"
+            android:theme="@style/NewUserActivityTheme"/>
+
     </application>
 </manifest>

@@ -1,7 +1,6 @@
 package com.example.authlib;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,7 +25,7 @@ public class User implements Parcelable {
                     in.readString(),
                     in.readString(),
                     in.readString(),
-                    in.<Uri>readParcelable(Uri.class.getClassLoader()));
+                    in.readString());
         }
 
         @Override
@@ -40,10 +39,10 @@ public class User implements Parcelable {
     private final String mUsername;
     private final String mPhoneNumber;
     private final String mName;
-    private final Uri mPhotoUri;
+    private final String mPhotoUri;
 
     private User(String providerId, String email, String username,
-                 String phoneNumber, String name, Uri photoUri) {
+                 String phoneNumber, String name, String photoUri) {
         mProviderId = providerId;
         mEmail = email;
         mUsername = username;
@@ -87,7 +86,7 @@ public class User implements Parcelable {
     }
 
     @Nullable
-    public Uri getPhotoUri() {
+    public String getPhotoUri() {
         return mPhotoUri;
     }
 
@@ -134,7 +133,7 @@ public class User implements Parcelable {
         dest.writeString(mEmail);
         dest.writeString(mPhoneNumber);
         dest.writeString(mName);
-        dest.writeParcelable(mPhotoUri, flags);
+        dest.writeString(mPhotoUri);
     }
 
     public static class Builder {
@@ -143,7 +142,7 @@ public class User implements Parcelable {
         private String mUsername;
         private String mPhoneNumber;
         private String mName;
-        private Uri mPhotoUri;
+        private String mPhotoUri;
 
         public Builder(@AuthLibUi.SupportedProviders @NonNull String providerId,
                        @Nullable String email) {
@@ -166,7 +165,7 @@ public class User implements Parcelable {
             return this;
         }
 
-        public Builder setPhotoUri(Uri photoUri) {
+        public Builder setPhotoUri(String photoUri) {
             mPhotoUri = photoUri;
             return this;
         }

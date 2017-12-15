@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
@@ -17,14 +16,11 @@ import com.example.authlib.User;
 import com.example.authlib.ui.fieldvalidators.PasswordFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
-import com.example.authlib.utils.ProfileMerger;
-import com.example.authlib.utils.TaskFailureLogger;
 import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.RegisterEmailContract;
 import com.example.corelib.ui.authui.RegisterEmailPresenter;
 import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 /**
  * Created by prakh on 03-12-2017.
@@ -234,44 +230,56 @@ public class RegisterEmailFragment extends FragmentBase implements
     @Override
     public void userRegistered(String status) {
         if (status.equalsIgnoreCase("ok")) {
+
             String email = user.getEmail();
             String username = usernameField.getText().toString();
             String fullName = fullNameField.getText().toString();
             String password = passwordField.getText().toString();
 
-            registerUserFirebase(email, username, fullName, password);
+            IdpResponse response = new IdpResponse.Builder(
+                    new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
+                            .setUsername(username)
+                            .setName(fullName)
+                            .setPhotoUri(user.getPhotoUri())
+                            .build())
+                    .build();
+
+            activityBase.setResultAndFinish(password, response);
+
+//
+//            registerUserFirebase(email, username, fullName, password);
         }
     }
 
-    private void registerUserFirebase(String email, String username,
-                                      String fullName, String password) {
-
-        IdpResponse response = new IdpResponse.Builder(
-                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
-                        .setUsername(username)
-                        .setName(fullName)
-                        .setPhotoUri(user.getPhotoUri())
-                        .build())
-                .build();
-        getAuthHelper().getFirebaseAuth()
-                .createUserWithEmailAndPassword(email, password)
-                .continueWithTask(new ProfileMerger(response))
-                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
-                .addOnSuccessListener(getActivity(), authResult ->
-                        activityBase.setResultAndFinish(authResult.getUser(),
-                                password, response))
-                .addOnFailureListener(getActivity(), e -> {
-                    if (e instanceof FirebaseAuthWeakPasswordException) {
-                        // Password too weak
-                        passwordLayout.setError(getResources().getQuantityString(
-                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
-                    } else {
-                        Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                    getDialogHolder().dismissDialog();
-                });
-    }
+//    private void registerUserFirebase(String email, String username,
+//                                      String fullName, String password) {
+//
+//        IdpResponse response = new IdpResponse.Builder(
+//                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
+//                        .setUsername(username)
+//                        .setName(fullName)
+//                        .setPhotoUri(user.getPhotoUri())
+//                        .build())
+//                .build();
+//        getAuthHelper().getFirebaseAuth()
+//                .createUserWithEmailAndPassword(email, password)
+//                .continueWithTask(new ProfileMerger(response))
+//                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
+//                .addOnSuccessListener(getActivity(), authResult ->
+//                        activityBase.setResultAndFinish(authResult.getUser(),
+//                                password, response))
+//                .addOnFailureListener(getActivity(), e -> {
+//                    if (e instanceof FirebaseAuthWeakPasswordException) {
+//                        // Password too weak
+//                        passwordLayout.setError(getResources().getQuantityString(
+//                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
+//                    } else {
+//                        Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT)
+//                                .show();
+//                    }
+//                    getDialogHolder().dismissDialog();
+//                });
+//    }
 
     @Override
     public void onDestroyView() {

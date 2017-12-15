@@ -27,6 +27,8 @@
     <string name="auth_username_missing">Username can\'t be empty</string>
     <string name="auth_username_exists">We\'re sorry but username is already taken.</string>
     <string name="auth_sign_up">Signing Up...</string>
+    <string name="auth_button_login">Login</string>
+    <string name="auth_sign_in">Signing In...</string>
 
     <plurals name="auth_error_weak_password" translation_description="Inline error for weak password">
         <item quantity="one" translation_description="Inline error for weak password">Password not strong enough. Use at least %1$d character and a mix of letters and numbers</item>

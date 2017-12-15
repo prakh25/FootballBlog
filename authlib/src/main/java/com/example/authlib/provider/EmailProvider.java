@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 
 import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.R;
+import com.example.authlib.ui.SignInEmailActivity;
 
 /**
  * Created by prakh on 02-12-2017.
@@ -37,7 +38,8 @@ public class EmailProvider implements Provider {
 
     @Override
     public void startLogin(Activity activity) {
-        mActivity.finish();
+        activity.startActivityForResult(SignInEmailActivity.createIntent(activity, mFlowParameters),
+                RC_EMAIL_FLOW);
     }
 
     @Override

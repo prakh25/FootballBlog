@@ -39,7 +39,7 @@ public class ProfileMerger implements Continuation<AuthResult, Task<AuthResult>>
 
         User user = mIdpResponse.getUser();
         if (TextUtils.isEmpty(name)) { name = user.getName(); }
-        if (photoUri == null) { photoUri = user.getPhotoUri(); }
+        if (photoUri == null) { photoUri = Uri.parse(user.getPhotoUri()); }
 
         return firebaseUser.updateProfile(
                 new UserProfileChangeRequest.Builder()

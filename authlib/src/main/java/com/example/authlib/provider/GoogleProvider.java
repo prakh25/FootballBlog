@@ -110,10 +110,13 @@ public class GoogleProvider implements IdpProvider, GoogleApiClient.OnConnection
     }
 
     private IdpResponse createIdpResponse(GoogleSignInAccount account) {
+
+        String photoUri = String.valueOf(account.getPhotoUrl());
+
         return new IdpResponse.Builder(
                 new User.Builder(GoogleAuthProvider.PROVIDER_ID, account.getEmail())
                         .setName(account.getDisplayName())
-                        .setPhotoUri(account.getPhotoUrl())
+                        .setPhotoUri(photoUri)
                         .build())
                 .setToken(account.getIdToken())
                 .build();
@@ -122,6 +125,14 @@ public class GoogleProvider implements IdpProvider, GoogleApiClient.OnConnection
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SIGN_IN) {
+//                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//                try {
+//                    GoogleSignInAccount account = task.getResult(ApiException.class);
+//                    mIdpCallback.onSuccess(createIdpResponse(account));
+//                } catch (ApiException e) {
+//                    e.printStackTrace();
+//                    onError(e.getMessage());
+//                }
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result != null) {
                 if (result.isSuccess()) {

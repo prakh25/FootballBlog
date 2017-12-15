@@ -4,6 +4,7 @@ import com.example.corelib.model.Post;
 import com.example.corelib.model.auth.RegisterUserWithEmail;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
+import com.example.corelib.model.auth.signinwithemail.GenerateAuthCookie;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
@@ -82,4 +83,20 @@ public interface MyBlogApi {
                                              @Query("display_name") String displayName,
                                              @Query("seconds") Integer seconds,
                                              @Query("provider") String providerId);
+
+    @GET("?json=user/generate_auth_cookie")
+    Call<GenerateAuthCookie> loginUserWithEmail(@Query("insecure") String insecure,
+                                                @Query("email") String email,
+                                                @Query("password") String password);
+
+    @GET("?json=user/register_using_idp")
+    Call<GenerateAuthCookie> loginUserWithIdp(@Query("insecure") String insecure,
+                                              @Query("email") String email,
+                                              @Query("username") String username,
+                                              @Query("nonce") String nonce,
+                                              @Query("first_name") String firstName,
+                                              @Query("last_name") String lastName,
+                                              @Query("display_name") String displayName,
+                                              @Query("provider") String providerId,
+                                              @Query("avatar") String avatarUrl);
 }
