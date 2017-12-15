@@ -77,7 +77,7 @@ public class RegisterEmailFragment extends FragmentBase implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_fragment_user_username_and_fullname,
+        View view = inflater.inflate(R.layout.auth_fragment_new_user_registration,
                 container, false);
         presenter.attachView(this);
         init(view);

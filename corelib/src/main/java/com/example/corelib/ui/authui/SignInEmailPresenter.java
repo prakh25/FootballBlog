@@ -3,7 +3,7 @@ package com.example.corelib.ui.authui;
 import android.util.Log;
 
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.signinwithemail.GenerateAuthCookie;
+import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;
 import com.example.corelib.ui.BasePresenter;
@@ -35,9 +35,9 @@ public class SignInEmailPresenter extends BasePresenter<SignInEmailContract.Sign
     }
 
     private void generateAuthCookie(String email, String password) {
-        dataManager.loginUser(INSECURE, email, password, new RemoteCallback<GenerateAuthCookie>() {
+        dataManager.loginUser(INSECURE, email, password, new RemoteCallback<UserObject>() {
             @Override
-            public void onSuccess(GenerateAuthCookie response) {
+            public void onSuccess(UserObject response) {
                 if(response.getStatus().equalsIgnoreCase("ok")) {
                     sharedPreferencesManager.setCookie(response.getCookie());
                     mView.onSignInSuccessful(response.getUser());

@@ -38,7 +38,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
-            android:src="@drawable/ic_close_black_24dp"     />
+            android:src="@drawable/auth_ic_close_white_24dp"     />
 
         <ImageView
             android:id="@+id/search_voice_btn"

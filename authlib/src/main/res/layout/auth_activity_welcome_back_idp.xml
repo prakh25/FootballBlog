@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="4sp"
+        android:paddingTop="64dp"
+        android:text="@string/auth_welcome_back_idp_header"
+        android:textSize="20sp" />
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="8sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        tools:text="@string/auth_welcome_back_idp_prompt_body"
+        android:textSize="16sp" />
+
+    <com.example.authlib.ui.SupportVectorDrawablesButton
+        android:id="@+id/button_login"
+        style="@style/NewUserActivityTheme.Button"
+        android:text="@string/auth_button_login" />
+</LinearLayout>

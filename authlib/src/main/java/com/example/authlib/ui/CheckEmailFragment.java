@@ -74,7 +74,7 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_fragment_user_email_and_password,
+        View view = inflater.inflate(R.layout.auth_fragment_check_email,
                 container, false);
         presenter.attachView(this);
         init(view);

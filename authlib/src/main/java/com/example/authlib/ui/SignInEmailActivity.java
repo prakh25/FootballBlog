@@ -17,7 +17,7 @@ import com.example.authlib.ui.fieldvalidators.EmailFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.signinwithemail.UserInfo;
+import com.example.corelib.model.auth.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.SignInEmailContract;
 import com.example.corelib.ui.authui.SignInEmailPresenter;
@@ -53,7 +53,7 @@ public class SignInEmailActivity extends HelperActivityBase implements
         super.onCreate(savedInstance);
         presenter = new SignInEmailPresenter(DataManager.getInstance(),
                 SharedPreferenceManager.getInstance());
-        setContentView(R.layout.auth_activity_sign_in_activity);
+        setContentView(R.layout.auth_activity_welcome_back_email);
         presenter.attachView(this);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -123,7 +123,7 @@ public class SignInEmailActivity extends HelperActivityBase implements
     }
 
     @Override
-    public void onSignInSuccessful(UserInfo info) {
+    public void onSignInSuccessful(UserData info) {
 
         String password = passwordField.getText().toString();
         String email = info.getEmail();

@@ -1,6 +1,6 @@
 package com.example.corelib.ui.authui;
 
-import com.example.corelib.model.auth.signinwithemail.UserInfo;
+import com.example.corelib.model.auth.UserData;
 
 /**
  * Created by prakh on 05-12-2017.
@@ -23,6 +23,6 @@ public interface AuthMethodContract {
                            String fistName, String lastName,
                            String displayName, String providerId, String customAvatar);
 
-        void onSignInSuccessful(UserInfo userInfo);
+        void onSignInSuccessful(UserData userInfo);
     }
 }

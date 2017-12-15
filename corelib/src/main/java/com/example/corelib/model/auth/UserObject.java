@@ -1,4 +1,4 @@
-package com.example.corelib.model.auth.signinwithemail;
+package com.example.corelib.model.auth;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by prakh on 04-12-2017.
  */
 
-public class GenerateAuthCookie {
+public class UserObject {
 
     @SerializedName("status")
     @Expose
@@ -26,7 +26,7 @@ public class GenerateAuthCookie {
     private String cookieName;
     @SerializedName("user")
     @Expose
-    private UserInfo user;
+    private UserData user;
 
     public String getStatus() {
         return status;
@@ -52,11 +52,11 @@ public class GenerateAuthCookie {
         this.cookieName = cookieName;
     }
 
-    public UserInfo getUser() {
+    public UserData getUser() {
         return user;
     }
 
-    public void setUser(UserInfo user) {
+    public void setUser(UserData user) {
         this.user = user;
     }
 

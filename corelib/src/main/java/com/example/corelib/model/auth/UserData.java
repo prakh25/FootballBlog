@@ -1,4 +1,4 @@
-package com.example.corelib.model.auth.signinwithemail;
+package com.example.corelib.model.auth;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by prakh on 04-12-2017.
  */
 
-public class UserInfo {
+public class UserData {
 
     @SerializedName("id")
     @Expose
@@ -42,9 +42,9 @@ public class UserInfo {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("capabilities")
+    @SerializedName("userCapabilities")
     @Expose
-    private Capabilities capabilities;
+    private UserCapabilities userCapabilities;
     @SerializedName("avatar")
     @Expose
     private String avatar;
@@ -143,12 +143,12 @@ public class UserInfo {
         this.description = description;
     }
 
-    public Capabilities getCapabilities() {
-        return capabilities;
+    public UserCapabilities getUserCapabilities() {
+        return userCapabilities;
     }
 
-    public void setCapabilities(Capabilities capabilities) {
-        this.capabilities = capabilities;
+    public void setUserCapabilities(UserCapabilities userCapabilities) {
+        this.userCapabilities = userCapabilities;
     }
 
     public String getAvatar() {

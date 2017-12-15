@@ -20,7 +20,7 @@ import com.example.authlib.provider.GoogleProvider;
 import com.example.authlib.provider.IdpProvider;
 import com.example.authlib.provider.Provider;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.signinwithemail.UserInfo;
+import com.example.corelib.model.auth.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.AuthMethodContract;
 import com.example.corelib.ui.authui.AuthMethodPresenter;
@@ -173,7 +173,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
     }
 
     @Override
-    public void onSignInSuccessful(UserInfo info) {
+    public void onSignInSuccessful(UserData info) {
 
         String email = info.getEmail();
         String username = info.getUsername();

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" translatable="false" tools:ignore="ResourceName">AuthLib</string>
 
     <string name="auth_btn_sign_in_with_email">Sign In with Email</string>
@@ -34,4 +34,18 @@
         <item quantity="one" translation_description="Inline error for weak password">Password not strong enough. Use at least %1$d character and a mix of letters and numbers</item>
         <item quantity="other" translation_description="Inline error for weak password">Password not strong enough. Use at least %1$d characters and a mix of letters and numbers</item>
     </plurals>
+
+    <string name="auth_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts">
+        You\'ve already used <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
+        to sign in. Enter your password for that account.
+    </string>
+
+    <string name="auth_welcome_back_idp_prompt_body" translation_description="Message to users that need to signin using existing email accounts">
+        Good news!. You\'ve already used <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>. Click login button to continue.
+    </string>
+
+    <string name="auth_welcome_back_email_heading">Welcome Back!</string>
+    <string name="auth_trouble_signing_in">Trouble signing in?</string>
+    <string name="auth_welcome_back_idp_header">You already have an account</string>
+    <string name="auth_button_send">Send</string>
 </resources>

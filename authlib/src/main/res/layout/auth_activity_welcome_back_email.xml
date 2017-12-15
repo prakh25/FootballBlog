@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="4sp"
+            android:paddingTop="56dp"
+            android:text="@string/auth_welcome_back_email_heading"
+            android:textSize="20sp" />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8sp"
+            android:paddingTop="12dp"
+            tools:text="@string/auth_welcome_back_password_prompt_body"
+            android:textSize="16sp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/password_field_layout"
+            style="@style/NewUserActivityTheme.TextInputLayout.PasswordField"
+            android:paddingTop="32dp"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/password_field"
+                style="@style/NewUserActivityTheme.TextInputEditText.PasswordField" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/trouble_signing_in"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/auth_trouble_signing_in"
+                android:lineSpacingExtra="6sp"
+                android:textColor="@android:color/holo_orange_light" />
+
+            <com.example.authlib.ui.SupportVectorDrawablesButton
+                android:id="@+id/button_login"
+                style="@style/NewUserActivityTheme.Button"
+                android:text="@string/auth_button_login" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

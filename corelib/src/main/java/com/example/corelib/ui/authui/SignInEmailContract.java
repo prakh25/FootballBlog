@@ -1,6 +1,6 @@
 package com.example.corelib.ui.authui;
 
-import com.example.corelib.model.auth.signinwithemail.UserInfo;
+import com.example.corelib.model.auth.UserData;
 
 /**
  * Created by prakh on 04-12-2017.
@@ -12,7 +12,7 @@ public interface SignInEmailContract {
     }
 
     interface SignInEmailView {
-        void onSignInSuccessful(UserInfo info);
+        void onSignInSuccessful(UserData info);
 
         void invalidEmailError(String error);
 
