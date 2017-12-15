@@ -3,7 +3,6 @@ package com.example.authlib.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +14,7 @@ import com.example.authlib.AuthLibUi.IdpConfig;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.User;
+import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.provider.EmailProvider;
 import com.example.authlib.provider.GoogleProvider;
 import com.example.authlib.provider.IdpProvider;
@@ -24,8 +24,6 @@ import com.example.corelib.model.auth.signinwithemail.UserInfo;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.AuthMethodContract;
 import com.example.corelib.ui.authui.AuthMethodPresenter;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,29 +119,22 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
 
     @Override
     public void onSuccess(IdpResponse idpResponse) {
-//        AuthCredential credential = ProviderUtils.getAuthCredential(idpResponse);
-//        getAuthHelper().getFirebaseAuth()
-//                .signInWithCredential(credential)
-//                .addOnCompleteListener(new CredentialSignInHandler(this,
-//                        idpResponse, RC_ACCOUNT_LINK))
-//                .addOnFailureListener(
-//                        new TaskFailureLogger(TAG, "Firebase signIn with credential unsuccessful")
-//                );
+
         String email = idpResponse.getUser().getEmail();
-        Log.d(TAG, " email " + email);
         String name = idpResponse.getUser().getName();
-        Log.d(TAG, " name " + name);
         String photoUri = idpResponse.getUser().getPhotoUri();
 
-        String firstName;
+        String firstName = "";
         String lastName = "";
 
-        if (name.split("\\w+").length > 1) {
+        if(!TextUtils.isEmpty(name)) {
+            if (name.split("\\w+").length > 1) {
 
-            lastName = name.substring(name.lastIndexOf(" ") + 1);
-            firstName = name.substring(0, name.lastIndexOf(' '));
-        } else {
-            firstName = name;
+                lastName = name.substring(name.lastIndexOf(" ") + 1);
+                firstName = name.substring(0, name.lastIndexOf(' '));
+            } else {
+                firstName = name;
+            }
         }
 
         Random r = new Random();
@@ -152,7 +143,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
         String userName = String.format(Locale.US, "%s_%d", firstName, randomNumber);
 
         presenter.getNonce(email, userName, firstName, lastName, name,
-                GoogleAuthProvider.PROVIDER_ID, photoUri);
+                AuthProviderId.GOOGLE_PROVIDER_ID, photoUri);
     }
 
     @Override
@@ -176,22 +167,25 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
     public void nonceAcquired(String nonce, String email,
                               String username, String fistName, String lastName,
                               String displayName, String providerId, String customAvatar) {
+
         presenter.loginUsingIdpProvider(email, username, nonce, fistName,
                 lastName, displayName, providerId, customAvatar);
     }
 
     @Override
     public void onSignInSuccessful(UserInfo info) {
+
         String email = info.getEmail();
         String username = info.getUsername();
         String name = info.getDisplayname();
         String photoUri = null;
+
         if (!TextUtils.isEmpty(info.getWslCurrentUserImage())) {
             photoUri = info.getWslCurrentUserImage();
         }
 
         IdpResponse response = new IdpResponse.Builder(
-                new User.Builder(EmailAuthProvider.PROVIDER_ID, email)
+                new User.Builder(AuthProviderId.GOOGLE_PROVIDER_ID, email)
                         .setUsername(username)
                         .setName(name)
                         .setPhotoUri(photoUri)

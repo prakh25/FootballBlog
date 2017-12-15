@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.User;
+import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.ui.fieldvalidators.PasswordFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
@@ -20,7 +21,6 @@ import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.RegisterEmailContract;
 import com.example.corelib.ui.authui.RegisterEmailPresenter;
-import com.google.firebase.auth.EmailAuthProvider;
 
 /**
  * Created by prakh on 03-12-2017.
@@ -138,7 +138,7 @@ public class RegisterEmailFragment extends FragmentBase implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(ExtraConstants.EXTRA_USER,
-                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
+                new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, user.getEmail())
                         .setUsername(usernameField.getText().toString())
                         .setName(fullNameField.getText().toString())
                         .setPhotoUri(user.getPhotoUri())
@@ -223,7 +223,7 @@ public class RegisterEmailFragment extends FragmentBase implements
         }
 
         presenter.registerNewUser(email, username, nonce, password, firstName, lastName,
-                fullName, EmailAuthProvider.PROVIDER_ID);
+                fullName, AuthProviderId.EMAIL_PROVIDER_ID);
 
     }
 
@@ -237,7 +237,7 @@ public class RegisterEmailFragment extends FragmentBase implements
             String password = passwordField.getText().toString();
 
             IdpResponse response = new IdpResponse.Builder(
-                    new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
+                    new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
                             .setUsername(username)
                             .setName(fullName)
                             .setPhotoUri(user.getPhotoUri())
@@ -245,41 +245,8 @@ public class RegisterEmailFragment extends FragmentBase implements
                     .build();
 
             activityBase.setResultAndFinish(password, response);
-
-//
-//            registerUserFirebase(email, username, fullName, password);
         }
     }
-
-//    private void registerUserFirebase(String email, String username,
-//                                      String fullName, String password) {
-//
-//        IdpResponse response = new IdpResponse.Builder(
-//                new User.Builder(EmailAuthProvider.PROVIDER_ID, user.getEmail())
-//                        .setUsername(username)
-//                        .setName(fullName)
-//                        .setPhotoUri(user.getPhotoUri())
-//                        .build())
-//                .build();
-//        getAuthHelper().getFirebaseAuth()
-//                .createUserWithEmailAndPassword(email, password)
-//                .continueWithTask(new ProfileMerger(response))
-//                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
-//                .addOnSuccessListener(getActivity(), authResult ->
-//                        activityBase.setResultAndFinish(authResult.getUser(),
-//                                password, response))
-//                .addOnFailureListener(getActivity(), e -> {
-//                    if (e instanceof FirebaseAuthWeakPasswordException) {
-//                        // Password too weak
-//                        passwordLayout.setError(getResources().getQuantityString(
-//                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
-//                    } else {
-//                        Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT)
-//                                .show();
-//                    }
-//                    getDialogHolder().dismissDialog();
-//                });
-//    }
 
     @Override
     public void onDestroyView() {

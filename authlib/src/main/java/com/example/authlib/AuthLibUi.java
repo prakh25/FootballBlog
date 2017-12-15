@@ -10,16 +10,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.app.FragmentActivity;
 
+import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.utils.GoogleSignInHelper;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,18 +36,18 @@ import java.util.Set;
 public class AuthLibUi {
 
     @StringDef({
-            EmailAuthProvider.PROVIDER_ID, EMAIL_PROVIDER,
-            GoogleAuthProvider.PROVIDER_ID, GOOGLE_PROVIDER,
-            FacebookAuthProvider.PROVIDER_ID, FACEBOOK_PROVIDER,
-            "Skip", SKIP_PROVIDER
+            AuthProviderId.EMAIL_PROVIDER_ID, EMAIL_PROVIDER,
+            AuthProviderId.GOOGLE_PROVIDER_ID, GOOGLE_PROVIDER,
+            AuthProviderId.FACEBOOK_PROVIDER_ID, FACEBOOK_PROVIDER,
+            AuthProviderId.SKIP_PROVIDER_ID, SKIP_PROVIDER
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedProviders {}
 
-    public static final String EMAIL_PROVIDER = EmailAuthProvider.PROVIDER_ID;
-    public static final String GOOGLE_PROVIDER = GoogleAuthProvider.PROVIDER_ID;
-    public static final String FACEBOOK_PROVIDER = FacebookAuthProvider.PROVIDER_ID;
-    public static final String SKIP_PROVIDER = "Skip";
+    public static final String EMAIL_PROVIDER = AuthProviderId.EMAIL_PROVIDER_ID;
+    public static final String GOOGLE_PROVIDER = AuthProviderId.GOOGLE_PROVIDER_ID;
+    public static final String FACEBOOK_PROVIDER = AuthProviderId.FACEBOOK_PROVIDER_ID;
+    public static final String SKIP_PROVIDER = AuthProviderId.SKIP_PROVIDER_ID;
 
     public static final Set<String> SUPPORTED_PROVIDERS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(

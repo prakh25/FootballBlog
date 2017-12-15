@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.User;
+import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.ui.fieldvalidators.EmailFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
@@ -20,7 +21,6 @@ import com.example.corelib.model.auth.signinwithemail.UserInfo;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.SignInEmailContract;
 import com.example.corelib.ui.authui.SignInEmailPresenter;
-import com.google.firebase.auth.EmailAuthProvider;
 
 /**
  * Created by prakh on 04-12-2017.
@@ -108,12 +108,8 @@ public class SignInEmailActivity extends HelperActivityBase implements
     }
 
     private void trySignInUsingWordpress(String email, String password) {
+
         getDialogHolder().showLoadingDialog(R.string.auth_sign_in);
-
-//        IdpResponse response = new IdpResponse.Builder(
-//                new User.Builder(EmailAuthProvider.PROVIDER_ID, email).build())
-//                .build();
-
         presenter.loginUsingWordpress(email, password);
     }
 
@@ -128,17 +124,19 @@ public class SignInEmailActivity extends HelperActivityBase implements
 
     @Override
     public void onSignInSuccessful(UserInfo info) {
+
         String password = passwordField.getText().toString();
         String email = info.getEmail();
         String username = info.getUsername();
         String name = info.getDisplayname();
         String photoUri = null;
+
         if (!TextUtils.isEmpty(info.getWslCurrentUserImage())) {
             photoUri = info.getWslCurrentUserImage();
         }
 
         IdpResponse response = new IdpResponse.Builder(
-                new User.Builder(EmailAuthProvider.PROVIDER_ID, email)
+                new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
                         .setUsername(username)
                         .setName(name)
                         .setPhotoUri(photoUri)
@@ -146,41 +144,7 @@ public class SignInEmailActivity extends HelperActivityBase implements
                 .build();
 
         setResultAndFinish(password, response);
-//        registerInFirebase(email, password, username, name, photoUri);
-
     }
-
-
-//    private void registerInFirebase(String email, String password, String username,
-//                                    String name, Uri photoUri) {
-//
-//        IdpResponse response = new IdpResponse.Builder(
-//                new User.Builder(EmailAuthProvider.PROVIDER_ID, email)
-//                        .setUsername(username)
-//                        .setName(name)
-//                        .setPhotoUri(photoUri)
-//                        .build())
-//                .build();
-//
-//        getAuthHelper().getFirebaseAuth()
-//                .createUserWithEmailAndPassword(email, password)
-//                .continueWithTask(new ProfileMerger(response))
-//                .addOnFailureListener(new TaskFailureLogger(TAG, "Error creating user"))
-//                .addOnSuccessListener(this, authResult ->
-//                        setResultAndFinish(authResult.getUser(),
-//                                password, response))
-//                .addOnFailureListener(this, e -> {
-//                    if (e instanceof FirebaseAuthWeakPasswordException) {
-//                        // Password too weak
-//                        passwordFieldLayout.setError(getResources().getQuantityString(
-//                                R.plurals.auth_error_weak_password, R.integer.auth_min_password_length));
-//                    } else {
-//                        Toast.makeText(this, "Registration Failed", Toast.LENGTH_SHORT)
-//                                .show();
-//                    }
-//                    getDialogHolder().dismissDialog();
-//                });
-//    }
 
     @Override
     public void invalidEmailError(String error) {

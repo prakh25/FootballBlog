@@ -7,12 +7,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
-import android.text.TextUtils;
 
 import com.example.authlib.ui.ExtraConstants;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
+
 
 /**
  * Created by prakh on 02-12-2017.
@@ -165,19 +162,18 @@ public class IdpResponse implements Parcelable {
         }
 
         public IdpResponse build() {
-            String providerId = mUser.getProviderId();
-            if ((providerId.equalsIgnoreCase(GoogleAuthProvider.PROVIDER_ID)
-                    || providerId.equalsIgnoreCase(FacebookAuthProvider.PROVIDER_ID)
-                    || providerId.equalsIgnoreCase(TwitterAuthProvider.PROVIDER_ID))
-                    && TextUtils.isEmpty(mToken)) {
-                throw new IllegalStateException(
-                        "Token cannot be null when using a non-email provider.");
-            }
-            if (providerId.equalsIgnoreCase(TwitterAuthProvider.PROVIDER_ID)
-                    && TextUtils.isEmpty(mSecret)) {
-                throw new IllegalStateException(
-                        "Secret cannot be null when using the Twitter provider.");
-            }
+//            String providerId = mUser.getProviderId();
+//            if ((providerId.equalsIgnoreCase(AuthLibUi.GOOGLE_PROVIDER)
+//                    || providerId.equalsIgnoreCase(AuthLibUi.FACEBOOK_PROVIDER))
+//                    && TextUtils.isEmpty(mToken)) {
+//                throw new IllegalStateException(
+//                        "Token cannot be null when using a non-email provider.");
+//            }
+//            if (providerId.equalsIgnoreCase(TwitterAuthProvider.PROVIDER_ID)
+//                    && TextUtils.isEmpty(mSecret)) {
+//                throw new IllegalStateException(
+//                        "Secret cannot be null when using the Twitter provider.");
+//            }
 
             return new IdpResponse(mUser, mToken, mSecret, Activity.RESULT_OK);
         }

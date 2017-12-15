@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.authlib.AuthLibUi;
 import com.example.authlib.AuthLibUi.IdpConfig;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
@@ -114,7 +115,7 @@ public class GoogleProvider implements IdpProvider, GoogleApiClient.OnConnection
         String photoUri = String.valueOf(account.getPhotoUrl());
 
         return new IdpResponse.Builder(
-                new User.Builder(GoogleAuthProvider.PROVIDER_ID, account.getEmail())
+                new User.Builder(AuthProviderId.GOOGLE_PROVIDER_ID, account.getEmail())
                         .setName(account.getDisplayName())
                         .setPhotoUri(photoUri)
                         .build())
@@ -125,14 +126,6 @@ public class GoogleProvider implements IdpProvider, GoogleApiClient.OnConnection
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SIGN_IN) {
-//                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//                try {
-//                    GoogleSignInAccount account = task.getResult(ApiException.class);
-//                    mIdpCallback.onSuccess(createIdpResponse(account));
-//                } catch (ApiException e) {
-//                    e.printStackTrace();
-//                    onError(e.getMessage());
-//                }
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result != null) {
                 if (result.isSuccess()) {

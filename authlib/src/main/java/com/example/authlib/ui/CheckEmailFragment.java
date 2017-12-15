@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import com.example.authlib.R;
 import com.example.authlib.User;
+import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.ui.fieldvalidators.EmailFieldValidator;
 import com.example.authlib.utils.GoogleApiHelper;
 import com.example.authlib.utils.ImeHelper;
@@ -27,7 +28,6 @@ import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
 import com.google.android.gms.auth.api.credentials.HintRequest;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.EmailAuthProvider;
 
 /**
  * Created by prakh on 03-12-2017.
@@ -227,7 +227,7 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
             photoUri = String.valueOf(lastCredentials.getProfilePictureUri());
         }
 
-        listener.newUser(new User.Builder(EmailAuthProvider.PROVIDER_ID, email)
+        listener.newUser(new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
                 .setName(name)
                 .setPhotoUri(photoUri)
                 .build());
