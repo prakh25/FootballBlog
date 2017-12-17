@@ -47,7 +47,7 @@ public class AuthMethodPresenter extends BasePresenter<AuthMethodContract.AuthMe
     private void idpLogin(String email, String username,
                           String nonce, String fistName, String lastName,
                           String displayName, String providerId, String customAvatar) {
-        dataManager.loginUsingIdp(INSECURE, email, username, nonce, fistName, lastName, displayName,
+        dataManager.registerUserUsingIdp(INSECURE, email, username, nonce, fistName, lastName, displayName,
                 providerId, customAvatar, new RemoteCallback<UserObject>() {
                     @Override
                     public void onSuccess(UserObject response) {

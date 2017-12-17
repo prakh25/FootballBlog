@@ -3,7 +3,7 @@ package com.example.corelib.ui.authui;
 import android.util.Log;
 
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.RegisterUserWithEmail;
+import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.network.DataManager;
@@ -87,13 +87,13 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
                                        String password, String fistName, String lastName,
                                        String displayName, String providerId) {
         Log.d("RegisterEmail_3","nonce:" + nonce);
-        dataManager.registerUser(INSECURE, email, username, password, nonce, fistName, lastName,
-                displayName, SECONDS, providerId, new RemoteCallback<RegisterUserWithEmail>() {
+        dataManager.registerUserWithEmail(INSECURE, email, username, password, nonce, fistName, lastName,
+                displayName, SECONDS, providerId, new RemoteCallback<UserObject>() {
                     @Override
-                    public void onSuccess(RegisterUserWithEmail response) {
+                    public void onSuccess(UserObject response) {
                         if (response.getStatus().equalsIgnoreCase("ok")) {
                             sharedPreferencesManager.setCookie(response.getCookie());
-                            mView.userRegistered(response.getStatus());
+                            mView.userRegistered(response.getUser());
                         }
                     }
 

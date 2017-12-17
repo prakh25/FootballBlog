@@ -70,6 +70,10 @@ public class SharedPreferenceManager {
         customPreferences.edit().putString("AUTH_COOKIE", cookie).apply();
     }
 
+    public void deleteCookie() {
+        customPreferences.edit().remove("AUTH_COOKIE").apply();
+    }
+
     public void getCookie() {
         customPreferences.getString("AUTH_COOKIE", null);
     }

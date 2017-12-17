@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.authlib.AuthLibUi;
 import com.example.authlib.AuthLibUi.IdpConfig;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
@@ -26,8 +25,6 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
  * Created by prakh on 02-12-2017.
@@ -55,10 +52,6 @@ public class GoogleProvider implements IdpProvider, GoogleApiClient.OnConnection
                 .enableAutoManage(mActivity, GoogleApiHelper.getSafeAutoManageId(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, getSignInOptions(email))
                 .build();
-    }
-
-    public static AuthCredential createAuthCredential(IdpResponse response) {
-        return GoogleAuthProvider.getCredential(response.getIdpToken(), null);
     }
 
     private GoogleSignInOptions getSignInOptions(@Nullable String email) {

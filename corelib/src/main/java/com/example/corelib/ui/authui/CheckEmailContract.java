@@ -10,6 +10,8 @@ public interface CheckEmailContract {
     }
 
     interface CheckEmailView {
-        void isEmailPresent(boolean emailExists);
+        void emailNotPresent();
+
+        void emailPresentWithProvider(String provider);
     }
 }

@@ -14,8 +14,8 @@ import com.example.authlib.AuthLibUi.IdpConfig;
 import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.User;
-import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.provider.EmailProvider;
+import com.example.authlib.provider.FacebookProvider;
 import com.example.authlib.provider.GoogleProvider;
 import com.example.authlib.provider.IdpProvider;
 import com.example.authlib.provider.Provider;
@@ -62,11 +62,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
         presenter.attachView(this);
         populateIdpList(getFlowParams().providerInfo);
 
-        SupportVectorDrawablesButton newUserButton = findViewById(R.id.new_user_button);
-
-        newUserButton.setOnClickListener(view ->
-                startActivityForResult(RegisterUserActivity.createIntent(this, getFlowParams()),
-                        RC_EMAIL_FLOW));
+        findViewById(R.id.button_skip).setOnClickListener(view -> finish());
     }
 
     @SuppressLint("WrongConstant")
@@ -79,6 +75,9 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
                     break;
                 case AuthLibUi.GOOGLE_PROVIDER:
                     mProviders.add(new GoogleProvider(this, idpConfig));
+                    break;
+                case AuthLibUi.FACEBOOK_PROVIDER:
+                    mProviders.add(new FacebookProvider(idpConfig, R.style.NewUserActivityTheme));
                     break;
                 default:
                     Log.e(TAG, "Encountered unknown provider parcel with type: "
@@ -143,7 +142,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
         String userName = String.format(Locale.US, "%s_%d", firstName, randomNumber);
 
         presenter.getNonce(email, userName, firstName, lastName, name,
-                AuthProviderId.GOOGLE_PROVIDER_ID, photoUri);
+                idpResponse.getProviderType(), photoUri);
     }
 
     @Override
@@ -153,6 +152,7 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
 
     @Override
     protected void onDestroy() {
+        presenter.detachView();
         super.onDestroy();
         if (mProviders != null) {
             for (Provider provider : mProviders) {
@@ -178,14 +178,15 @@ public class AuthMethodPickerActivity extends HelperActivityBase implements IdpP
         String email = info.getEmail();
         String username = info.getUsername();
         String name = info.getDisplayname();
-        String photoUri = null;
+        String photoUri = "";
+        String providerId = info.getWslCurrentProvider();
 
         if (!TextUtils.isEmpty(info.getWslCurrentUserImage())) {
             photoUri = info.getWslCurrentUserImage();
         }
 
         IdpResponse response = new IdpResponse.Builder(
-                new User.Builder(AuthProviderId.GOOGLE_PROVIDER_ID, email)
+                new User.Builder(providerId, email)
                         .setUsername(username)
                         .setName(name)
                         .setPhotoUri(photoUri)

@@ -21,9 +21,6 @@ import java.util.List;
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class FlowParameters implements Parcelable {
     @NonNull
-    public final String appName;
-
-    @NonNull
     public final List<IdpConfig> providerInfo;
 
     @Nullable
@@ -37,13 +34,11 @@ public class FlowParameters implements Parcelable {
     public final boolean enableHints;
 
     public FlowParameters(
-            @NonNull String appName,
             @NonNull List<IdpConfig> providerInfo,
             @Nullable String termsOfServiceUrl,
             @Nullable String privacyPolicyUrl,
             boolean enableHints,
             boolean allowNewEmailAccounts) {
-        this.appName = Precondition.checkNotNull(appName, "appName cannot be null");
         this.providerInfo = Collections.unmodifiableList(
                 Precondition.checkNotNull(providerInfo, "providerInfo cannot be null"));
 
@@ -80,7 +75,6 @@ public class FlowParameters implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(appName);
         dest.writeTypedList(providerInfo);
         dest.writeString(termsOfServiceUrl);
         dest.writeString(privacyPolicyUrl);
@@ -96,7 +90,6 @@ public class FlowParameters implements Parcelable {
     public static final Creator<FlowParameters> CREATOR = new Creator<FlowParameters>() {
         @Override
         public FlowParameters createFromParcel(Parcel in) {
-            String appName = in.readString();
             List<IdpConfig> providerInfo = in.createTypedArrayList(IdpConfig.CREATOR);
             String termsOfServiceUrl = in.readString();
             String privacyPolicyUrl = in.readString();
@@ -104,7 +97,6 @@ public class FlowParameters implements Parcelable {
             boolean allowNewEmailAccounts = in.readInt() != 0;
 
             return new FlowParameters(
-                    appName,
                     providerInfo,
                     termsOfServiceUrl,
                     privacyPolicyUrl,

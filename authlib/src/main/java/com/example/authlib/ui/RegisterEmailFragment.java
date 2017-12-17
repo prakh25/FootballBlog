@@ -14,10 +14,12 @@ import com.example.authlib.IdpResponse;
 import com.example.authlib.R;
 import com.example.authlib.User;
 import com.example.authlib.provider.AuthProviderId;
+import com.example.authlib.ui.fieldvalidators.EmailFieldValidator;
 import com.example.authlib.ui.fieldvalidators.PasswordFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
 import com.example.corelib.SharedPreferenceManager;
+import com.example.corelib.model.auth.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.RegisterEmailContract;
 import com.example.corelib.ui.authui.RegisterEmailPresenter;
@@ -34,13 +36,16 @@ public class RegisterEmailFragment extends FragmentBase implements
 
     private HelperActivityBase activityBase;
 
+    private EditText emailField;
     private EditText usernameField;
     private EditText fullNameField;
+    private EditText passwordField;
+    private TextInputLayout emailFieldLayout;
     private TextInputLayout userNameFieldLayout;
     private TextInputLayout fullNameFieldLayout;
     private TextInputLayout passwordLayout;
-    private EditText passwordField;
 
+    private EmailFieldValidator emailFieldValidator;
     private RequiredFieldValidator usernameFieldValidator;
     private RequiredFieldValidator fullNameFieldValidator;
     private PasswordFieldValidator passwordFieldValidator;
@@ -88,13 +93,17 @@ public class RegisterEmailFragment extends FragmentBase implements
     }
 
     private void init(View view) {
+        emailField = view.findViewById(R.id.email_field);
         usernameField = view.findViewById(R.id.username_field);
         fullNameField = view.findViewById(R.id.full_name_field);
+        passwordField = view.findViewById(R.id.password_field);
+
+        emailFieldLayout = view.findViewById(R.id.email_field_layout);
         userNameFieldLayout = view.findViewById(R.id.username_field_layout);
         fullNameFieldLayout = view.findViewById(R.id.full_name_field_layout);
         passwordLayout = view.findViewById(R.id.password_field_layout);
-        passwordField = view.findViewById(R.id.password_field);
 
+        emailFieldValidator = new EmailFieldValidator(emailFieldLayout);
         passwordFieldValidator = new PasswordFieldValidator(passwordLayout,
                 getResources().getInteger(R.integer.auth_min_password_length));
         usernameFieldValidator = new RequiredFieldValidator(userNameFieldLayout);
@@ -102,9 +111,15 @@ public class RegisterEmailFragment extends FragmentBase implements
 
         ImeHelper.setImeOnDoneListener(passwordField, this);
 
+        emailField.setOnFocusChangeListener(this);
         usernameField.setOnFocusChangeListener(this);
         fullNameField.setOnFocusChangeListener(this);
         passwordField.setOnFocusChangeListener(this);
+
+        String email = user.getEmail();
+        if(!TextUtils.isEmpty(email)) {
+            emailField.setText(email);
+        }
 
         String username = user.getmUsername();
         if (!TextUtils.isEmpty(username)) {
@@ -151,7 +166,9 @@ public class RegisterEmailFragment extends FragmentBase implements
         if (b) return; // Only consider fields losing focus
 
         int id = view.getId();
-        if (id == R.id.username_field) {
+        if(id == R.id.email_field) {
+            emailFieldValidator.validate(emailField.getText());
+        }else if (id == R.id.username_field) {
             usernameFieldValidator.validate(usernameField.getText());
         } else if (id == R.id.full_name_field) {
             fullNameFieldValidator.validate(fullNameField.getText());
@@ -175,15 +192,17 @@ public class RegisterEmailFragment extends FragmentBase implements
     }
 
     private void validateAndRegisterUser() {
+        String email = emailField.getText().toString();
         String username = usernameField.getText().toString();
         String fullName = fullNameField.getText().toString();
         String password = passwordField.getText().toString();
 
+        boolean emailValid = emailFieldValidator.validate(email);
         boolean usernameValid = usernameFieldValidator.validate(username);
         boolean fullNameValid = fullNameFieldValidator.validate(fullName);
         boolean passwordValid = passwordFieldValidator.validate(password);
 
-        if (usernameValid && fullNameValid && passwordValid) {
+        if (emailValid && usernameValid && fullNameValid && passwordValid) {
             presenter.checkUsername(username);
         }
     }
@@ -228,24 +247,27 @@ public class RegisterEmailFragment extends FragmentBase implements
     }
 
     @Override
-    public void userRegistered(String status) {
-        if (status.equalsIgnoreCase("ok")) {
+    public void userRegistered(UserData userData) {
 
-            String email = user.getEmail();
-            String username = usernameField.getText().toString();
-            String fullName = fullNameField.getText().toString();
-            String password = passwordField.getText().toString();
+            String email = userData.getEmail();
+            String username = userData.getUsername();
+            String fullName = userData.getDisplayname();
+            String photoUri = "";
+
+            if(!TextUtils.isEmpty(userData.getAvatar())) {
+                photoUri = userData.getAvatar();
+            }
 
             IdpResponse response = new IdpResponse.Builder(
                     new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
                             .setUsername(username)
                             .setName(fullName)
-                            .setPhotoUri(user.getPhotoUri())
+                            .setPhotoUri(photoUri)
                             .build())
                     .build();
 
-            activityBase.setResultAndFinish(password, response);
-        }
+            activityBase.setResultAndFinish(response);
+
     }
 
     @Override

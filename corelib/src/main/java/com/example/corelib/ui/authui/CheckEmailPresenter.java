@@ -32,7 +32,11 @@ public class CheckEmailPresenter extends
             @Override
             public void onSuccess(EmailExists response) {
                 if(response.getStatus().equalsIgnoreCase("ok")) {
-                    mView.isEmailPresent(response.isEmail_exists());
+                    if(!response.isEmail_exists()) {
+                        mView.emailNotPresent();
+                        return;
+                    }
+                    mView.emailPresentWithProvider(response.getProvider());
                 }
             }
 

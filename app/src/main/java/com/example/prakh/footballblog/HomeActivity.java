@@ -201,7 +201,7 @@ public class HomeActivity extends BaseActivity {
                         new AuthLibUi.IdpConfig.Builder(AuthLibUi.GOOGLE_PROVIDER).build(),
                         new AuthLibUi.IdpConfig.Builder(AuthLibUi.FACEBOOK_PROVIDER).build()))
                 .setAllowNewEmailAccounts(true)
-                .setIsSmartLockEnabled(true)
+                .setIsSmartLockEnabled()
                 .build(), RC_SIGN_IN);
     }
 

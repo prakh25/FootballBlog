@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,9 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
     public static final String TAG = "CheckEmailFragment";
 
     interface CheckEmailListener {
-        void newUser(User user);
+        void onExistingEmailUser(User user);
+        void onExistingIdpUser(User user);
+        void onNewUser(User user);
     }
 
     private static final int RC_HINT = 13;
@@ -210,11 +213,8 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
     }
 
     @Override
-    public void isEmailPresent(boolean emailExists) {
-        if(!emailExists) {
-            createNewUser();
-        }
-        emailLayout.setError(getString(R.string.auth_email_already_exists));
+    public void emailNotPresent() {
+        createNewUser();
     }
 
     private void createNewUser() {
@@ -227,10 +227,21 @@ public class CheckEmailFragment extends FragmentBase implements View.OnClickList
             photoUri = String.valueOf(lastCredentials.getProfilePictureUri());
         }
 
-        listener.newUser(new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
+        listener.onNewUser(new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID, email)
                 .setName(name)
                 .setPhotoUri(photoUri)
                 .build());
+    }
+
+    @Override
+    public void emailPresentWithProvider(String provider) {
+        if(TextUtils.isEmpty(provider) || provider.equalsIgnoreCase("Password")) {
+            listener.onExistingEmailUser(new User.Builder(AuthProviderId.EMAIL_PROVIDER_ID,
+                    emailField.getText().toString()).build());
+        } else if(provider.equalsIgnoreCase("Google")) {
+            listener.onExistingIdpUser(new User.Builder(AuthProviderId.GOOGLE_PROVIDER_ID,
+                    emailField.getText().toString()).build());
+        }
     }
 
     @Override

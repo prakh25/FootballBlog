@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.LayoutRes;
 
-import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.R;
-import com.example.authlib.ui.SignInEmailActivity;
+import com.example.authlib.ui.FlowParameters;
+import com.example.authlib.ui.RegisterUserActivity;
 
 /**
  * Created by prakh on 02-12-2017.
@@ -38,7 +38,7 @@ public class EmailProvider implements Provider {
 
     @Override
     public void startLogin(Activity activity) {
-        activity.startActivityForResult(SignInEmailActivity.createIntent(activity, mFlowParameters),
+        activity.startActivityForResult(RegisterUserActivity.createIntent(activity, mFlowParameters),
                 RC_EMAIL_FLOW);
     }
 

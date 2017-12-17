@@ -1,10 +1,9 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
-import com.example.corelib.model.auth.RegisterUserWithEmail;
+import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
-import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
@@ -31,7 +30,7 @@ public interface MyBlogApi {
                               @Query("fields") String includeFields);
 
     @GET("wp-json/related-posts-by-taxonomy/v1/posts/{post_id}")
-    Call<RelatedPostsList> getRelatedPosts(@Path("post_id") Integer postId );
+    Call<RelatedPostsList> getRelatedPosts(@Path("post_id") Integer postId);
 
     @GET("wp-json/wp/v2/tags")
     Call<List<CategoriesOrTag>> getTagsList(@Query("page") Integer pageNo,
@@ -39,7 +38,7 @@ public interface MyBlogApi {
 
     @GET("wp-json/wp/v2/categories")
     Call<List<CategoriesOrTag>> getCategoriesList(@Query("page") Integer pageNo,
-                                            @Query("fields") String includeFields);
+                                                  @Query("fields") String includeFields);
 
     @GET("wp-json/wp/v2/posts/?_embed")
     Call<List<Post>> getUserSelectedPostList(@Query("page") Integer pageNo,
@@ -50,15 +49,15 @@ public interface MyBlogApi {
 
     @GET("wp-json/wp/v2/posts/?_embed")
     Call<List<Post>> getPostFromSearch(@Query("search") String searchQuery,
-                                     @Query("fields") String includeFields);
+                                       @Query("fields") String includeFields);
 
     @GET("wp-json/wp/v2/categories")
     Call<List<CategoriesOrTag>> getCategoriesFromSearch(@Query("search") String searchQuery,
-                                                  @Query("fields") String includeFields);
+                                                        @Query("fields") String includeFields);
 
     @GET("wp-json/wp/v2/tags")
     Call<List<CategoriesOrTag>> getTagsFromSearch(@Query("search") String searchQuery,
-                                            @Query("fields") String includeFields);
+                                                  @Query("fields") String includeFields);
 
     @GET("?json=user/if_email_exists")
     Call<EmailExists> getIfEmailExists(@Query("insecure") String insecure,
@@ -73,30 +72,34 @@ public interface MyBlogApi {
                                              @Query("method") String method);
 
     @GET("?json=user/register")
-    Call<RegisterUserWithEmail> registerUser(@Query("insecure") String insecure,
-                                             @Query("email") String email,
-                                             @Query("username") String username,
-                                             @Query("nonce") String nonce,
-                                             @Query("user_pass") String password,
-                                             @Query("first_name") String firstName,
-                                             @Query("last_name") String lastName,
-                                             @Query("display_name") String displayName,
-                                             @Query("seconds") Integer seconds,
-                                             @Query("provider") String providerId);
+    Call<UserObject> registerUserWithEmail(@Query("insecure") String insecure,
+                                           @Query("email") String email,
+                                           @Query("username") String username,
+                                           @Query("nonce") String nonce,
+                                           @Query("user_pass") String password,
+                                           @Query("first_name") String firstName,
+                                           @Query("last_name") String lastName,
+                                           @Query("display_name") String displayName,
+                                           @Query("seconds") Integer seconds,
+                                           @Query("provider") String providerId);
 
     @GET("?json=user/generate_auth_cookie")
     Call<UserObject> loginUserWithEmail(@Query("insecure") String insecure,
                                         @Query("email") String email,
                                         @Query("password") String password);
 
+    @GET("?json=user/generate_auth_cookie_idp")
+    Call<UserObject> loginUserUsingIdp(@Query("insecure") String insecure,
+                                       @Query("email") String email);
+
     @GET("?json=user/register_using_idp")
-    Call<UserObject> loginUserWithIdp(@Query("insecure") String insecure,
-                                      @Query("email") String email,
-                                      @Query("username") String username,
-                                      @Query("nonce") String nonce,
-                                      @Query("first_name") String firstName,
-                                      @Query("last_name") String lastName,
-                                      @Query("display_name") String displayName,
-                                      @Query("provider") String providerId,
-                                      @Query("avatar") String avatarUrl);
+    Call<UserObject> registerUserWithIdp(@Query("insecure") String insecure,
+                                         @Query("email") String email,
+                                         @Query("username") String username,
+                                         @Query("nonce") String nonce,
+                                         @Query("first_name") String firstName,
+                                         @Query("last_name") String lastName,
+                                         @Query("display_name") String displayName,
+                                         @Query("provider") String providerId,
+                                         @Query("avatar") String avatarUrl);
 }

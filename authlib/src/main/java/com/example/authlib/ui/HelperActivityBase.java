@@ -10,7 +10,6 @@ import android.support.annotation.RestrictTo;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.authlib.IdpResponse;
-import com.example.authlib.utils.AuthHelper;
 
 import static com.example.authlib.utils.Precondition.checkNotNull;
 
@@ -23,7 +22,6 @@ import static com.example.authlib.utils.Precondition.checkNotNull;
 public class HelperActivityBase extends AppCompatActivity {
 
     private FlowParameters mFlowParameters;
-    private AuthHelper mAuthHelper;
     private ProgressDialogHolder mProgressDialogHolder;
 
     public static Intent createBaseIntent(
@@ -40,7 +38,6 @@ public class HelperActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        mAuthHelper = new AuthHelper(getFlowParams());
         mProgressDialogHolder = new ProgressDialogHolder(this);
     }
 
@@ -56,10 +53,6 @@ public class HelperActivityBase extends AppCompatActivity {
         }
 
         return mFlowParameters;
-    }
-
-    public AuthHelper getAuthHelper() {
-        return mAuthHelper;
     }
 
     public ProgressDialogHolder getDialogHolder() {

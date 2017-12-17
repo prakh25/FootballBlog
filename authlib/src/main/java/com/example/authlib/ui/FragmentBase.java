@@ -26,7 +26,7 @@ public class FragmentBase extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAuthHelper = new AuthHelper(getFlowParams());
+        mAuthHelper = new AuthHelper();
         ContextThemeWrapper context = new ContextThemeWrapper(getContext(),
                 R.style.NewUserActivityTheme);
         mProgressDialogHolder = new ProgressDialogHolder(context);

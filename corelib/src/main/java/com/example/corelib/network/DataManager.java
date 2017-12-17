@@ -1,10 +1,9 @@
 package com.example.corelib.network;
 
 import com.example.corelib.model.Post;
-import com.example.corelib.model.auth.RegisterUserWithEmail;
+import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
-import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
@@ -92,11 +91,11 @@ public class DataManager {
         myBlogApi.getRegisterNonce(controller, method).enqueue(callback);
     }
 
-    public void registerUser(String insecure, String email, String username, String nonce,
-                             String user_pass, String firstName, String lastName,
-                             String displayName, Integer seconds, String providerId,
-                             RemoteCallback<RegisterUserWithEmail> callback) {
-        myBlogApi.registerUser(insecure, email, username, nonce, user_pass, firstName, lastName,
+    public void registerUserWithEmail(String insecure, String email, String username, String nonce,
+                                      String user_pass, String firstName, String lastName,
+                                      String displayName, Integer seconds, String providerId,
+                                      RemoteCallback<UserObject> callback) {
+        myBlogApi.registerUserWithEmail(insecure, email, username, nonce, user_pass, firstName, lastName,
                 displayName, seconds, providerId).enqueue(callback);
     }
 
@@ -105,11 +104,15 @@ public class DataManager {
         myBlogApi.loginUserWithEmail(insecure, email, password).enqueue(callback);
     }
 
-    public void loginUsingIdp(String insecure, String email, String username,
-                              String nonce, String firstName, String lastName,
-                              String displayName, String providerId,
-                              String avatarUrl, RemoteCallback<UserObject> callback) {
-        myBlogApi.loginUserWithIdp(insecure, email, username, nonce, firstName,
+    public void loginUserIdp(String insecure, String email, RemoteCallback<UserObject> callback) {
+        myBlogApi.loginUserUsingIdp(insecure, email).enqueue(callback);
+    }
+
+    public void registerUserUsingIdp(String insecure, String email, String username,
+                                     String nonce, String firstName, String lastName,
+                                     String displayName, String providerId,
+                                     String avatarUrl, RemoteCallback<UserObject> callback) {
+        myBlogApi.registerUserWithIdp(insecure, email, username, nonce, firstName,
                 lastName, displayName, providerId, avatarUrl).enqueue(callback);
     }
 }

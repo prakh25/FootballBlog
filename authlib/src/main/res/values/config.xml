@@ -4,4 +4,8 @@
     <string name="default_web_client_id" translatable="false">
         427371146557-4qsljtq1r0sbbiu8vm5ubs4egu26otah.apps.googleusercontent.com</string>
 
+    <string name="facebook_app_id" translatable="false">866744703489628</string>
+
+    <string name="fb_login_protocol_scheme" translatable="false">fb866744703489628</string>
+
 </resources>

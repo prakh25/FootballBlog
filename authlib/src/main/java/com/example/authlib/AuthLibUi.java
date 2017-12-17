@@ -13,11 +13,12 @@ import android.support.v4.app.FragmentActivity;
 import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.ui.FlowParameters;
 import com.example.authlib.utils.GoogleSignInHelper;
+import com.example.corelib.MyBlogApplication;
+import com.example.corelib.SharedPreferenceManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,8 +39,7 @@ public class AuthLibUi {
     @StringDef({
             AuthProviderId.EMAIL_PROVIDER_ID, EMAIL_PROVIDER,
             AuthProviderId.GOOGLE_PROVIDER_ID, GOOGLE_PROVIDER,
-            AuthProviderId.FACEBOOK_PROVIDER_ID, FACEBOOK_PROVIDER,
-            AuthProviderId.SKIP_PROVIDER_ID, SKIP_PROVIDER
+            AuthProviderId.FACEBOOK_PROVIDER_ID, FACEBOOK_PROVIDER
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedProviders {}
@@ -47,49 +47,45 @@ public class AuthLibUi {
     public static final String EMAIL_PROVIDER = AuthProviderId.EMAIL_PROVIDER_ID;
     public static final String GOOGLE_PROVIDER = AuthProviderId.GOOGLE_PROVIDER_ID;
     public static final String FACEBOOK_PROVIDER = AuthProviderId.FACEBOOK_PROVIDER_ID;
-    public static final String SKIP_PROVIDER = AuthProviderId.SKIP_PROVIDER_ID;
 
     public static final Set<String> SUPPORTED_PROVIDERS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     EMAIL_PROVIDER,
                     GOOGLE_PROVIDER,
-                    FACEBOOK_PROVIDER,
-                    SKIP_PROVIDER
+                    FACEBOOK_PROVIDER
             )));
 
-    public static final IdentityHashMap<FirebaseApp, AuthLibUi> INSTANCES = new IdentityHashMap<>();
+    private static final IdentityHashMap<MyBlogApplication, AuthLibUi> INSTANCES =
+            new IdentityHashMap<>();
 
-    private final FirebaseApp firebaseApp;
-    private final FirebaseAuth firebaseAuth;
+    private final MyBlogApplication mApp;
 
-    private AuthLibUi(FirebaseApp app) {
-        firebaseApp = app;
-        firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
-        firebaseAuth.useAppLanguage();
+    private AuthLibUi(MyBlogApplication application) {
+        mApp = application;
     }
 
     public static AuthLibUi getInstance() {
-        return getInstance(FirebaseApp.getInstance());
+        return getInstance(MyBlogApplication.getApp());
     }
 
-    public static AuthLibUi getInstance(FirebaseApp app) {
-        AuthLibUi authLibUi;
+    public static AuthLibUi getInstance(MyBlogApplication app) {
+        AuthLibUi authUi;
         synchronized (INSTANCES) {
-            authLibUi = INSTANCES.get(app);
-            if (authLibUi == null) {
-                authLibUi = new AuthLibUi(app);
-                INSTANCES.put(app, authLibUi);
+            authUi = INSTANCES.get(app);
+            if (authUi == null) {
+                authUi = new AuthLibUi(app);
+                INSTANCES.put(app, authUi);
             }
         }
-        return authLibUi;
+        return authUi;
     }
 
     public Task<Void> signOut(@NonNull FragmentActivity activity) {
         // Get Credentials Helper
         GoogleSignInHelper signInHelper = GoogleSignInHelper.getInstance(activity);
+        SharedPreferenceManager preferenceManager = SharedPreferenceManager.getInstance();
 
-        // Firebase Sign out
-        firebaseAuth.signOut();
+        preferenceManager.deleteCookie();
 
         // Disable credentials auto sign-in
         Task<Status> disableCredentialsTask = signInHelper.disableAutoSignIn();
@@ -98,11 +94,11 @@ public class AuthLibUi {
         Task<Status> signOutTask = signInHelper.signOut();
 
         // Facebook sign out
-//        try {
-//            LoginManager.getInstance().logOut();
-//        } catch (NoClassDefFoundError e) {
-//            // do nothing
-//        }
+        try {
+            LoginManager.getInstance().logOut();
+        } catch (NoClassDefFoundError e) {
+            // do nothing
+        }
 
         // Wait for all tasks to complete
         return Tasks.whenAll(disableCredentialsTask, signOutTask);
@@ -246,7 +242,6 @@ public class AuthLibUi {
         List<IdpConfig> mProviders = new ArrayList<>();
         String mTosUrl;
         String mPrivacyPolicyUrl;
-        boolean mEnableCredentials = true;
         boolean mEnableHints = true;
 
         private AuthIntentBuilder() {}
@@ -291,16 +286,16 @@ public class AuthLibUi {
                     mProviders.add(config);
                 }
 
-//                if (config.getProviderId().equals(FACEBOOK_PROVIDER)) {
-//                    try {
-//                        Class c = com.facebook.FacebookSdk.class;
-//                    } catch (NoClassDefFoundError e) {
-//                        throw new RuntimeException(
-//                                "Facebook provider cannot be configured " +
-//                                        "without dependency. Did you forget to add " +
-//                                        "'com.facebook.android:facebook-android-sdk:VERSION' dependency?");
-//                    }
-//                }
+                if (config.getProviderId().equals(FACEBOOK_PROVIDER)) {
+                    try {
+                        Class c = com.facebook.FacebookSdk.class;
+                    } catch (NoClassDefFoundError e) {
+                        throw new RuntimeException(
+                                "Facebook provider cannot be configured " +
+                                        "without dependency. Did you forget to add " +
+                                        "'com.facebook.android:facebook-android-sdk:VERSION' dependency?");
+                    }
+                }
 
 //                if (config.getProviderId().equals(TWITTER_PROVIDER)) {
 //                    try {
@@ -351,10 +346,9 @@ public class AuthLibUi {
          * <p>
          * <p>Both selectors are enabled by default.
          *
-         * @param enableHints       enable hint selector in respective signup screens
          */
-        public T setIsSmartLockEnabled(boolean enableHints) {
-            mEnableHints = enableHints;
+        public T setIsSmartLockEnabled() {
+            mEnableHints = true;
             return (T) this;
         }
 
@@ -364,7 +358,7 @@ public class AuthLibUi {
                 mProviders.add(new IdpConfig.Builder(EMAIL_PROVIDER).build());
             }
 
-            return KickoffActivity.createIntent(firebaseApp.getApplicationContext(),
+            return KickoffActivity.createIntent(mApp.getApplicationContext(),
                     getFlowParams());
         }
 
@@ -394,7 +388,6 @@ public class AuthLibUi {
         @Override
         protected FlowParameters getFlowParams() {
             return new FlowParameters(
-                    firebaseApp.getName(),
                     mProviders,
                     mTosUrl,
                     mPrivacyPolicyUrl,

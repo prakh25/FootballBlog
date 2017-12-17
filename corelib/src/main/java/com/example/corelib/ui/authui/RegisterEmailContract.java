@@ -1,5 +1,7 @@
 package com.example.corelib.ui.authui;
 
+import com.example.corelib.model.auth.UserData;
+
 /**
  * Created by prakh on 03-12-2017.
  */
@@ -22,6 +24,6 @@ public interface RegisterEmailContract {
 
         void nonceAcquired(String nonce);
 
-        void userRegistered(String status);
+        void userRegistered(UserData userData);
     }
 }

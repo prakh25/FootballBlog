@@ -12,6 +12,8 @@ public class EmailExists {
     private String status;
     @Expose
     private boolean email_exists;
+    @Expose
+    private String provider;
 
     public String getStatus() {
         return status;
@@ -27,5 +29,13 @@ public class EmailExists {
 
     public void setEmail_exists(boolean email_exists) {
         this.email_exists = email_exists;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 }
