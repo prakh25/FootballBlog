@@ -46,7 +46,7 @@ public class NetworkService {
 
     private static OkHttpClient provideOkhttpClient() {
 
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient().newBuilder();
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.connectTimeout(HTTP_CONNECT_TIMEOUT, TimeUnit.SECONDS);
         httpClientBuilder.readTimeout(HTTP_READ_TIMEOUT, TimeUnit.SECONDS);
         httpClientBuilder.addInterceptor(makeLoggingInterceptor());

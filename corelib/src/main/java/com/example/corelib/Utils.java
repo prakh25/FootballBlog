@@ -1,5 +1,7 @@
 package com.example.corelib;
 
+import android.os.Build;
+
 import java.util.List;
 
 /**
@@ -23,5 +25,19 @@ public class Utils {
         }
 
         return commaSepValueBuilder.toString();
+    }
+
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        } else {
+            return manufacturer + " " + model;
+        }
+    }
+
+    public static String getAndroidVersion() {
+        return Build.VERSION.RELEASE + "";
     }
 }

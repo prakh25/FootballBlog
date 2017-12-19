@@ -13,8 +13,6 @@ import com.example.corelib.ui.BasePresenter;
 public class WelcomeBackIdpPresenter extends BasePresenter<WelcomeBackIdpContract.WelcomeBackIdpView>
         implements WelcomeBackIdpContract.ViewActions {
 
-    private static final String INSECURE = "cool";
-
     private static final Integer SECONDS = 8640000;
 
     private final DataManager dataManager;
@@ -32,7 +30,7 @@ public class WelcomeBackIdpPresenter extends BasePresenter<WelcomeBackIdpContrac
     }
 
     private void idpLogin(String email) {
-        dataManager.loginUserIdp(INSECURE, email, new RemoteCallback<UserObject>() {
+        dataManager.loginUserIdp(email, new RemoteCallback<UserObject>() {
                     @Override
                     public void onSuccess(UserObject response) {
                         if(response.getStatus().equalsIgnoreCase("ok")) {

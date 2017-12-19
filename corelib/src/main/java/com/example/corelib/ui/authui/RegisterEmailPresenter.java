@@ -17,7 +17,6 @@ import com.example.corelib.ui.BasePresenter;
 public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.RegisterEmailView>
         implements RegisterEmailContract.ViewActions {
 
-    private static final String INSECURE = "cool";
     private static final String CONTROLLER = "user";
     private static final String METHOD = "register";
     private static final Integer SECONDS = 8640000;
@@ -51,7 +50,7 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
     }
 
     private void checkIfUsernameExists(String username) {
-        dataManager.ifUsernameExists(INSECURE, username, new RemoteCallback<UsernameExists>() {
+        dataManager.ifUsernameExists(username, new RemoteCallback<UsernameExists>() {
             @Override
             public void onSuccess(UsernameExists response) {
                 if (response.getStatus().equalsIgnoreCase("ok")) {
@@ -87,7 +86,7 @@ public class RegisterEmailPresenter extends BasePresenter<RegisterEmailContract.
                                        String password, String fistName, String lastName,
                                        String displayName, String providerId) {
         Log.d("RegisterEmail_3","nonce:" + nonce);
-        dataManager.registerUserWithEmail(INSECURE, email, username, password, nonce, fistName, lastName,
+        dataManager.registerUserWithEmail(email, username, password, nonce, fistName, lastName,
                 displayName, SECONDS, providerId, new RemoteCallback<UserObject>() {
                     @Override
                     public void onSuccess(UserObject response) {

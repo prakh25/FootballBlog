@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.corelib.model.Post;
+import com.example.corelib.model.post.Post;
 import com.example.prakh.footballblog.GlideApp;
 import com.example.prakh.footballblog.R;
 import com.example.prakh.footballblog.utils.Utils;

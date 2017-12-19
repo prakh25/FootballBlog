@@ -16,7 +16,6 @@ import com.example.corelib.ui.BasePresenter;
 public class AuthMethodPresenter extends BasePresenter<AuthMethodContract.AuthMethodView>
         implements AuthMethodContract.ViewActions {
 
-    private static final String INSECURE = "cool";
     private static final String CONTROLLER = "user";
     private static final String METHOD = "register";
 
@@ -47,7 +46,7 @@ public class AuthMethodPresenter extends BasePresenter<AuthMethodContract.AuthMe
     private void idpLogin(String email, String username,
                           String nonce, String fistName, String lastName,
                           String displayName, String providerId, String customAvatar) {
-        dataManager.registerUserUsingIdp(INSECURE, email, username, nonce, fistName, lastName, displayName,
+        dataManager.registerUserUsingIdp(email, username, nonce, fistName, lastName, displayName,
                 providerId, customAvatar, new RemoteCallback<UserObject>() {
                     @Override
                     public void onSuccess(UserObject response) {

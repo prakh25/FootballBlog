@@ -2,7 +2,7 @@ package com.example.corelib.ui;
 
 import android.support.annotation.NonNull;
 
-import com.example.corelib.model.Post;
+import com.example.corelib.model.post.Post;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;

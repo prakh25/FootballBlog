@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.corelib.model.Terms;
+import com.example.corelib.model.post.Terms;
 import com.example.corelib.model.related_post.RelatedPost;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.DetailContract;

@@ -33,4 +33,12 @@
         <item name="android:imeOptions">actionSearch</item>
     </style>
 
+    <style name="SplashActivityTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/splash_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/splash_colorPrimaryDark</item>
+        <item name="colorAccent">@color/splash_colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/splash_colorPrimaryDark</item>
+    </style>
+
 </resources>

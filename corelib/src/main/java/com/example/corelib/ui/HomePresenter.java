@@ -1,10 +1,14 @@
 package com.example.corelib.ui;
 
+import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.text.TextUtils;
 
+import com.example.corelib.MyBlogApplication;
 import com.example.corelib.Utils;
-import com.example.corelib.model.Post;
+import com.example.corelib.model.post.Post;
+import com.example.corelib.model.splash.notification.CallBackDevice;
+import com.example.corelib.model.splash.notification.DeviceInfo;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;
 import com.example.corelib.realm.RealmManager;
@@ -12,6 +16,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by prakh on 16-11-2017.
@@ -36,9 +41,6 @@ public class HomePresenter extends BasePresenter<HomeContract.HomeScreenView>
 
     @Override
     public void onIntializedRequest() {
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Token",""+token);
 
         if (!realmManager.hasCategory()) {
             getAllPosts(INCLUDE_FIELDS, INITIAL_PAGE);

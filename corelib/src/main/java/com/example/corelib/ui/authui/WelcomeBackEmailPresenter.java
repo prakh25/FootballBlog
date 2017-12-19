@@ -13,8 +13,6 @@ import com.example.corelib.ui.BasePresenter;
 public class WelcomeBackEmailPresenter extends BasePresenter<WelcomeBackEmailContract.SignInEmailView>
         implements WelcomeBackEmailContract.ViewActions {
 
-    private static final String INSECURE = "cool";
-
     private static final Integer SECONDS = 8640000;
 
     private final DataManager dataManager;
@@ -33,7 +31,7 @@ public class WelcomeBackEmailPresenter extends BasePresenter<WelcomeBackEmailCon
     }
 
     private void generateAuthCookie(String email, String password) {
-        dataManager.loginUser(INSECURE, email, password, new RemoteCallback<UserObject>() {
+        dataManager.loginUser(email, password, new RemoteCallback<UserObject>() {
             @Override
             public void onSuccess(UserObject response) {
                 if(response.getStatus().equalsIgnoreCase("ok")) {

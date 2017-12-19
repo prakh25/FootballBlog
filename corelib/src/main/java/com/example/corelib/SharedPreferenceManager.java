@@ -58,12 +58,12 @@ public class SharedPreferenceManager {
         return customPreferences.getString("SEARCH_QUERY", null);
     }
 
-    public void setFirstLaunch() {
-        customPreferences.edit().putBoolean("FIRST_LAUNCH", true).apply();
+    public void setFirstLaunch(boolean launch) {
+        customPreferences.edit().putBoolean("FIRST_LAUNCH", launch).apply();
     }
 
-    public boolean isSecondLaunch() {
-        return customPreferences.getBoolean("FIRST_LAUNCH", false);
+    public boolean isFirstLaunch() {
+        return customPreferences.getBoolean("FIRST_LAUNCH", true);
     }
 
     public void setCookie(String cookie) {
@@ -74,7 +74,7 @@ public class SharedPreferenceManager {
         customPreferences.edit().remove("AUTH_COOKIE").apply();
     }
 
-    public void getCookie() {
-        customPreferences.getString("AUTH_COOKIE", null);
+    public String getCookie() {
+        return customPreferences.getString("AUTH_COOKIE", "");
     }
 }

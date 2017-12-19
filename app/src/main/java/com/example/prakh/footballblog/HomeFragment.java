@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.corelib.model.Post;
+import com.example.corelib.model.post.Post;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.realm.RealmManager;
 import com.example.corelib.ui.HomeContract;

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.corelib.model.Terms;
+import com.example.corelib.model.post.Terms;
 import com.example.prakh.footballblog.R;
 
 import java.util.ArrayList;

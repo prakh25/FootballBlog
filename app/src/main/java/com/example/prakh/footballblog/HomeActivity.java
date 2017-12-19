@@ -63,7 +63,7 @@ public class HomeActivity extends BaseActivity {
 
         sharedPreferenceManager = SharedPreferenceManager.getInstance();
 
-        checkIsFirstLaunch();
+//        checkIsFirstLaunch();
 
         initToolbar();
         initDrawerMenu();
@@ -194,7 +194,7 @@ public class HomeActivity extends BaseActivity {
 //            return;
 //        }
 
-        sharedPreferenceManager.setFirstLaunch();
+        sharedPreferenceManager.setFirstLaunch(false);
         startActivityForResult(AuthLibUi.getInstance().createSignInIntentBuilder()
                 .setAvailableProviders(Arrays.asList(
                         new AuthLibUi.IdpConfig.Builder(AuthLibUi.EMAIL_PROVIDER).build(),
@@ -205,13 +205,13 @@ public class HomeActivity extends BaseActivity {
                 .build(), RC_SIGN_IN);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN) {
-            handleSignInResponse(resultCode, data);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == RC_SIGN_IN) {
+//            handleSignInResponse(resultCode, data);
+//        }
+//    }
 
     private void handleSignInResponse(int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);

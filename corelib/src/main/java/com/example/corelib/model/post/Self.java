@@ -1,9 +1,9 @@
 
-package com.example.corelib.model;
+package com.example.corelib.model.post;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WpPostType {
+public class Self {
 
     @SerializedName("href")
     private String href;

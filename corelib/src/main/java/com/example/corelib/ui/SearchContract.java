@@ -1,6 +1,6 @@
 package com.example.corelib.ui;
 
-import com.example.corelib.model.Post;
+import com.example.corelib.model.post.Post;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
 import java.util.List;

@@ -1,17 +1,23 @@
 package com.example.corelib.network;
 
-import com.example.corelib.model.Post;
 import com.example.corelib.model.auth.UserObject;
 import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
+import com.example.corelib.model.post.Post;
 import com.example.corelib.model.related_post.RelatedPostsList;
+import com.example.corelib.model.splash.ValidateCookie;
+import com.example.corelib.model.splash.notification.CallBackDevice;
+import com.example.corelib.model.splash.notification.DeviceInfo;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -102,4 +108,16 @@ public interface MyBlogApi {
                                          @Query("display_name") String displayName,
                                          @Query("provider") String providerId,
                                          @Query("avatar") String avatarUrl);
+
+    @GET("?json=user/validate_auth_cookie")
+    Call<ValidateCookie> isCookieValid(@Query("insecure") String insecure,
+                                       @Query("cookie") String cookie);
+
+    @GET("?json=user/get_current_user_info")
+    Call<UserObject> getCurrentUserData(@Query("insecure") String insecure,
+                                        @Query("cookie") String cookie);
+
+    @Headers({"Cache-Control: max-age=0", "User-Agent: Wordpress"})
+    @POST("?api-fcm=register")
+    Call<CallBackDevice> registerForFcm(@Body DeviceInfo deviceInfo);
 }

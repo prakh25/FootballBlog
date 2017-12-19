@@ -20,4 +20,9 @@
 
     <color name="newUserActivityPrimaryColorDark">#2ECBFF</color>
     <color name="textInputEditText">#000</color>
+
+
+    <color name="splash_colorPrimary">#448aff</color>
+    <color name="splash_colorPrimaryDark">#005ecb</color>
+    <color name="splash_colorAccent">#00e676</color>
 </resources>

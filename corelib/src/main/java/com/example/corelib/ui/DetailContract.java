@@ -1,6 +1,6 @@
 package com.example.corelib.ui;
 
-import com.example.corelib.model.Terms;
+import com.example.corelib.model.post.Terms;
 import com.example.corelib.model.related_post.RelatedPost;
 
 import java.util.List;

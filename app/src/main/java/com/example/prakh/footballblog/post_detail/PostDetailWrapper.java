@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.corelib.model.Terms;
+import com.example.corelib.model.post.Terms;
 import com.example.prakh.footballblog.GlideApp;
 import com.example.prakh.footballblog.R;
 import com.example.prakh.footballblog.utils.Utils;

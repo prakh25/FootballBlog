@@ -13,8 +13,6 @@ public class CheckEmailPresenter extends
         BasePresenter<CheckEmailContract.CheckEmailView>
         implements CheckEmailContract.viewActions {
 
-    private static final String INSECURE = "cool";
-
     private final DataManager dataManager;
 
     public CheckEmailPresenter(DataManager dataManager) {
@@ -28,7 +26,7 @@ public class CheckEmailPresenter extends
 
     private void checkIfEmailExists(String email) {
 
-        dataManager.ifEmailExists(INSECURE, email, new RemoteCallback<EmailExists>() {
+        dataManager.ifEmailExists(email, new RemoteCallback<EmailExists>() {
             @Override
             public void onSuccess(EmailExists response) {
                 if(response.getStatus().equalsIgnoreCase("ok")) {

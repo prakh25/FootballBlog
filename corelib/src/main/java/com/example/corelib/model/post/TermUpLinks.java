@@ -1,14 +1,12 @@
 
-package com.example.corelib.model;
+package com.example.corelib.model.post;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Up {
+public class TermUpLinks {
 
     @SerializedName("embeddable")
     private Boolean embeddable;
-    @SerializedName("post_type")
-    private String postType;
     @SerializedName("href")
     private String href;
 
@@ -18,14 +16,6 @@ public class Up {
 
     public void setEmbeddable(Boolean embeddable) {
         this.embeddable = embeddable;
-    }
-
-    public String getPostType() {
-        return postType;
-    }
-
-    public void setPostType(String postType) {
-        this.postType = postType;
     }
 
     public String getHref() {
