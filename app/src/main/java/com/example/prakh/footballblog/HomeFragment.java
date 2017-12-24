@@ -23,7 +23,6 @@ import com.example.corelib.realm.RealmManager;
 import com.example.corelib.ui.HomeContract;
 import com.example.corelib.ui.HomePresenter;
 import com.example.prakh.footballblog.post_detail.DetailActivity;
-import com.example.prakh.footballblog.utils.EndlessRecyclerViewOnScrollListener;
 
 import java.util.List;
 
@@ -93,8 +92,6 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
 
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
-
-        recyclerView.addOnScrollListener(setupScrollListener(recyclerView.getLayoutManager()));
     }
 
     private RecyclerView.LayoutManager setUpLayoutManager() {
@@ -102,19 +99,6 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
         layoutManager = new LinearLayoutManager(activity,
                 LinearLayoutManager.HORIZONTAL, false);
         return layoutManager;
-    }
-
-    private EndlessRecyclerViewOnScrollListener setupScrollListener(RecyclerView.LayoutManager layoutManager) {
-        return new EndlessRecyclerViewOnScrollListener((LinearLayoutManager) layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                view.post(() -> {
-                    if (adapter.addLoadingView()) {
-                        homePresenter.onListEndReached(page);
-                    }
-                });
-            }
-        };
     }
 
     @Override

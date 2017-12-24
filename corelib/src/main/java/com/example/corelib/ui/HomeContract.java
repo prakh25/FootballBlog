@@ -13,9 +13,6 @@ public interface HomeContract {
     interface ViewActions {
 
         void onIntializedRequest();
-
-        void onListEndReached(Integer pageNo);
-
     }
 
     interface HomeScreenView extends BaseView {
