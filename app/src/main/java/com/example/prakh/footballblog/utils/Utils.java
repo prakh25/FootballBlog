@@ -47,7 +47,7 @@ public class Utils {
 
     public static String getFormatedDateSimple(String date_str) {
         if (date_str != null && !date_str.trim().equals("")) {
-            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.US);
+            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
             SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
             try {
                 return newFormat.format(oldFormat.parse(date_str));

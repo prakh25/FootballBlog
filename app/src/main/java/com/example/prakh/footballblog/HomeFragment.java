@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.corelib.model.post.Post;
+import com.example.corelib.model.post_new.Post;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.realm.RealmManager;
 import com.example.corelib.ui.HomeContract;
@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
         homePresenter.attachView(this);
         adapter.setListener(this);
         init(view);
-        homePresenter.onIntializedRequest();
+        homePresenter.onRecentPostsRequested();
 
         return view;
     }
@@ -111,7 +111,6 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
     @Override
     public void hideProgress() {
         swipeRefreshLayout.setRefreshing(false);
-        adapter.removeLoadingView();
     }
 
     @Override

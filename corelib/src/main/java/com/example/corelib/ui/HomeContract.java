@@ -1,6 +1,6 @@
 package com.example.corelib.ui;
 
-import com.example.corelib.model.post.Post;
+import com.example.corelib.model.post_new.Post;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface HomeContract {
 
     interface ViewActions {
 
-        void onIntializedRequest();
+        void onRecentPostsRequested();
     }
 
     interface HomeScreenView extends BaseView {

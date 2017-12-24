@@ -34,6 +34,9 @@ public class Author implements Parcelable
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("avatar")
+    @Expose
+    private String avatarUrl;
     public final static Parcelable.Creator<Author> CREATOR = new Creator<Author>() {
 
 
@@ -60,6 +63,7 @@ public class Author implements Parcelable
         this.nickname = ((String) in.readValue((String.class.getClassLoader())));
         this.url = ((String) in.readValue((String.class.getClassLoader())));
         this.description = ((String) in.readValue((String.class.getClassLoader())));
+        this.avatarUrl = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public Author() {
@@ -129,6 +133,14 @@ public class Author implements Parcelable
         this.description = description;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(slug);
@@ -138,10 +150,10 @@ public class Author implements Parcelable
         dest.writeValue(nickname);
         dest.writeValue(url);
         dest.writeValue(description);
+        dest.writeValue(avatarUrl);
     }
 
     public int describeContents() {
         return  0;
     }
-
 }

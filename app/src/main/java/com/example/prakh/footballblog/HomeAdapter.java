@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.corelib.model.post.Post;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.corelib.model.post_new.Post;
 import com.example.prakh.footballblog.utils.Utils;
 
 import java.lang.annotation.Retention;
@@ -92,22 +93,27 @@ public class HomeAdapter extends
 
     private void onBindGenericItemViewHolder(final PostViewHolder holder, int position) {
 
-        String featureImageUrl = postList.get(holder.getAdapterPosition()).getEmbedded()
-                .getFeaturedMedia().getFirst().getSourceUrl()
-                .replace("localhost", "192.168.0.23");
+        String featureImageUrl = "";
 
-        String postTitle = postList.get(holder.getAdapterPosition()).getTitle().getRendered();
-        String postContent = postList.get(holder.getAdapterPosition()).getContent().getRendered();
-        String postCategory = postList.get(holder.getAdapterPosition()).getEmbedded().getWpTerm()
-                .get(0).get(0).getName();
-        String authorName = postList.get(holder.getAdapterPosition()).getEmbedded().getAuthor().get(0).getName();
-        String authorAvatarUrl = postList.get(holder.getAdapterPosition()).getEmbedded().getAuthor()
-                .get(0).getAvatarUrls().get96();
-        String publishDate = postList.get(holder.getAdapterPosition()).getDateGmt();
+        if(postList.get(position).getThumbnailImages() != null) {
+            featureImageUrl = postList.get(position).getThumbnailImages().getFull()
+                    .getUrl().replace("localhost","192.168.0.23");
+        }
+
+        String postTitle = postList.get(position).getTitle();
+        String postContent = postList.get(position).getContent();
+        String postCategory = postList.get(position).getCategories().get(0).getTitle();
+
+        String authorName = postList.get(position).getAuthor().getName();
+
+        String authorAvatarUrl = postList.get(position).getAuthor().getAvatarUrl();
+        String publishDate = postList.get(position).getDate();
 
         GlideApp.with(holder.itemView.getContext())
                 .load(featureImageUrl)
                 .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .thumbnail(0.8f)
                 .into(holder.postFeatureImage);
 
         holder.postTitle.setText(Utils.fromHtml(postTitle));
@@ -122,7 +128,9 @@ public class HomeAdapter extends
 
         GlideApp.with(holder.itemView.getContext())
                 .load(authorAvatarUrl)
+                .placeholder(R.drawable.profile_picture_placeholder)
                 .circleCrop()
+                .thumbnail(0.5f)
                 .into(holder.postAuthorAvatar);
 
         holder.authorName.setText(authorName);
@@ -160,25 +168,6 @@ public class HomeAdapter extends
     public void removeAll() {
         postList.clear();
         notifyDataSetChanged();
-    }
-
-    public boolean addLoadingView() {
-        if (getItemViewType(postList.size() - 1) != VIEW_TYPE_LOADING) {
-            add(null);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean removeLoadingView() {
-        if (postList.size() > 1) {
-            int loadingViewPosition = postList.size() - 1;
-            if (getItemViewType(loadingViewPosition) == VIEW_TYPE_LOADING) {
-                remove(loadingViewPosition);
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean isEmpty() {
