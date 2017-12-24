@@ -124,6 +124,11 @@ public class HomeAdapter extends
                 holder.itemView.getContext().getResources()
                         .getDrawable(Utils.selectCategoryBackground(postCategory)));
 
+        holder.postCategory.setCompoundDrawablesWithIntrinsicBounds(
+                Utils.selectCategoryLogo(postCategory),
+                0, 0 ,0);
+        holder.postCategory.setCompoundDrawablePadding(8);
+
         holder.postCategory.setText(postCategory);
 
         GlideApp.with(holder.itemView.getContext())
@@ -135,7 +140,7 @@ public class HomeAdapter extends
 
         holder.authorName.setText(authorName);
 
-        holder.postDate.setText(Utils.getFormatedDateSimple(publishDate));
+        holder.postDate.setText(Utils.getFormattedDateSimple(publishDate));
     }
 
     public void add(Post item) {

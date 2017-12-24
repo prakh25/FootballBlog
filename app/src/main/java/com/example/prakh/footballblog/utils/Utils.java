@@ -45,7 +45,25 @@ public class Utils {
         return R.drawable.category_background;
     }
 
-    public static String getFormatedDateSimple(String date_str) {
+    public static int selectCategoryLogo(String category) {
+        if (category != null && !category.isEmpty()) {
+            switch (category) {
+                case "La Liga":
+                    return R.drawable.logo_la_liga;
+                case "Premier League":
+                    return R.drawable.logo_premier_league_4;
+                case "Bundesliga":
+                    return R.drawable.logo_bundesliga_2;
+                case "International":
+                    return R.drawable.logo_international;
+                default:
+                    return 0;
+            }
+        }
+        return 0;
+    }
+
+    public static String getFormattedDateSimple(String date_str) {
         if (date_str != null && !date_str.trim().equals("")) {
             SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
             SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);

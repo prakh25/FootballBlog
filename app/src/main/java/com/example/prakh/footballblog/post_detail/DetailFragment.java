@@ -173,7 +173,7 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
                 .into(authorAvatar);
 
         authorName.setText(name);
-        postDate.setText(Utils.getFormatedDateSimple(date));
+        postDate.setText(Utils.getFormattedDateSimple(date));
     }
 
     @Override

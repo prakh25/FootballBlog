@@ -40,5 +40,4 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/splash_colorPrimaryDark</item>
     </style>
-
 </resources>
