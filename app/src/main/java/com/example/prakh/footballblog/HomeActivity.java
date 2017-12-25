@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
-import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -19,23 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.authlib.AuthLibUi;
-import com.example.authlib.IdpResponse;
-import com.example.corelib.SharedPreferenceManager;
 import com.example.prakh.footballblog.interests.InterestsFragment;
 import com.example.prakh.footballblog.search.SearchActivity;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseActivity {
-
-    private static final Integer ANIM_DURATION = 700;
-    private static final Integer RC_SIGN_IN = 100;
 
     @BindView(R.id.homeToolbar)
     Toolbar toolbar;
@@ -50,8 +39,6 @@ public class HomeActivity extends BaseActivity {
     private TextView userName;
     private TextView userEmail;
 
-    private SharedPreferenceManager sharedPreferenceManager;
-
     public static boolean active = false;
 
     public static Intent createNewIntent(Context context) {
@@ -63,10 +50,6 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-
-        sharedPreferenceManager = SharedPreferenceManager.getInstance();
-
-//        checkIsFirstLaunch();
 
         initToolbar();
         initDrawerMenu();
@@ -212,49 +195,5 @@ public class HomeActivity extends BaseActivity {
 
         startActivity(SearchActivity.newStartIntent(this, cx, cy),
                 optionsCompat.toBundle());
-    }
-
-    private void checkIsFirstLaunch() {
-//        if (sharedPreferenceManager.isSecondLaunch()) {
-//            return;
-//        }
-
-        sharedPreferenceManager.setFirstLaunch(false);
-        startActivityForResult(AuthLibUi.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(Arrays.asList(
-                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.EMAIL_PROVIDER).build(),
-                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.GOOGLE_PROVIDER).build(),
-                        new AuthLibUi.IdpConfig.Builder(AuthLibUi.FACEBOOK_PROVIDER).build()))
-                .setAllowNewEmailAccounts(true)
-                .setIsSmartLockEnabled()
-                .build(), RC_SIGN_IN);
-    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == RC_SIGN_IN) {
-//            handleSignInResponse(resultCode, data);
-//        }
-//    }
-
-    private void handleSignInResponse(int resultCode, Intent data) {
-        IdpResponse response = IdpResponse.fromResultIntent(data);
-        if (resultCode == RESULT_OK) {
-            Toast.makeText(this, "Signed in as" + response.getEmail(), Toast.LENGTH_SHORT)
-                    .show();
-        } else {
-            // Sign in failed
-            if (response == null) {
-                // User pressed back button
-                showSnackbar(R.string.cancelled);
-                return;
-            }
-        }
-    }
-
-    @MainThread
-    private void showSnackbar(@StringRes int errorMessageRes) {
-        Toast.makeText(this, errorMessageRes, Toast.LENGTH_LONG).show();
     }
 }
