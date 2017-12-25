@@ -1,11 +1,13 @@
 package com.example.prakh.footballblog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -181,12 +184,34 @@ public class HomeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                startActivity(SearchActivity.newStartIntent(this));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                presentActivity(R.id.homeToolbar);
+//                startActivity(SearchActivity.newStartIntent(this));
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @SuppressLint("PrivateResource")
+    public void presentActivity(int viewID) {
+        View view = findViewById(viewID);
+
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                view, "transition");
+
+        int width = view.getWidth();
+
+
+        width -= (getResources().getDimensionPixelSize(R.dimen.abc_action_button_min_width_material)) - (getResources().getDimensionPixelSize(R.dimen.abc_action_button_min_width_material) / 2);
+
+        width -= getResources().getDimensionPixelSize(R.dimen.abc_action_button_min_width_overflow_material);
+
+        int cx = width;
+        int cy = view.getHeight() / 2;
+
+        startActivity(SearchActivity.newStartIntent(this, cx, cy),
+                optionsCompat.toBundle());
     }
 
     private void checkIsFirstLaunch() {
@@ -216,8 +241,8 @@ public class HomeActivity extends BaseActivity {
     private void handleSignInResponse(int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if (resultCode == RESULT_OK) {
-           Toast.makeText(this, "Signed in as" + response.getEmail(), Toast.LENGTH_SHORT)
-                   .show();
+            Toast.makeText(this, "Signed in as" + response.getEmail(), Toast.LENGTH_SHORT)
+                    .show();
         } else {
             // Sign in failed
             if (response == null) {

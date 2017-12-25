@@ -53,7 +53,7 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_post_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_post_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

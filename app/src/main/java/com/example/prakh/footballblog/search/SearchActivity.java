@@ -1,12 +1,18 @@
 package com.example.prakh.footballblog.search;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -26,6 +32,9 @@ import butterknife.Unbinder;
 
 public class SearchActivity extends BaseActivity {
 
+    public static final String EXTRA_CIRCULAR_REVEAL_X = "extra_reveal_x";
+    public static final String EXTRA_CIRCULAR_REVEAL_Y = "extra_reveal_y";
+
     @BindView(R.id.search_back_button)
     ImageView backButton;
     @BindView(R.id.search_edit_text)
@@ -36,24 +45,56 @@ public class SearchActivity extends BaseActivity {
     ImageView voiceInputBtn;
 
     private Unbinder unbinder;
+    private View rootLayout;
 
-    public static Intent newStartIntent(Context context) {
-        return new Intent(context, SearchActivity.class);
+    private int revealX;
+    private int revealY;
+
+    public static Intent newStartIntent(Context context, int revealX, int revealY) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(EXTRA_CIRCULAR_REVEAL_X, revealX);
+        intent.putExtra(EXTRA_CIRCULAR_REVEAL_Y, revealY);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_search);
 
-        init();
+        final Intent intent = getIntent();
 
+        rootLayout = findViewById(R.id.search_root_view);
+
+        if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
+                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
+
+            rootLayout.setVisibility(View.INVISIBLE);
+            revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
+            revealY = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_Y, 0);
+            ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
+            if (viewTreeObserver.isAlive()) {
+                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        revealActivity(revealX, revealY);
+                        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            }
+        } else {
+            rootLayout.setVisibility(View.VISIBLE);
+        }
+
+        init();
     }
 
     private void init() {
 
         unbinder = ButterKnife.bind(this);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         searchQueryView.addTextChangedListener(textWatcher);
 
@@ -95,7 +136,7 @@ public class SearchActivity extends BaseActivity {
         }
     };
 
-    private void showKeyboard() {
+    public void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.showSoftInput(searchQueryView, InputMethodManager.SHOW_IMPLICIT);
@@ -130,5 +171,22 @@ public class SearchActivity extends BaseActivity {
         searchQueryView.removeTextChangedListener(textWatcher);
         unbinder.unbind();
         super.onDestroy();
+    }
+
+    protected void revealActivity(int x, int y) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float finalRadius = (float) (Math.max(rootLayout.getWidth(), rootLayout.getHeight()) * 1.1);
+
+            // create the animator for this view (the start radius is zero)
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, x, y, 0, finalRadius);
+            circularReveal.setDuration(500);
+            circularReveal.setInterpolator(new AccelerateInterpolator());
+
+            // make the view visible and start the animation
+            rootLayout.setVisibility(View.VISIBLE);
+            circularReveal.start();
+        } else {
+            finish();
+        }
     }
 }

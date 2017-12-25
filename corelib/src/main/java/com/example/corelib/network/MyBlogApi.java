@@ -57,10 +57,12 @@ public interface MyBlogApi {
                                              @Query("fields") String includeFields);
 
     //Search Apis
-
     @GET("wp-json/wp/v2/posts/?_embed")
     Call<List<Post>> getPostFromSearch(@Query("search") String searchQuery,
                                        @Query("fields") String includeFields);
+
+    @GET("?json=get_search_results")
+    Call<PostListResponse> getPostsFromSearch(@Query("search") String query);
 
     @GET("wp-json/wp/v2/categories")
     Call<List<CategoriesOrTag>> getCategoriesFromSearch(@Query("search") String searchQuery,
@@ -70,6 +72,7 @@ public interface MyBlogApi {
     Call<List<CategoriesOrTag>> getTagsFromSearch(@Query("search") String searchQuery,
                                                   @Query("fields") String includeFields);
 
+    // Auth Api
     @GET("?json=user/if_email_exists")
     Call<EmailExists> getIfEmailExists(@Query("insecure") String insecure,
                                        @Query("email") String email);

@@ -40,4 +40,9 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/splash_colorPrimaryDark</item>
     </style>
+
+    <style name="DetailThemeLight.Transparent" parent="DetailThemeLight">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

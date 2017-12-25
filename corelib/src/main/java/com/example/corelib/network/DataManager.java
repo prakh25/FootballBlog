@@ -76,6 +76,10 @@ public class DataManager {
         myBlogApi.getPostFromSearch(searchString, includeFields).enqueue(callback);
     }
 
+    public void getPostsFromSearch(String query, RemoteCallback<PostListResponse> callback) {
+        myBlogApi.getPostsFromSearch(query).enqueue(callback);
+    }
+
     public void getTagsFromSearch(String includeFields, String search,
                                RemoteCallback<List<CategoriesOrTag>> callback) {
         myBlogApi.getTagsFromSearch(search, includeFields).enqueue(callback);

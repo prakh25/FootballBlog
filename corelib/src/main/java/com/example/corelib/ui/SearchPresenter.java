@@ -68,6 +68,24 @@ public class SearchPresenter extends BasePresenter<SearchContract.SearchView>
                         mView.showError(throwable.getMessage());
                     }
                 });
+
+//        dataManager.getPostsFromSearch(query, new RemoteCallback<PostListResponse>() {
+//            @Override
+//            public void onSuccess(PostListResponse response) {
+//                List<Post> postList = response.getPosts();
+//                if(postList.isEmpty()) {
+//                    mView.hideProgress();
+//                    mView.showEmpty();
+//                    return;
+//                }
+//                mView.showSearchPost(postList);
+//            }
+//
+//            @Override
+//            public void onFailed(Throwable throwable) {
+//
+//            }
+//        });
     }
 
     private void searchCategories(String query) {
