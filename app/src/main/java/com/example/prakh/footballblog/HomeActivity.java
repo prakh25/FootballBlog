@@ -39,8 +39,6 @@ public class HomeActivity extends BaseActivity {
     private TextView userName;
     private TextView userEmail;
 
-    public static boolean active = false;
-
     public static Intent createNewIntent(Context context) {
         return new Intent(context, HomeActivity.class);
     }
@@ -122,12 +120,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        active = true;
-    }
-
-    @Override
     protected void onResume() {
 
         userName.setText("Prakhar Gupta");
@@ -140,12 +132,6 @@ public class HomeActivity extends BaseActivity {
                 .into(authorAvatar);
 
         super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        active = false;
     }
 
     @Override

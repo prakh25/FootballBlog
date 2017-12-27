@@ -62,8 +62,6 @@ public class FcmMessageService extends FirebaseMessagingService {
         Integer id = notification.getPost_id();
         Spanned title = Utils.fromHtml(notification.getContent());
 
-//        boolean fromNotif = !HomeActivity.active;
-
         Intent intent = DetailActivity.createNewIntent(this,
                 id);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -72,9 +70,6 @@ public class FcmMessageService extends FirebaseMessagingService {
 
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                (int) System.currentTimeMillis(), intent, 0);
 
         PendingIntent pendingShareIntent = PendingIntent.getActivity(this,
                 (int) System.currentTimeMillis(), Intent
