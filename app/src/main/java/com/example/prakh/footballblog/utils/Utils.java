@@ -1,5 +1,6 @@
 package com.example.prakh.footballblog.utils;
 
+import android.content.Intent;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -75,5 +76,20 @@ public class Utils {
         } else {
             return "";
         }
+    }
+
+    public static Intent sharingIntent(Spanned title, String appName, String url) {
+
+        String sb = "Read Article \'" + title + "\'\n" +
+                "Using app \'" + appName + "\'\n" +
+                "Source : " + url + "";
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, sb);
+
+        return sharingIntent;
     }
 }

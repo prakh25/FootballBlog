@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 /**
  * Created by prakh on 26-12-2017.
  */
-// TODO: Complete implementation
 public class SearchResultActivity extends BaseActivity {
 
     public static final String ARG_SEARCH_QUERY = "arg_search_query";

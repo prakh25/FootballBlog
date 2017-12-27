@@ -11,9 +11,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.text.Spanned;
 
 import com.example.corelib.SharedPreferenceManager;
 import com.example.prakh.footballblog.post_detail.DetailActivity;
+import com.example.prakh.footballblog.utils.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -43,19 +45,35 @@ public class FcmMessageService extends FirebaseMessagingService {
 
             if (remoteMessage.getData().size() > 0) {
                 Map<String, String> data = remoteMessage.getData();
-                displayNotification(data.get("title"), data.get("id"));
+                FcmNotification notification = new FcmNotification();
+                notification.setTitle(data.get("title"));
+                notification.setContent(data.get("content"));
+                notification.setPost_id(Integer.parseInt(data.get("post_id")));
+                notification.setPermalink(data.get("permalink"));
+                notification.setThumbnail(data.get("thumbnail"));
+                displayNotification(notification);
             }
         }
     }
 
-    private void displayNotification(String title, String postId) {
-        Integer id = Integer.valueOf(postId);
+    private void displayNotification(FcmNotification notification) {
+
+        Integer id = notification.getPost_id();
+        Spanned title = Utils.fromHtml(notification.getContent());
+
         boolean fromNotif = !HomeActivity.active;
 
         Intent intent = DetailActivity.createNewIntent(this,
                 id, fromNotif);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                (int) System.currentTimeMillis(), intent, 0);
+
+        PendingIntent pendingShareIntent = PendingIntent.getActivity(this,
+                (int) System.currentTimeMillis(), Intent
+                        .createChooser(Utils.sharingIntent(title,
+                        getString(R.string.app_name), notification.getPermalink()), "Share Using"),
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_FOOTBALL_BLOG");
         builder.setContentTitle(getString(R.string.app_name));
@@ -64,13 +82,16 @@ public class FcmMessageService extends FirebaseMessagingService {
         builder.setSmallIcon(R.drawable.ic_notification_icon);
         builder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
                 R.mipmap.ic_launcher_round));
-        builder.setColor(this.getResources().getColor(R.color.colorPrimary));
         builder.setDefaults(Notification.DEFAULT_LIGHTS);
+        builder.addAction(R.drawable.ic_share_black_24dp,
+                getString(R.string.action_share), pendingShareIntent);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             builder.setPriority(Notification.PRIORITY_HIGH);
         }
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         int unique_id = (int) System.currentTimeMillis();
         notificationManager.notify(unique_id, builder.build());
