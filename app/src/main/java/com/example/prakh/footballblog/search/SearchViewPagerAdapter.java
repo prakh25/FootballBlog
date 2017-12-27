@@ -1,5 +1,6 @@
 package com.example.prakh.footballblog.search;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -12,10 +13,14 @@ import com.example.prakh.footballblog.utils.SmartFragmentStatePagerAdapter;
 public class SearchViewPagerAdapter extends SmartFragmentStatePagerAdapter {
 
     private static final int PAGE_COUNT = 3;
-    private static final String tabTitles[] = new String[] {"Posts","Categories", "Tags"};
+    private static final String tabTitles[] = new String[]{"Posts", "Categories", "Tags"};
 
-    public SearchViewPagerAdapter(FragmentManager fragmentManager) {
+    private final Bundle queryBundle;
+
+    public SearchViewPagerAdapter(FragmentManager fragmentManager,
+                                  Bundle query) {
         super(fragmentManager);
+        queryBundle = query;
     }
 
     @Override
@@ -27,11 +32,17 @@ public class SearchViewPagerAdapter extends SmartFragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new SearchPostsFragment();
+                SearchPostsFragment postsFragment = new SearchPostsFragment();
+                postsFragment.setArguments(queryBundle);
+                return postsFragment;
             case 1:
-                return new SearchCategoriesFragment();
+                SearchCategoriesFragment categoriesFragment = new SearchCategoriesFragment();
+                categoriesFragment.setArguments(queryBundle);
+                return categoriesFragment;
             case 2:
-                return new SearchTagsFragment();
+                SearchTagsFragment tagsFragment = new SearchTagsFragment();
+                tagsFragment.setArguments(queryBundle);
+                return tagsFragment;
             default:
                 return null;
         }

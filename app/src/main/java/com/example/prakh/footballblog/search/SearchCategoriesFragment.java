@@ -12,21 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.model.post.Post;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.realm.RealmManager;
 import com.example.corelib.ui.SearchContract;
 import com.example.corelib.ui.SearchPresenter;
-import com.example.prakh.footballblog.interests.CategoriesAdapter;
 import com.example.prakh.footballblog.R;
+import com.example.prakh.footballblog.interests.CategoriesAdapter;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.example.prakh.footballblog.search.SearchResultActivity.ARG_SEARCH_QUERY;
 
 /**
  * Created by prakh on 21-11-2017.
@@ -45,19 +46,17 @@ public class SearchCategoriesFragment extends Fragment implements SearchContract
     private SearchPresenter searchPresenter;
 
     private String query;
-    private SharedPreferenceManager sharedPreferenceManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if(getArguments() != null) {
-            query = getArguments().getString(query);
+            query = getArguments().getString(ARG_SEARCH_QUERY);
         }
         adapter = new CategoriesAdapter();
         searchPresenter = new SearchPresenter(DataManager.getInstance(),
                 RealmManager.getInstance());
-        sharedPreferenceManager = new SharedPreferenceManager();
     }
 
     @Nullable
@@ -66,7 +65,6 @@ public class SearchCategoriesFragment extends Fragment implements SearchContract
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
         searchPresenter.attachView(this);
         init(view);
-        query = sharedPreferenceManager.getQueryString();
         searchPresenter.onCategoryQuery(query);
         return view;
     }

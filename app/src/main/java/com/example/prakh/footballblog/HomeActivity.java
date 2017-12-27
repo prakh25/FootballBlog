@@ -193,7 +193,7 @@ public class HomeActivity extends BaseActivity {
         int cx = width;
         int cy = view.getHeight() / 2;
 
-        startActivity(SearchActivity.newStartIntent(this, cx, cy),
+        startActivity(SearchActivity.newStartIntent(this, cx, cy, width),
                 optionsCompat.toBundle());
     }
 }

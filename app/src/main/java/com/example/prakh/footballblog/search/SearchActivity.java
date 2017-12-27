@@ -1,12 +1,20 @@
 package com.example.prakh.footballblog.search;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
+import android.speech.RecognizerIntent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -14,13 +22,16 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.prakh.footballblog.BaseActivity;
 import com.example.prakh.footballblog.R;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,31 +40,48 @@ import butterknife.Unbinder;
 /**
  * Created by prakh on 21-11-2017.
  */
-
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements
+        SearchSuggestionAdapter.SuggestionInteractionListener {
 
     public static final String EXTRA_CIRCULAR_REVEAL_X = "extra_reveal_x";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "extra_reveal_y";
+    public static final String EXTRA_FINAL_RADIUS = "extra_radius";
+
+    public static final String EXTRA_RESULT_QUERY = "extra_result_query";
+
+    public static final String EXTRA_CLICKED_SEARCH_ITEM = "clicked_search_item";
+
+    public static final int VOICE_RECOGNITION_CODE = 100;
 
     @BindView(R.id.search_back_button)
     ImageView backButton;
     @BindView(R.id.search_edit_text)
     EditText searchQueryView;
-    @BindView(R.id.search_close_btn)
-    ImageView clearButton;
     @BindView(R.id.search_voice_btn)
     ImageView voiceInputBtn;
+    @BindView(R.id.search_suggestion_list)
+    RecyclerView recyclerView;
 
     private Unbinder unbinder;
     private View rootLayout;
 
     private int revealX;
     private int revealY;
+    private int finalRadius;
 
-    public static Intent newStartIntent(Context context, int revealX, int revealY) {
+    private String query;
+
+    public static Intent searchIntent(Context context, String query) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(EXTRA_RESULT_QUERY, query);
+        return intent;
+    }
+
+    public static Intent newStartIntent(Context context, int revealX, int revealY, int radius) {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(EXTRA_CIRCULAR_REVEAL_X, revealX);
         intent.putExtra(EXTRA_CIRCULAR_REVEAL_Y, revealY);
+        intent.putExtra(EXTRA_FINAL_RADIUS, radius);
         return intent;
     }
 
@@ -64,6 +92,8 @@ public class SearchActivity extends BaseActivity {
 
         final Intent intent = getIntent();
 
+        query = intent.getStringExtra(EXTRA_RESULT_QUERY);
+
         rootLayout = findViewById(R.id.search_root_view);
 
         if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
@@ -73,12 +103,14 @@ public class SearchActivity extends BaseActivity {
             rootLayout.setVisibility(View.INVISIBLE);
             revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
             revealY = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_Y, 0);
+            finalRadius = intent.getIntExtra(EXTRA_FINAL_RADIUS, 0);
+
             ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
             if (viewTreeObserver.isAlive()) {
                 viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        revealActivity(revealX, revealY);
+                        revealActivity(revealX, revealY, finalRadius);
                         rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
@@ -96,90 +128,212 @@ public class SearchActivity extends BaseActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        searchQueryView.addTextChangedListener(textWatcher);
+        if(query == null || query.isEmpty() || query.equals("")) {
+            query = "";
+        } else {
+            searchQueryView.setText(query);
+        }
 
-        backButton.setOnClickListener(view -> onBackPressed());
+        voiceInputBtn.setSelected(false);
 
-        clearButton.setOnClickListener(view ->{
-            if(getSupportFragmentManager().findFragmentById(R.id.search_container) != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .remove(getSupportFragmentManager().findFragmentById(R.id.search_container))
-                        .commit();
-                searchQueryView.setText("");
-                searchQueryView.requestFocus();
-                showKeyboard();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        new MapResultsFromRecentProviderList(SearchActivity.this).execute();
+
+        initializeSearchTextListener();
+        initializeDismissListener();
+        initializeVoiceInputListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case VOICE_RECOGNITION_CODE: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    searchQueryView.setText(text.get(0));
+                    query = text.get(0);
+                    new MapResultsFromRecentProviderList(SearchActivity.this).execute();
+                }
+                break;
             }
-        });
+        }
+    }
 
-        searchQueryView.setOnEditorActionListener((textView, i, keyEvent) -> {
+    private void initializeSearchTextListener() {
 
+        TextView.OnEditorActionListener searchListener = (textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
-                hideKeyboard();
-                searchAction();
-                return true;
+                sendSearchIntent();
             }
-            return false;
+            return true;
+        };
+        searchQueryView.setOnEditorActionListener(searchListener);
+        searchQueryView.addTextChangedListener(textWatcher);
+    }
+
+    private void initializeDismissListener() {
+        backButton.setOnClickListener(view -> {
+            onBackPressed();
+            finish();
         });
+    }
+
+    private void initializeVoiceInputListener() {
+        voiceInputBtn.setOnClickListener(view -> {
+            if (voiceInputBtn.isSelected()) {
+                searchQueryView.setText("");
+                query = "";
+                voiceInputBtn.setSelected(false);
+                voiceInputBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
+            } else {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now");
+
+                SearchActivity.this.startActivityForResult(intent, VOICE_RECOGNITION_CODE);
+            }
+        });
+    }
+
+    private void sendSearchIntent() {
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                RecentSuggestionsProvider.AUTHORITY, RecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+        suggestions.saveRecentQuery(query, null);
+        startActivity(SearchResultActivity.createSearchIntent(this, query));
+        finish();
+    }
+
+    private void sendSuggestionIntent(SearchResultItem item) {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(EXTRA_CLICKED_SEARCH_ITEM, item);
+            startActivity(SearchResultActivity.createSuggestionIntent(this, bundle));
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence c, int i, int i1, int i2) {
+            if (!"".equals(c.toString())) {
+                query = searchQueryView.getText().toString();
+                setClearTextIcon();
+                new MapResultsFromRecentProviderList(SearchActivity.this).execute();
+            } else if (c.length() == 0) {
+                setVoiceInputIcon();
+                query = "";
+                new MapResultsFromRecentProviderList(SearchActivity.this).execute();
+            }
         }
 
+        // Do nothing
         @Override
         public void beforeTextChanged(CharSequence c, int i, int i1, int i2) {
+            // TODO: Auto-generated method stub
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
+            // TODO: Auto-generated method stub
         }
     };
 
-    public void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.showSoftInput(searchQueryView, InputMethodManager.SHOW_IMPLICIT);
-        }
+    private void setClearTextIcon() {
+        voiceInputBtn.setSelected(true);
+        voiceInputBtn.setImageResource(R.drawable.ic_close_black_24dp);
+        voiceInputBtn.invalidate();
     }
 
-    private void hideKeyboard() {
-        if(TextUtils.isEmpty(searchQueryView.getText())) {
-            Toast.makeText(getBaseContext(), "Please Enter String", Toast.LENGTH_SHORT).show();
-            return;
+    private void setVoiceInputIcon() {
+        voiceInputBtn.setSelected(false);
+        voiceInputBtn.setImageResource(R.drawable.ic_keyboard_voice_black_24dp);
+        voiceInputBtn.invalidate();
+    }
+
+    private static class MapResultsFromRecentProviderList extends
+            AsyncTask<Void, Void, List<SearchResultItem>> {
+
+        private WeakReference<SearchActivity> activityWeakReference;
+
+        MapResultsFromRecentProviderList(SearchActivity activity) {
+            activityWeakReference = new WeakReference<>(activity);
         }
 
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        private Cursor queryRecentSuggestionsProvider() {
+            SearchActivity activity = activityWeakReference.get();
+
+            Uri uri = Uri.parse("content://"
+                    .concat(RecentSuggestionsProvider.AUTHORITY.concat("/suggestions")));
+
+            String[] selection;
+
+            selection = SearchRecentSuggestions.QUERIES_PROJECTION_1LINE;
+
+            String[] selectionArgs = new String[]{"%" + activity.query + "%"};
+
+            return activity.getContentResolver().query(
+                    uri,
+                    selection,
+                    "display1 LIKE?",
+                    selectionArgs,
+                    "date ASC"
+            );
+        }
+
+        @Override
+        protected List<SearchResultItem> doInBackground(Void... voids) {
+            Cursor results = queryRecentSuggestionsProvider();
+            List<SearchResultItem> itemList = new ArrayList<>();
+            Integer titleId = results.getColumnIndex("display1");
+            Integer leftIconId = results.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1);
+            Integer rightIconId = results.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_2);
+
+            while (results.moveToNext()) {
+                String title = results.getString(titleId);
+                Integer leftIcon = (leftIconId == -1) ? R.drawable.ic_restore_black_24dp : results.getInt(leftIconId);
+                Integer rightIcon = (rightIconId == -1) ? R.drawable.ic_submit_arrow_24dp : results.getInt(rightIconId);
+
+                SearchResultItem aux = new SearchResultItem(title, leftIcon, rightIcon);
+                itemList.add(aux);
             }
+            results.close();
+            return itemList;
         }
-    }
 
-    private void searchAction() {
-        String query = searchQueryView.getText().toString();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.search_container, SearchResultFragment.newInstance(query))
-                .commitAllowingStateLoss();
+        @Override
+        protected void onPostExecute(List<SearchResultItem> itemList) {
+            SearchActivity activity = activityWeakReference.get();
+            SearchSuggestionAdapter adapter = new SearchSuggestionAdapter(itemList);
+
+            RecyclerView recyclerView = activity.findViewById(R.id.search_suggestion_list);
+            recyclerView.setAdapter(adapter);
+            adapter.setListener(activity);
+        }
     }
 
     @Override
-    protected void onDestroy() {
-        searchQueryView.setText(null);
-        searchQueryView.removeTextChangedListener(textWatcher);
-        unbinder.unbind();
-        super.onDestroy();
+    public void onBackPressed() {
+        unRevealActivity();
+        super.onBackPressed();
     }
 
-    protected void revealActivity(int x, int y) {
+    protected void revealActivity(int x, int y, int radius) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            float finalRadius = (float) (Math.max(rootLayout.getWidth(), rootLayout.getHeight()) * 1.1);
 
-            // create the animator for this view (the start radius is zero)
-            Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, x, y, 0, finalRadius);
-            circularReveal.setDuration(400);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.quantum_grey_600));
+            // create the animator for this view (the start finalRadius is zero)
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, x, y,
+                    0, (float) radius);
+            circularReveal.setDuration(300);
             circularReveal.setInterpolator(new AccelerateInterpolator());
 
             // make the view visible and start the animation
@@ -188,5 +342,44 @@ public class SearchActivity extends BaseActivity {
         } else {
             finish();
         }
+    }
+
+    protected void unRevealActivity() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            finish();
+        } else {
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(
+                    rootLayout, revealX, revealY, (float) finalRadius, 0);
+
+            circularReveal.setDuration(300);
+            circularReveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    rootLayout.setVisibility(View.INVISIBLE);
+                    finish();
+                }
+            });
+
+
+            circularReveal.start();
+        }
+    }
+
+    /**
+     * Interaction listener callback for {@link SearchSuggestionAdapter}
+     *
+     * @param item: Recent suggestion from list od recent suggestions
+     */
+    @Override
+    public void onSuggestionClicked(SearchResultItem item) {
+        sendSuggestionIntent(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        searchQueryView.setText(null);
+        searchQueryView.removeTextChangedListener(textWatcher);
+        unbinder.unbind();
+        super.onDestroy();
     }
 }

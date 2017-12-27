@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.model.post.Post;
 import com.example.corelib.model.tags_list.CategoriesOrTag;
 import com.example.corelib.network.DataManager;
@@ -27,6 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.example.prakh.footballblog.search.SearchResultActivity.ARG_SEARCH_QUERY;
 
 /**
  * Created by prakh on 21-11-2017.
@@ -49,16 +50,19 @@ SearchPostAdapter.SearchPostListener {
     private SearchPresenter searchPresenter;
 
     private String query;
-    private SharedPreferenceManager sharedPreferenceManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getArguments() != null) {
+            query = getArguments().getString(ARG_SEARCH_QUERY);
+        }
+
         adapter = new SearchPostAdapter();
         searchPresenter = new SearchPresenter(DataManager.getInstance(),
                 RealmManager.getInstance());
-        sharedPreferenceManager = new SharedPreferenceManager();
+
     }
 
     @Nullable
@@ -68,7 +72,6 @@ SearchPostAdapter.SearchPostListener {
         searchPresenter.attachView(this);
         init(view);
         adapter.setListener(this);
-        query = sharedPreferenceManager.getQueryString();
         searchPresenter.onPostQuery(query);
         return view;
     }
@@ -147,6 +150,5 @@ SearchPostAdapter.SearchPostListener {
     @Override
     public void onPostClicked(Integer postId) {
         startActivity(DetailActivity.createNewIntent(activity, postId, false));
-        activity.finish();
     }
 }
