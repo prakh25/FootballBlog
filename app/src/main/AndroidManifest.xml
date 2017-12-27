@@ -16,11 +16,12 @@
         android:theme="@style/AppTheme">
 
         <provider
-            android:authorities="com.example.prakh.footballblog.search.RecentSuggestionsProvider"
             android:name=".search.RecentSuggestionsProvider"
-            android:exported="false"/>
+            android:authorities="com.example.prakh.footballblog.search.RecentSuggestionsProvider"
+            android:exported="false" />
 
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/SplashActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +30,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".HomeActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".post_detail.DetailActivity"
-            android:theme="@style/DetailThemeLight" />
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/DetailThemeLight">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+
+        </activity>
 
         <activity
             android:name=".SettingsActivity"
@@ -41,13 +50,14 @@
 
         <activity
             android:name=".search.SearchActivity"
-            android:theme="@style/DetailThemeLight.Transparent"/>
+            android:theme="@style/DetailThemeLight.Transparent" />
 
-        <activity android:name=".search.SearchResultActivity"
-            android:theme="@style/DetailThemeLight"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".search.SearchResultActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/DetailThemeLight">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
 

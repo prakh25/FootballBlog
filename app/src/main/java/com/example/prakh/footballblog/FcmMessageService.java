@@ -3,6 +3,7 @@ package com.example.prakh.footballblog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -61,10 +62,16 @@ public class FcmMessageService extends FirebaseMessagingService {
         Integer id = notification.getPost_id();
         Spanned title = Utils.fromHtml(notification.getContent());
 
-        boolean fromNotif = !HomeActivity.active;
+//        boolean fromNotif = !HomeActivity.active;
 
         Intent intent = DetailActivity.createNewIntent(this,
-                id, fromNotif);
+                id);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(DetailActivity.class);
+        stackBuilder.addNextIntent(intent);
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 (int) System.currentTimeMillis(), intent, 0);
@@ -89,7 +96,7 @@ public class FcmMessageService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             builder.setPriority(Notification.PRIORITY_HIGH);
         }
-        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(resultPendingIntent);
         builder.setAutoCancel(true);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

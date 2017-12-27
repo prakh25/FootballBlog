@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.example.prakh.footballblog.BaseActivity;
-import com.example.prakh.footballblog.HomeActivity;
 import com.example.prakh.footballblog.R;
 
 /**
@@ -18,12 +17,9 @@ public class DetailActivity extends BaseActivity {
     public static final String EXTRA_POST_ID = "extraPostId";
     public static final String EXTRA_FROM_NOTIF = "extraFromNotif";
 
-    private Boolean fromNotif;
-
-    public static Intent createNewIntent(Context context, Integer postId, Boolean fromNotif) {
+    public static Intent createNewIntent(Context context, Integer postId) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(EXTRA_POST_ID, postId);
-        intent.putExtra(EXTRA_FROM_NOTIF, fromNotif);
         return intent;
     }
 
@@ -32,7 +28,6 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Integer id = getIntent().getIntExtra(EXTRA_POST_ID, 1);
-        fromNotif = getIntent().getBooleanExtra(EXTRA_FROM_NOTIF, false);
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -41,15 +36,6 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if(fromNotif) {
-            startActivity(HomeActivity.createNewIntent(getApplicationContext()));
-            finish();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
