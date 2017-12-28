@@ -5,7 +5,9 @@ import com.example.corelib.model.auth.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.post.Post;
+import com.example.corelib.model.post_new.PostDetailResponse;
 import com.example.corelib.model.post_new.PostListResponse;
+import com.example.corelib.model.post_new.PostViewCount;
 import com.example.corelib.model.related_post.RelatedPostsList;
 import com.example.corelib.model.splash.ValidateCookie;
 import com.example.corelib.model.splash.notification.CallBackDevice;
@@ -28,17 +30,16 @@ import retrofit2.http.Query;
 
 public interface MyBlogApi {
 
-    @GET("wp-json/wp/v2/posts/?_embed")
-    Call<List<Post>> getAllPostsList(@Query("page") Integer pageNo,
-                                     @Query("fields") String includeFields);
-
-    @GET("wp-json/wp/v2/posts/{id}/?_embed")
-    Call<Post> getPostDetails(@Path("id") Integer postId,
-                              @Query("fields") String includeFields);
-
     //recent posts
     @GET("?json=get_recent_posts")
     Call<PostListResponse> getRecentPosts();
+
+    @GET("wp-json/myFootballBlog/views/{id}")
+    Call<PostViewCount> updatePostViewCount(@Path("id") Integer postId);
+
+    //Post Details
+    @GET("?json=get_post")
+    Call<PostDetailResponse> getPostDetails(@Query("id") Integer postId);
 
     @GET("wp-json/related-posts-by-taxonomy/v1/posts/{post_id}")
     Call<RelatedPostsList> getRelatedPosts(@Path("post_id") Integer postId);

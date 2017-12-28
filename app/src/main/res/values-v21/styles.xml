@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@android:color/background_dark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="android:colorControlHighlight">@android:color/darker_gray</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="DetailThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorControlHighlight">@android:color/darker_gray</item>
-        <item name="colorPrimaryDark">@android:color/background_dark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/detail_primaryColor</item>
+        <item name="colorPrimaryDark">@color/detail_primaryDark</item>
+        <item name="colorAccent">@color/detail_accent</item>
     </style>
 
     <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">

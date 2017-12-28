@@ -1,6 +1,8 @@
 package com.example.corelib.network;
 
+import com.example.corelib.model.post_new.PostDetailResponse;
 import com.example.corelib.model.post_new.PostListResponse;
+import com.example.corelib.model.post_new.PostViewCount;
 import com.example.corelib.model.splash.notification.CallBackDevice;
 import com.example.corelib.model.splash.notification.DeviceInfo;
 import com.example.corelib.model.post.Post;
@@ -36,18 +38,16 @@ public class DataManager {
         myBlogApi = NetworkService.provideBlogPost();
     }
 
-    public void getAllPostsList(String includeFields, Integer pageNo,
-                                RemoteCallback<List<Post>> callback) {
-        myBlogApi.getAllPostsList(pageNo, includeFields).enqueue(callback);
-    }
-
     public void getRecentPosts(RemoteCallback<PostListResponse> callback) {
         myBlogApi.getRecentPosts().enqueue(callback);
     }
 
-    public void getPostDetails(Integer postId, String includeFields,
-                               RemoteCallback<Post> callback) {
-        myBlogApi.getPostDetails(postId, includeFields).enqueue(callback);
+    public void updatePostCount(Integer postId, RemoteCallback<PostViewCount> callback) {
+        myBlogApi.updatePostViewCount(postId).enqueue(callback);
+    }
+
+    public void getPostDetails(Integer postId, RemoteCallback<PostDetailResponse> callback) {
+        myBlogApi.getPostDetails(postId).enqueue(callback);
     }
 
     public void getRelatedPosts(Integer postId, RemoteCallback<RelatedPostsList> callback) {

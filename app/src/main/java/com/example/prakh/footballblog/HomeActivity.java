@@ -23,7 +23,9 @@ import com.example.prakh.footballblog.search.SearchActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+// TODO: Improve drawer navigation also add new drawer header layout and drawer menu
+// TODO: Add user profile screen and navigate to it through navigation header
+// TODO: change activity transition animations
 public class HomeActivity extends BaseActivity {
 
     @BindView(R.id.homeToolbar)

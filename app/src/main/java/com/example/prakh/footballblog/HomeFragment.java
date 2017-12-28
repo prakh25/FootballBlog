@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
     }
 
     @Override
-    public void getPostDetail(Integer postId) {
-        startActivity(DetailActivity.createNewIntent(activity, postId));
+    public void getPostDetail(Post post) {
+        startActivity(DetailActivity.newIntent(activity, post));
     }
 }

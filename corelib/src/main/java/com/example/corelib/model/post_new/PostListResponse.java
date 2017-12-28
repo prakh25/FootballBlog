@@ -30,6 +30,11 @@ public class PostListResponse implements Parcelable
     @SerializedName("query")
     @Expose
     private Query query;
+    @SerializedName("previous_url")
+    private String previousUrl;
+    @SerializedName("next_url")
+    private String nextUrl;
+
     public final static Parcelable.Creator<PostListResponse> CREATOR = new Creator<PostListResponse>() {
 
 
@@ -54,6 +59,8 @@ public class PostListResponse implements Parcelable
         this.pages = ((Integer) in.readValue((Integer.class.getClassLoader())));
         in.readList(this.posts, (com.example.corelib.model.post_new.Post.class.getClassLoader()));
         this.query = ((Query) in.readValue((Query.class.getClassLoader())));
+        this.previousUrl = ((String) in.readValue((String.class.getClassLoader())));
+        this.nextUrl = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public PostListResponse() {
@@ -107,6 +114,22 @@ public class PostListResponse implements Parcelable
         this.query = query;
     }
 
+    public String getPreviousUrl() {
+        return previousUrl;
+    }
+
+    public void setPreviousUrl(String previousUrl) {
+        this.previousUrl = previousUrl;
+    }
+
+    public String getNextUrl() {
+        return nextUrl;
+    }
+
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(status);
         dest.writeValue(count);
@@ -114,6 +137,8 @@ public class PostListResponse implements Parcelable
         dest.writeValue(pages);
         dest.writeList(posts);
         dest.writeValue(query);
+        dest.writeValue(previousUrl);
+        dest.writeValue(nextUrl);
     }
 
     public int describeContents() {

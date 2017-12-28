@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.corelib.model.post.Terms;
+import com.example.corelib.model.post_new.Tag;
 import com.example.prakh.footballblog.R;
 
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ import butterknife.ButterKnife;
 
 public class PostTagsAdapter extends RecyclerView.Adapter<PostTagsAdapter.TagViewHolder> {
 
-    private List<Terms> tagList;
+    private List<Tag> tagList;
     private TagClickListener listener;
 
-    public PostTagsAdapter(List<Terms> tags, TagClickListener listener) {
+    public PostTagsAdapter(List<Tag> tags, TagClickListener listener) {
         tagList = new ArrayList<>();
         tagList.addAll(tags);
         this.listener = listener;
@@ -39,7 +39,7 @@ public class PostTagsAdapter extends RecyclerView.Adapter<PostTagsAdapter.TagVie
 
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
-        holder.tag.setText(tagList.get(position).getName());
+        holder.tag.setText(tagList.get(position).getTitle());
         holder.tag.setBackground(holder.itemView.getContext().getResources()
         .getDrawable(R.drawable.tag_background));
     }
@@ -59,7 +59,7 @@ public class PostTagsAdapter extends RecyclerView.Adapter<PostTagsAdapter.TagVie
             ButterKnife.bind(this, itemView);
             tag.setOnClickListener(view ->
             listener.onTagChipClicked(tagList.get(getAdapterPosition()).getId(),
-                    tagList.get(getAdapterPosition()).getName()));
+                    tagList.get(getAdapterPosition()).getTitle()));
         }
     }
 

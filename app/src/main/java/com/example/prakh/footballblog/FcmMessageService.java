@@ -62,8 +62,7 @@ public class FcmMessageService extends FirebaseMessagingService {
         Integer id = notification.getPost_id();
         Spanned title = Utils.fromHtml(notification.getContent());
 
-        Intent intent = DetailActivity.createNewIntent(this,
-                id);
+        Intent intent = DetailActivity.newNotificationIntent(this, id);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(DetailActivity.class);
         stackBuilder.addNextIntent(intent);

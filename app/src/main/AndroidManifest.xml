@@ -32,7 +32,8 @@
 
         <activity
             android:name=".HomeActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".post_detail.DetailActivity"
             android:parentActivityName=".HomeActivity"

@@ -149,6 +149,6 @@ SearchPostAdapter.SearchPostListener {
 
     @Override
     public void onPostClicked(Integer postId) {
-        startActivity(DetailActivity.createNewIntent(activity, postId));
+        startActivity(DetailActivity.newNotificationIntent(activity, postId));
     }
 }

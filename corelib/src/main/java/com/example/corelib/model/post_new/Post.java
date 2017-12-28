@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Post implements Parcelable
@@ -47,19 +48,19 @@ public class Post implements Parcelable
     private String modified;
     @SerializedName("categories")
     @Expose
-    private List<Category> categories = null;
+    private List<Category> categories = new ArrayList<>();
     @SerializedName("tags")
     @Expose
-    private List<Tag> tags = null;
+    private List<Tag> tags = new ArrayList<>();
     @SerializedName("author")
     @Expose
     private Author author;
     @SerializedName("comments")
     @Expose
-    private List<Comment> comments = null;
+    private List<Comment> comments = new ArrayList<>();
     @SerializedName("attachments")
     @Expose
-    private List<Attachment> attachments = null;
+    private List<Attachment> attachments = new ArrayList<>();
     @SerializedName("comment_count")
     @Expose
     private Integer commentCount;

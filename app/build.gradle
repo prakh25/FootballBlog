@@ -65,6 +65,8 @@ dependencies {
     compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true;
     }
+
+    implementation 'com.mikhaellopez:circularimageview:3.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

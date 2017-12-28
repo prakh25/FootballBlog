@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.corelib.model.post.Terms;
+import com.example.corelib.model.post_new.Tag;
 import com.example.prakh.footballblog.GlideApp;
 import com.example.prakh.footballblog.R;
 import com.example.prakh.footballblog.utils.Utils;
@@ -45,7 +45,7 @@ public class PostDetailWrapper extends LinearLayout {
     }
 
     public PostDetailWrapper(Context context, String title, String imageUrl,
-                             String content, List<Terms> tags,
+                             String content, List<Tag> tags,
                              PostTagsAdapter.TagClickListener listener) {
         super(context);
         adapter = new PostTagsAdapter(tags, listener);

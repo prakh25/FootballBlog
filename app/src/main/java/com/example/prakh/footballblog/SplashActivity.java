@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by prakh on 18-12-2017.
  */
+// TODO: Remove Splash Activity in favor of splash screen and do all initial setup before starting home activity
 public class SplashActivity extends BaseActivity implements
         SplashContract.SplashView {
 

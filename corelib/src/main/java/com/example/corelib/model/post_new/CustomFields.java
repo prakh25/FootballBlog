@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomFields implements Parcelable
@@ -14,7 +15,7 @@ public class CustomFields implements Parcelable
 
     @SerializedName("wpb_post_views_count")
     @Expose
-    private List<String> wpbPostViewsCount = null;
+    private List<String> wpbPostViewsCount = new ArrayList<>();
     public final static Parcelable.Creator<CustomFields> CREATOR = new Creator<CustomFields>() {
 
 

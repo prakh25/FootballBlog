@@ -19,7 +19,8 @@ import android.view.MenuItem;
 /**
  * Created by prakh on 19-11-2017.
  */
-
+// TODO: create new settings page and include settings to change theme accent colors
+    // TODO: add clear search history settings options
 public class SettingsActivity extends AppCompatPreferenceActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 

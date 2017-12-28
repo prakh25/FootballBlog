@@ -21,7 +21,7 @@ import butterknife.Unbinder;
 /**
  * Created by prakh on 20-11-2017.
  */
-
+// TODO: completely change interest fragment layout
 public class InterestsFragment extends Fragment {
 
     @BindView(R.id.interest_tab_layout)

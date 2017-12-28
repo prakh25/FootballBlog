@@ -3,8 +3,8 @@ package com.example.prakh.footballblog.post_detail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 
+import com.example.corelib.model.post_new.Post;
 import com.example.prakh.footballblog.BaseActivity;
 import com.example.prakh.footballblog.R;
 
@@ -15,11 +15,19 @@ import com.example.prakh.footballblog.R;
 public class DetailActivity extends BaseActivity {
 
     public static final String EXTRA_POST_ID = "extraPostId";
-    public static final String EXTRA_FROM_NOTIF = "extraFromNotif";
+    public static final String EXTRA_POST = "extra_post";
+    public static final String EXTRA_FROM_NOTIFICATIONS = "extra_from_notification";
 
-    public static Intent createNewIntent(Context context, Integer postId) {
+    public static Intent newIntent(Context context, Post post) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(EXTRA_POST, post);
+        return intent;
+    }
+
+    public static Intent newNotificationIntent(Context context, Integer postId) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(EXTRA_POST_ID, postId);
+        intent.putExtra(EXTRA_FROM_NOTIFICATIONS, true);
         return intent;
     }
 
@@ -27,19 +35,15 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Integer id = getIntent().getIntExtra(EXTRA_POST_ID, 1);
+
+        Integer id = getIntent().getIntExtra(EXTRA_POST_ID, 0);
+        Post post = getIntent().getParcelableExtra(EXTRA_POST);
+        Boolean fromNotif = getIntent().getBooleanExtra(EXTRA_FROM_NOTIFICATIONS, false);
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_container, DetailFragment.newInstance(id))
+                    .replace(R.id.detail_container, DetailFragment.newInstance(id, post, fromNotif))
                     .commit();
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_post_detail, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 }

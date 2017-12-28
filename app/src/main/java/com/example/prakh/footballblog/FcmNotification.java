@@ -7,6 +7,9 @@ import android.os.Parcelable;
  * Created by prakh on 27-12-2017.
  */
 
+/**
+ * TODO: Change notification payload
+ */
 public class FcmNotification implements Parcelable {
 
     private String title = "";

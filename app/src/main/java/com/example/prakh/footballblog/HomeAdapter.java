@@ -226,12 +226,12 @@ public class HomeAdapter extends
             ButterKnife.bind(this, view);
 
             itemLayout.setOnClickListener(view1 -> listener
-                    .getPostDetail(postList.get(getAdapterPosition()).getId()));
+                    .getPostDetail(postList.get(getAdapterPosition())));
         }
     }
 
     public interface PostInteractionListener {
-        void getPostDetail(Integer postId);
+        void getPostDetail(Post post);
     }
 
     public void setListener(PostInteractionListener postInteractionListener) {

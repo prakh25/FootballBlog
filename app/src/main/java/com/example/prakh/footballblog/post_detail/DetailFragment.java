@@ -6,11 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.corelib.model.post.Terms;
+import com.example.corelib.model.post_new.Post;
+import com.example.corelib.model.post_new.Tag;
 import com.example.corelib.model.related_post.RelatedPost;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.DetailContract;
@@ -41,11 +40,17 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
         PostTagsAdapter.TagClickListener, SimilarPostsAdapter.SimilarPostsListener {
 
     public static final String ARG_POST_ID = "argPostId";
+    public static final String ARG_POST = "arg_post";
+    public static final String ARG_FROM_NOTIF = "arg_from_notif";
 
     @BindView(R.id.detail_frame_wrapper)
     LinearLayout detailFrame;
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.detail_back_button)
+    ImageView backButton;
+    @BindView(R.id.detail_share_button)
+    ImageView shareButton;
     @BindView(R.id.post_author_name)
     TextView authorName;
     @BindView(R.id.post_date)
@@ -58,15 +63,24 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
     ProgressBar progressBar;
 
     private Unbinder unbinder;
+
     private Integer postId;
+    private Post post;
+    private Boolean fromNotif;
+
     private AppCompatActivity activity;
     private DetailPresenter detailPresenter;
 
-    public static DetailFragment newInstance(Integer postId) {
+    public static DetailFragment newInstance(Integer postId, @Nullable Post post,
+                                             Boolean fromNotif) {
 
         Bundle args = new Bundle();
         DetailFragment fragment = new DetailFragment();
+
         args.putInt(ARG_POST_ID, postId);
+        args.putParcelable(ARG_POST, post);
+        args.putBoolean(ARG_FROM_NOTIF, fromNotif);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +91,8 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             postId = getArguments().getInt(ARG_POST_ID);
+            post = getArguments().getParcelable(ARG_POST);
+            fromNotif = getArguments().getBoolean(ARG_FROM_NOTIF);
         }
         detailPresenter = new DetailPresenter(DataManager.getInstance());
     }
@@ -87,40 +103,23 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         detailPresenter.attachView(this);
         init(view);
-        detailPresenter.getPostDetails(postId);
+
+        if(fromNotif) {
+            detailPresenter.updatePostCounts(postId);
+        } else {
+            detailPresenter.updatePostCounts(post.getId());
+        }
         return view;
     }
 
     private void init(View view) {
         unbinder = ButterKnife.bind(this, view);
         activity = (AppCompatActivity) getActivity();
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                activity.onBackPressed();
-                return true;
-            case R.id.action_share:
-                shareAction(detailPresenter.getPostTitle(), detailPresenter.getPostUrl());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void shareAction(String postTitle, String postUrl) {
-        String sb = "Read Article \'" + postTitle + "\'\n" +
-                "Using app \'" + activity.getString(R.string.app_name) + "\'\n" +
-                "Source : " + postUrl + "";
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.app_name));
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, sb);
-        activity.startActivity(Intent.createChooser(sharingIntent, "Share Using"));
+        backButton.setOnClickListener(view1 -> {
+            activity.onBackPressed();
+            activity.finish();
+        });
     }
 
     @Override
@@ -157,16 +156,16 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
     }
 
     @Override
+    public void onPostViewsUpdated() {
+        if(fromNotif) {
+            detailPresenter.getPostDetails(postId);
+        } else {
+            detailPresenter.getPostDetails(post);
+        }
+    }
+
+    @Override
     public void showAuthorName(String avatar, String name, String date) {
-        ActionBar actionBar = null;
-        if (activity != null) {
-            activity.setSupportActionBar(toolbar);
-            actionBar = activity.getSupportActionBar();
-        }
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
 
         GlideApp.with(activity).load(avatar)
                 .circleCrop()
@@ -177,11 +176,20 @@ public class DetailFragment extends Fragment implements DetailContract.DetailScr
     }
 
     @Override
-    public void showPostContent(String featureImageUrl, String postTitle, String postContent,
-                                List<Terms> tagList) {
-        PostDetailWrapper postDetailWrapper = new PostDetailWrapper(activity, postTitle,
-                featureImageUrl, postContent, tagList, this);
+    public void showPostContent(Integer postId, String featureImageUrl, String postUrl,
+                                String postTitle, String postContent, List<Tag> tagList) {
+
+        PostDetailWrapper postDetailWrapper = new PostDetailWrapper(activity,
+                postTitle, featureImageUrl, postContent, tagList, this);
         detailFrame.addView(postDetailWrapper);
+
+
+        shareButton.setOnClickListener(view1 ->
+                activity.startActivity(Intent.createChooser(
+                        Utils.sharingIntent(Utils.fromHtml(postTitle),
+                getString(R.string.app_name), postUrl),"Share Using")));
+
+        detailPresenter.getRelatedPosts(postId);
     }
 
     @Override
