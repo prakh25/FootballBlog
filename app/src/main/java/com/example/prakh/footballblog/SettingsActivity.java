@@ -12,9 +12,13 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.MenuItem;
+
+import com.example.prakh.footballblog.search.RecentSuggestionsProvider;
 
 /**
  * Created by prakh on 19-11-2017.
@@ -52,6 +56,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_title_ringtone)));
+
+            findPreference(getString(R.string.pref_title_clear_search_history))
+                    .setOnPreferenceClickListener(preference -> {
+
+                        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+                                getActivity(), RecentSuggestionsProvider.AUTHORITY,
+                                RecentSuggestionsProvider.MODE);
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle(getString(R.string.pref_title_clear_search_history))
+                                .setMessage(getString(R.string.pref_clear_search_history_dialog_message))
+                                .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
+                                    suggestions.clearHistory();
+                                    dialogInterface.dismiss();
+                                })
+                                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
+                                    dialogInterface.cancel();
+                                })
+                                .show();
+
+                        return true;
+
+                    });
         }
     }
 

@@ -31,4 +31,10 @@
             android:dependency="@string/pref_title_new_notification"/>
 
     </PreferenceCategory>
+
+    <Preference
+        android:title="@string/pref_title_clear_search_history"
+        android:key="@string/pref_title_clear_search_history">
+    </Preference>
+
 </PreferenceScreen>

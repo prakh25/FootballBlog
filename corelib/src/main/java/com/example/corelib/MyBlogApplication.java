@@ -25,6 +25,8 @@ public class MyBlogApplication extends Application{
     private static MyBlogApplication app = null;
     private ConnectivityManager manager;
 
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,6 +34,8 @@ public class MyBlogApplication extends Application{
             return;
         }
         LeakCanary.install(this);
+
+        MyBlogApplication.context = getApplicationContext();
 
         app = this;
 
@@ -49,6 +53,10 @@ public class MyBlogApplication extends Application{
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
+    }
+
+    public static Context getAppContext() {
+        return MyBlogApplication.context;
     }
 
     public static MyBlogApplication getApp() {
