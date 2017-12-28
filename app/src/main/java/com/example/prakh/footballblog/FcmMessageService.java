@@ -41,8 +41,15 @@ public class FcmMessageService extends FirebaseMessagingService {
                     ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATION_TIME);
                 }
             }
-            RingtoneManager.getRingtone(this,
-                    Uri.parse(sharedPreferenceManager.getRingtone())).play();
+
+            if (sharedPreferenceManager.getAppDefaultNotification()) {
+                RingtoneManager.getRingtone(this,
+                        Uri.parse("android.resource://" + getPackageName() + "/" +
+                                R.raw.whistle_notification)).play();
+            } else {
+                RingtoneManager.getRingtone(this,
+                        Uri.parse(sharedPreferenceManager.getRingtone())).play();
+            }
 
             if (remoteMessage.getData().size() > 0) {
                 Map<String, String> data = remoteMessage.getData();
@@ -73,7 +80,7 @@ public class FcmMessageService extends FirebaseMessagingService {
         PendingIntent pendingShareIntent = PendingIntent.getActivity(this,
                 (int) System.currentTimeMillis(), Intent
                         .createChooser(Utils.sharingIntent(title,
-                        getString(R.string.app_name), notification.getPermalink()), "Share Using"),
+                                getString(R.string.app_name), notification.getPermalink()), "Share Using"),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MY_FOOTBALL_BLOG");
@@ -92,7 +99,6 @@ public class FcmMessageService extends FirebaseMessagingService {
         }
         builder.setContentIntent(resultPendingIntent);
         builder.setAutoCancel(true);
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         int unique_id = (int) System.currentTimeMillis();
         notificationManager.notify(unique_id, builder.build());

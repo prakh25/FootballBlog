@@ -7,9 +7,17 @@
             android:key="@string/pref_title_new_notification"
             android:title="@string/pref_title_new_notification" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="@string/pref_title_app_default_notification_sound"
+            android:summary="@string/pref_summary_default_notification"
+            android:dependency="@string/pref_title_new_notification"
+            android:key="@string/pref_title_app_default_notification_sound"
+            android:disableDependentsState="true"/>
+
         <RingtonePreference
             android:defaultValue="content://settings/system/notification_sound"
-            android:dependency="@string/pref_title_new_notification"
+            android:dependency="@string/pref_title_app_default_notification_sound"
             android:key="@string/pref_title_ringtone"
             android:ringtoneType="notification"
             android:summary="@string/summary_choose_ringtone"

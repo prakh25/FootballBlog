@@ -38,6 +38,11 @@ public class SharedPreferenceManager {
         return defaultPreferences.getBoolean(str(R.string.pref_title_new_notification), true);
     }
 
+    public boolean getAppDefaultNotification() {
+        return defaultPreferences.getBoolean(str(R.string.pref_title_app_default_notification_sound),
+                true);
+    }
+
     public String getRingtone(){
         return defaultPreferences.getString(str(R.string.pref_title_ringtone), "content://settings/system/notification_sound");
     }

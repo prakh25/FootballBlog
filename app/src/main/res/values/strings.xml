@@ -33,5 +33,6 @@
     <string name="action_all_posts">All Posts</string>
     <string name="cancelled">Cancelled</string>
     <string name="action_clear_search">Clear Search</string>
+    <string name="pref_summary_default_notification">Whistle</string>
 
 </resources>

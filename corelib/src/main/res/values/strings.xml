@@ -14,4 +14,7 @@
     <string name="summary_vibrate">Vibrate on new notification</string>
 
     <string name="pref_title_new_notification">New Post notification</string>
+
+    <string name="pref_title_app_default_notification_sound">App Default Notification Sound</string>
+
 </resources>
