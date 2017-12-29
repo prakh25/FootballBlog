@@ -39,7 +39,7 @@ public class HomeActivity extends BaseActivity {
 
     private ImageView authorAvatar;
     private TextView userName;
-    private TextView userEmail;
+    private TextView userSeeProfile;
 
     public static Intent createNewIntent(Context context) {
         return new Intent(context, HomeActivity.class);
@@ -78,7 +78,6 @@ public class HomeActivity extends BaseActivity {
 
         navigationView.setNavigationItemSelectedListener(
                 item -> {
-                    item.setChecked(true);
                     displayFragments(item.getItemId(),
                             item.getTitle().toString());
                     drawerLayout.closeDrawers();
@@ -90,8 +89,9 @@ public class HomeActivity extends BaseActivity {
                 .findViewById(R.id.nav_author_avatar);
         userName = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_author_name);
-        userEmail = navigationView.getHeaderView(0)
-                .findViewById(R.id.nav_author_email);
+        userSeeProfile = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_see_profile);
+
     }
 
     private void displayFragments(int id, String title) {
@@ -125,7 +125,8 @@ public class HomeActivity extends BaseActivity {
     protected void onResume() {
 
         userName.setText("Prakhar Gupta");
-        userEmail.setText("prakhargupta99@gmail.com");
+
+        userSeeProfile.setText("See Profile");
 
         GlideApp.with(this)
                 .load(R.mipmap.ic_launcher_round)

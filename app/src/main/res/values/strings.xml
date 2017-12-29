@@ -36,5 +36,8 @@
     <string name="pref_summary_default_notification">Whistle</string>
     <string name="pref_title_clear_search_history">Clear Search History</string>
     <string name="pref_clear_search_history_dialog_message">Are you sure you want to delete all your search history?</string>
+    <string name="nav_title_help_and_support">Help and Support</string>
+    <string name="nav_title_send_feedback">Send Feedback</string>
+    <string name="nav_title_categories">Categories</string>
 
 </resources>

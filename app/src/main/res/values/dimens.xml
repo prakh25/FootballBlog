@@ -9,4 +9,9 @@
     <dimen name="fui_auth_method_button_width">208dp</dimen>
     <dimen name="fui_auth_method_button_margin">4dp</dimen>
     <dimen name="fui_auth_method_button_drawablePadding">12dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="nav_header_profile_pic">64dp</dimen>
+    <dimen name="nav_header_height">180dp</dimen>
+
 </resources>

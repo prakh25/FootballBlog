@@ -12,6 +12,7 @@
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:listDivider">@android:color/black</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -53,5 +54,24 @@
     <style name="DetailThemeLight.Transparent" parent="DetailThemeLight">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.NavigationText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppTheme.NavigationText.Header" parent="AppTheme.NavigationText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.NavigationText.SubHeader">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/navigation_subheader_text</item>
+    </style>
+    <style name="AppTheme.NavigationText.MenuItem">
+        <item name="android:textColor">@color/navigation_menu_item</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 </resources>
