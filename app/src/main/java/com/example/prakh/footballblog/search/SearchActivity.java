@@ -178,10 +178,7 @@ public class SearchActivity extends BaseActivity implements
     }
 
     private void initializeDismissListener() {
-        backButton.setOnClickListener(view -> {
-            onBackPressed();
-            finish();
-        });
+        backButton.setOnClickListener(view -> onBackPressed());
     }
 
     private void initializeVoiceInputListener() {

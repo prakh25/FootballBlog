@@ -1,7 +1,6 @@
 package com.example.corelib;
 
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 public class SharedPreferenceManager {
 
@@ -30,9 +29,9 @@ public class SharedPreferenceManager {
         return customPreferences.getString("FCM_REFRESHED_PREF_KEY", null);
     }
 
-    public boolean isFcmRegIdEmpty(){
-        return TextUtils.isEmpty(getRefreshedToken());
-    }
+//    public boolean isFcmRegIdEmpty(){
+//        return TextUtils.isEmpty(getRefreshedToken());
+//    }
 
     public boolean getNotifications() {
         return defaultPreferences.getBoolean(str(R.string.pref_title_new_notification), true);
@@ -55,16 +54,16 @@ public class SharedPreferenceManager {
         return MyBlogApplication.getApp().getString(string_id);
     }
 
-    public void setQueryString(String query) {
-        customPreferences.edit().putString("SEARCH_QUERY", query).apply();
-    }
+//    public void setQueryString(String query) {
+//        customPreferences.edit().putString("SEARCH_QUERY", query).apply();
+//    }
+//
+//    public String getQueryString() {
+//        return customPreferences.getString("SEARCH_QUERY", null);
+//    }
 
-    public String getQueryString() {
-        return customPreferences.getString("SEARCH_QUERY", null);
-    }
-
-    public void setFirstLaunch(boolean launch) {
-        customPreferences.edit().putBoolean("FIRST_LAUNCH", launch).apply();
+    public void setFirstLaunch() {
+        customPreferences.edit().putBoolean("FIRST_LAUNCH", false).apply();
     }
 
     public boolean isFirstLaunch() {

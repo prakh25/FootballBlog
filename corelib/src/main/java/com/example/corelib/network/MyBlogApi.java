@@ -1,5 +1,6 @@
 package com.example.corelib.network;
 
+import com.example.corelib.model.auth.user_network.RefreshedCookie;
 import com.example.corelib.model.auth.user_network.UserObject;
 import com.example.corelib.model.auth.user_network.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
@@ -121,6 +122,11 @@ public interface MyBlogApi {
     @GET("?json=user/validate_auth_cookie")
     Call<ValidateCookie> isCookieValid(@Query("insecure") String insecure,
                                        @Query("cookie") String cookie);
+
+    // refresh valid cookie
+    @GET("?json=user/refresh_auth_cookie")
+    Call<RefreshedCookie> getValidatedUser(@Query("insecure") String insecure,
+                                           @Query("prev_cookie") String prevCookie);
 
     @GET("?json=user/get_current_user_info")
     Call<UserObject> getCurrentUserData(@Query("insecure") String insecure,

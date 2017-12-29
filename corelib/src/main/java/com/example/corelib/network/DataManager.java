@@ -1,5 +1,6 @@
 package com.example.corelib.network;
 
+import com.example.corelib.model.auth.user_network.RefreshedCookie;
 import com.example.corelib.model.post_new.PostDetailResponse;
 import com.example.corelib.model.post_new.PostListResponse;
 import com.example.corelib.model.post_new.PostViewCount;
@@ -129,6 +130,10 @@ public class DataManager {
 
     public void isValidCookie(String cookie, RemoteCallback<ValidateCookie> callback) {
         myBlogApi.isCookieValid(INSECURE, cookie).enqueue(callback);
+    }
+
+    public void getValidatedUser(String prevCookie, RemoteCallback<RefreshedCookie> callback) {
+        myBlogApi.getValidatedUser(INSECURE, prevCookie).enqueue(callback);
     }
 
     public void getCurrentUser(String cookie, RemoteCallback<UserObject> callback) {

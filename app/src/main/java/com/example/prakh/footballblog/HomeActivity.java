@@ -3,7 +3,9 @@ package com.example.prakh.footballblog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -14,15 +16,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.authlib.IdpResponse;
+import com.example.corelib.SharedPreferenceManager;
+import com.example.corelib.network.DataManager;
+import com.example.corelib.ui.authui.HomeActivityContract;
+import com.example.corelib.ui.authui.HomeActivityPresenter;
 import com.example.prakh.footballblog.interests.InterestsFragment;
 import com.example.prakh.footballblog.search.SearchActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.lang.ref.WeakReference;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -30,7 +41,10 @@ import butterknife.ButterKnife;
 
 // TODO: Add user profile screen and navigate to it through navigation header
 // TODO: change activity transition animations
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements
+        HomeActivityContract.View {
+
+    private static final Integer RC_SIGN_IN = 100;
 
     @BindView(R.id.homeToolbar)
     Toolbar toolbar;
@@ -46,26 +60,102 @@ public class HomeActivity extends BaseActivity {
 
     private Stack<Fragment> fragmentStack;
     private FragmentManager fragmentManager;
+    private HomeActivityPresenter presenter;
 
     public static Intent createNewIntent(Context context) {
         return new Intent(context, HomeActivity.class);
     }
 
+    // TODO: Add splash screen before activity start
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
 
+        presenter = new HomeActivityPresenter(DataManager.getInstance(),
+                SharedPreferenceManager.getInstance());
+
+        setContentView(R.layout.activity_home);
+        presenter.attachView(this);
         fragmentStack = new Stack<>();
 
+        ButterKnife.bind(this);
+
         initToolbar();
-
         initDrawerMenu();
+        displayHome(getString(R.string.nav_home));
 
-        if (savedInstanceState == null) {
-            displayHome(getString(R.string.nav_home));
+        presenter.checkLaunch();
+    }
+
+    @Override
+    public void firstLaunch() {
+        new RegisterDeviceForFcm(HomeActivity.this).execute();
+        presenter.getCurrentUser();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN) {
+            handleSignInResponse(resultCode, data);
         }
+    }
+
+    @MainThread
+    private void handleSignInResponse(int resultCode, Intent data) {
+        IdpResponse response = IdpResponse.fromResultIntent(data);
+
+        if(resultCode == RESULT_OK) {
+            startActivity(HomeActivity.createNewIntent(this));
+            finish();
+        } else {
+            if(response == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+                startActivity(HomeActivity.createNewIntent(this));
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void notFirstLaunch() {
+        presenter.getCurrentUser();
+    }
+
+    // TODO: Add click listener to user see profile for login
+    @Override
+    public void currentUserNotFound() {
+        userName.setVisibility(View.GONE);
+        userSeeProfile.setText("Login");
+        GlideApp.with(this)
+                .load(R.mipmap.ic_launcher_round)
+                .centerCrop()
+                .circleCrop()
+                .into(authorAvatar);
+    }
+
+    @Override
+    public void currentUserValidated(String displayName, String avatarUrl, Integer userId) {
+        userName.setVisibility(View.VISIBLE);
+        userName.setText(displayName);
+        userSeeProfile.setText("See Profile");
+        GlideApp.with(this)
+                .load(avatarUrl)
+                .centerCrop()
+                .circleCrop()
+                .placeholder(R.drawable.profile_picture_placeholder)
+                .into(authorAvatar);
+    }
+
+    // todo: add snack bar to show device registration for fcm with action of disabling notifications
+    @Override
+    public void deviceRegistered() {
+        Toast.makeText(this, "Device Registered", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deviceRegistrationFailed() {
+        Toast.makeText(this, "Device Registration Failed", Toast.LENGTH_SHORT).show();
     }
 
     private void initToolbar() {
@@ -151,19 +241,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-
-        toolbar .setTitle(toolbarTitle);
-
-        userName.setText("Prakhar Gupta");
-
-        userSeeProfile.setText("See Profile");
-
-        GlideApp.with(this)
-                .load(R.mipmap.ic_launcher_round)
-                .centerCrop()
-                .circleCrop()
-                .into(authorAvatar);
-
+        toolbar.setTitle(toolbarTitle);
         super.onResume();
     }
 
@@ -172,7 +250,7 @@ public class HomeActivity extends BaseActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if(fragmentStack.size() >= 2) {
+            if (fragmentStack.size() >= 2) {
                 fragmentStack.clear();
                 displayHome(getString(R.string.nav_home));
             } else {
@@ -225,5 +303,29 @@ public class HomeActivity extends BaseActivity {
     protected void onDestroy() {
         fragmentStack.clear();
         super.onDestroy();
+    }
+
+    private static class RegisterDeviceForFcm extends AsyncTask<Void, Void, String> {
+
+        private WeakReference<HomeActivity> activityWeakReference;
+
+        RegisterDeviceForFcm(HomeActivity activity) {
+            activityWeakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String token = "";
+            while(TextUtils.isEmpty(token)) {
+                token = FirebaseInstanceId.getInstance().getToken();
+            }
+            return token;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            HomeActivity activity = activityWeakReference.get();
+            activity.presenter.registerDeviceFcm(s);
+        }
     }
 }
