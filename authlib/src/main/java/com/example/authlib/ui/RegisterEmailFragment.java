@@ -19,7 +19,7 @@ import com.example.authlib.ui.fieldvalidators.PasswordFieldValidator;
 import com.example.authlib.ui.fieldvalidators.RequiredFieldValidator;
 import com.example.authlib.utils.ImeHelper;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserData;
+import com.example.corelib.model.auth.user_network.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.RegisterEmailContract;
 import com.example.corelib.ui.authui.RegisterEmailPresenter;

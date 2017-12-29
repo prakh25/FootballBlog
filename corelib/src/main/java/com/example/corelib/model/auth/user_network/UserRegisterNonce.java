@@ -1,4 +1,4 @@
-package com.example.corelib.model.auth;
+package com.example.corelib.model.auth.user_network;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

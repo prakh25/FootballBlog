@@ -1,7 +1,7 @@
 package com.example.corelib.network;
 
-import com.example.corelib.model.auth.UserObject;
-import com.example.corelib.model.auth.UserRegisterNonce;
+import com.example.corelib.model.auth.user_network.UserObject;
+import com.example.corelib.model.auth.user_network.UserRegisterNonce;
 import com.example.corelib.model.auth.emailvalidator.EmailExists;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.model.post.Post;

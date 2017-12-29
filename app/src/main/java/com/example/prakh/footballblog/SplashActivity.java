@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.example.authlib.AuthLibUi;
 import com.example.authlib.IdpResponse;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserData;
+import com.example.corelib.model.auth.user_network.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.SplashContract;
 import com.example.corelib.ui.SplashPresenter;

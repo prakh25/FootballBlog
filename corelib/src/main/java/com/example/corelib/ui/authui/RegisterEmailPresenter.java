@@ -3,8 +3,8 @@ package com.example.corelib.ui.authui;
 import android.util.Log;
 
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserObject;
-import com.example.corelib.model.auth.UserRegisterNonce;
+import com.example.corelib.model.auth.user_network.UserObject;
+import com.example.corelib.model.auth.user_network.UserRegisterNonce;
 import com.example.corelib.model.auth.usernamevalidator.UsernameExists;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;

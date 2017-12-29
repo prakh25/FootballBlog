@@ -20,7 +20,7 @@ import com.example.authlib.provider.GoogleProvider;
 import com.example.authlib.provider.IdpProvider;
 import com.example.authlib.provider.Provider;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserData;
+import com.example.corelib.model.auth.user_network.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.AuthMethodContract;
 import com.example.corelib.ui.authui.AuthMethodPresenter;

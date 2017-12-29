@@ -1,7 +1,7 @@
 package com.example.corelib.ui.authui;
 
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserObject;
+import com.example.corelib.model.auth.user_network.UserObject;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.network.RemoteCallback;
 import com.example.corelib.ui.BasePresenter;

@@ -1,6 +1,6 @@
 package com.example.corelib.ui;
 
-import com.example.corelib.model.auth.UserData;
+import com.example.corelib.model.auth.user_network.UserData;
 
 /**
  * Created by prakh on 18-12-2017.

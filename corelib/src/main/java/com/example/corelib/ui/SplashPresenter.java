@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.example.corelib.MyBlogApplication;
 import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.Utils;
-import com.example.corelib.model.auth.UserObject;
+import com.example.corelib.model.auth.user_network.UserObject;
 import com.example.corelib.model.splash.ValidateCookie;
 import com.example.corelib.model.splash.notification.CallBackDevice;
 import com.example.corelib.model.splash.notification.DeviceInfo;

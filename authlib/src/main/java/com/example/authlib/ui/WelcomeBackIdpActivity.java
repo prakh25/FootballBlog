@@ -16,7 +16,7 @@ import com.example.authlib.provider.AuthProviderId;
 import com.example.authlib.provider.GoogleProvider;
 import com.example.authlib.provider.IdpProvider;
 import com.example.corelib.SharedPreferenceManager;
-import com.example.corelib.model.auth.UserData;
+import com.example.corelib.model.auth.user_network.UserData;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.WelcomeBackIdpContract;
 import com.example.corelib.ui.authui.WelcomeBackIdpPresenter;

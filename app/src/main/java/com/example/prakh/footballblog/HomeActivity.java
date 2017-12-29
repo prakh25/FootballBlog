@@ -42,6 +42,7 @@ public class HomeActivity extends BaseActivity {
     private ImageView authorAvatar;
     private TextView userName;
     private TextView userSeeProfile;
+    private String toolbarTitle;
 
     private Stack<Fragment> fragmentStack;
     private FragmentManager fragmentManager;
@@ -104,7 +105,8 @@ public class HomeActivity extends BaseActivity {
 
     private void displayHome(String title) {
 
-        toolbar.setTitle(title);
+        toolbarTitle = title;
+
         navigationView.setCheckedItem(R.id.nav_home);
 
         HomeFragment homeFragment = new HomeFragment();
@@ -122,15 +124,16 @@ public class HomeActivity extends BaseActivity {
 
         switch (id) {
             case R.id.nav_home:
+                toolbarTitle = title;
                 fragmentStack.clear();
                 displayHome(title);
                 break;
             case R.id.nav_bookmarks:
-                toolbar.setTitle(title);
+                toolbarTitle = title;
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_interests:
-                toolbar.setTitle(title);
+                toolbarTitle = title;
                 fragment = new InterestsFragment();
                 break;
             case R.id.nav_settings:
@@ -148,6 +151,8 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+
+        toolbar .setTitle(toolbarTitle);
 
         userName.setText("Prakhar Gupta");
 
