@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,17 +23,17 @@ import android.widget.TextView;
 import com.example.prakh.footballblog.interests.InterestsFragment;
 import com.example.prakh.footballblog.search.SearchActivity;
 
+import java.util.Stack;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-// TODO: Improve drawer navigation also add new drawer header layout and drawer menu
+
 // TODO: Add user profile screen and navigate to it through navigation header
 // TODO: change activity transition animations
 public class HomeActivity extends BaseActivity {
 
     @BindView(R.id.homeToolbar)
     Toolbar toolbar;
-    @BindView(R.id.toolbarTitleHome)
-    TextView toolbarTitle;
     @BindView(R.id.home_drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.home_nav_view)
@@ -40,6 +42,9 @@ public class HomeActivity extends BaseActivity {
     private ImageView authorAvatar;
     private TextView userName;
     private TextView userSeeProfile;
+
+    private Stack<Fragment> fragmentStack;
+    private FragmentManager fragmentManager;
 
     public static Intent createNewIntent(Context context) {
         return new Intent(context, HomeActivity.class);
@@ -51,11 +56,14 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        fragmentStack = new Stack<>();
+
         initToolbar();
+
         initDrawerMenu();
 
         if (savedInstanceState == null) {
-            displayFragments(R.id.nav_home, getString(R.string.nav_home));
+            displayHome(getString(R.string.nav_home));
         }
     }
 
@@ -94,19 +102,35 @@ public class HomeActivity extends BaseActivity {
 
     }
 
+    private void displayHome(String title) {
+
+        toolbar.setTitle(title);
+        navigationView.setCheckedItem(R.id.nav_home);
+
+        HomeFragment homeFragment = new HomeFragment();
+
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.home_container, homeFragment);
+        fragmentStack.push(homeFragment);
+        ft.commit();
+    }
+
     private void displayFragments(int id, String title) {
+
         Fragment fragment = null;
+
         switch (id) {
             case R.id.nav_home:
-                toolbarTitle.setText(title);
-                fragment = new HomeFragment();
+                fragmentStack.clear();
+                displayHome(title);
                 break;
             case R.id.nav_bookmarks:
-                toolbarTitle.setText(title);
+                toolbar.setTitle(title);
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_interests:
-                toolbarTitle.setText(title);
+                toolbar.setTitle(title);
                 fragment = new InterestsFragment();
                 break;
             case R.id.nav_settings:
@@ -115,9 +139,10 @@ public class HomeActivity extends BaseActivity {
         }
 
         if (fragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.home_container, fragment)
-                    .commitAllowingStateLoss();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.home_container, fragment);
+            fragmentStack.push(fragment);
+            ft.commit();
         }
     }
 
@@ -142,7 +167,12 @@ public class HomeActivity extends BaseActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            finish();
+            if(fragmentStack.size() >= 2) {
+                fragmentStack.clear();
+                displayHome(getString(R.string.nav_home));
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -184,5 +214,11 @@ public class HomeActivity extends BaseActivity {
 
         startActivity(SearchActivity.newStartIntent(this, cx, cy, width),
                 optionsCompat.toBundle());
+    }
+
+    @Override
+    protected void onDestroy() {
+        fragmentStack.clear();
+        super.onDestroy();
     }
 }
