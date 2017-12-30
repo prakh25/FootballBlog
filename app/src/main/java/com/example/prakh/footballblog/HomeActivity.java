@@ -3,6 +3,7 @@ package com.example.prakh.footballblog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.authlib.IdpResponse;
 import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.network.DataManager;
@@ -53,6 +56,7 @@ public class HomeActivity extends BaseActivity implements
     @BindView(R.id.home_nav_view)
     NavigationView navigationView;
 
+    private View navHeaderContainer;
     private ImageView authorAvatar;
     private TextView userName;
     private TextView userSeeProfile;
@@ -125,13 +129,14 @@ public class HomeActivity extends BaseActivity implements
     // TODO: Add click listener to user see profile for login
     @Override
     public void currentUserNotFound() {
-        userName.setVisibility(View.GONE);
-        userSeeProfile.setText("Login");
-        GlideApp.with(this)
-                .load(R.mipmap.ic_launcher_round)
-                .centerCrop()
-                .circleCrop()
-                .into(authorAvatar);
+        GlideApp.with(this).load(R.drawable.profile_background)
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource,
+                                                Transition<? super Drawable> transition) {
+                        navHeaderContainer.setBackground(resource);
+                    }
+                });
     }
 
     @Override
@@ -184,6 +189,8 @@ public class HomeActivity extends BaseActivity implements
                 }
         );
 
+        navHeaderContainer = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_container);
         authorAvatar = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_author_avatar);
         userName = navigationView.getHeaderView(0)

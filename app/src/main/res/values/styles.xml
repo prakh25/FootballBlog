@@ -19,6 +19,31 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.NavigationButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:drawablePadding">@dimen/auth_login_method_button_drawablePadding</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_marginTop">@dimen/login_method_button_margin</item>
+        <item name="android:layout_marginBottom">@dimen/login_method_button_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme.NavigationButton.Login">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:text">@string/btn_login</item>
+        <item name="android:background">@drawable/btn_login_bg</item>
+        <item name="drawableStartCompat">@drawable/ic_person_add_24dp</item>
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
     <style name="DetailThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/detail_primaryColor</item>
         <item name="colorPrimaryDark">@color/detail_primaryDark</item>
@@ -74,4 +99,6 @@
         <item name="android:textColor">@color/navigation_menu_item</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
+    <dimen name="login_method_button_margin">2dp</dimen>
 </resources>

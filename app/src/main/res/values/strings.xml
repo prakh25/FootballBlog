@@ -39,5 +39,6 @@
     <string name="nav_title_help_and_support">Help and Support</string>
     <string name="nav_title_send_feedback">Send Feedback</string>
     <string name="nav_title_categories">Categories</string>
+    <string name="btn_login">Login</string>
 
 </resources>

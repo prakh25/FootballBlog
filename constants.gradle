@@ -6,7 +6,7 @@ project.ext {
     buildTools = '26.0.2'
 
     supportLibraryVersion = '27.0.2'
-    glideVersion = '4.2.0'
+    glideVersion = '4.4.0'
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.8.0'
 
