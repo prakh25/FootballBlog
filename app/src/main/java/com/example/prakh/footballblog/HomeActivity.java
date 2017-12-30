@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,12 +22,13 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.authlib.AuthLibUi;
 import com.example.authlib.IdpResponse;
 import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.network.DataManager;
@@ -37,6 +39,7 @@ import com.example.prakh.footballblog.search.SearchActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -55,11 +58,15 @@ public class HomeActivity extends BaseActivity implements
     DrawerLayout drawerLayout;
     @BindView(R.id.home_nav_view)
     NavigationView navigationView;
+    @BindView(R.id.home_root_layout)
+    View rootView;
 
     private View navHeaderContainer;
     private ImageView authorAvatar;
     private TextView userName;
     private TextView userSeeProfile;
+    private Button loginButton;
+
     private String toolbarTitle;
 
     private Stack<Fragment> fragmentStack;
@@ -100,7 +107,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN) {
             handleSignInResponse(resultCode, data);
         }
     }
@@ -109,14 +116,12 @@ public class HomeActivity extends BaseActivity implements
     private void handleSignInResponse(int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             startActivity(HomeActivity.createNewIntent(this));
             finish();
         } else {
-            if(response == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
-                startActivity(HomeActivity.createNewIntent(this));
-                finish();
+            if (response == null) {
+                Snackbar.make(rootView, "Cancelled", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -126,9 +131,50 @@ public class HomeActivity extends BaseActivity implements
         presenter.getCurrentUser();
     }
 
-    // TODO: Add click listener to user see profile for login
     @Override
     public void currentUserNotFound() {
+
+        setBackgroundToHeaderLayout();
+
+        loginButton.setOnClickListener(view -> {
+                    startActivityForResult(
+                            AuthLibUi.getInstance().createSignInIntentBuilder()
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthLibUi.IdpConfig.Builder(AuthLibUi.EMAIL_PROVIDER).build(),
+                                            new AuthLibUi.IdpConfig.Builder(AuthLibUi.GOOGLE_PROVIDER).build(),
+                                            new AuthLibUi.IdpConfig.Builder(AuthLibUi.FACEBOOK_PROVIDER).build()))
+                                    .setAllowNewEmailAccounts(true)
+                                    .setIsSmartLockEnabled()
+                                    .build(), RC_SIGN_IN);
+
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+        );
+    }
+
+    @Override
+    public void currentUserValidated(String displayName, String avatarUrl, Integer userId) {
+        loginButton.setVisibility(View.GONE);
+
+        userName.setVisibility(View.VISIBLE);
+        userName.setText(displayName);
+
+        userSeeProfile.setVisibility(View.VISIBLE);
+        userSeeProfile.setText(R.string.nav_header_view_profile);
+
+        authorAvatar.setVisibility(View.VISIBLE);
+
+        GlideApp.with(this)
+                .load(avatarUrl)
+                .centerCrop()
+                .circleCrop()
+                .placeholder(R.drawable.profile_picture_placeholder)
+                .into(authorAvatar);
+
+        setBackgroundToHeaderLayout();
+    }
+
+    private void setBackgroundToHeaderLayout() {
         GlideApp.with(this).load(R.drawable.profile_background)
                 .into(new SimpleTarget<Drawable>() {
                     @Override
@@ -140,27 +186,20 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void currentUserValidated(String displayName, String avatarUrl, Integer userId) {
-        userName.setVisibility(View.VISIBLE);
-        userName.setText(displayName);
-        userSeeProfile.setText("See Profile");
-        GlideApp.with(this)
-                .load(avatarUrl)
-                .centerCrop()
-                .circleCrop()
-                .placeholder(R.drawable.profile_picture_placeholder)
-                .into(authorAvatar);
-    }
-
-    // todo: add snack bar to show device registration for fcm with action of disabling notifications
-    @Override
     public void deviceRegistered() {
-        Toast.makeText(this, "Device Registered", Toast.LENGTH_SHORT).show();
+        Snackbar.make(rootView, "Enable Notifications", Snackbar.LENGTH_LONG)
+                .setAction("ENABLE", view -> presenter.enableNotifications())
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
     }
 
     @Override
     public void deviceRegistrationFailed() {
-        Toast.makeText(this, "Device Registration Failed", Toast.LENGTH_SHORT).show();
+        Snackbar.make(rootView, "App Registration Failed", Snackbar.LENGTH_LONG)
+                .setAction("RETRY", view ->
+                        new RegisterDeviceForFcm(HomeActivity.this).execute())
+                .setActionTextColor(getResources().getColor(R.color.color_accent))
+                .show();
     }
 
     private void initToolbar() {
@@ -197,6 +236,8 @@ public class HomeActivity extends BaseActivity implements
                 .findViewById(R.id.nav_author_name);
         userSeeProfile = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_header_see_profile);
+        loginButton = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_button_login);
 
     }
 
@@ -323,7 +364,7 @@ public class HomeActivity extends BaseActivity implements
         @Override
         protected String doInBackground(Void... voids) {
             String token = "";
-            while(TextUtils.isEmpty(token)) {
+            while (TextUtils.isEmpty(token)) {
                 token = FirebaseInstanceId.getInstance().getToken();
             }
             return token;

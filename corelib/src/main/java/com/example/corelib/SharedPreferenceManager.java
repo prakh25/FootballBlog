@@ -34,9 +34,13 @@ public class SharedPreferenceManager {
 //    }
 
     public boolean getNotifications() {
-        return defaultPreferences.getBoolean(str(R.string.pref_title_new_notification), true);
+        return defaultPreferences.getBoolean(str(R.string.pref_title_new_notification), false);
     }
 
+    public void setNotifications() {
+        defaultPreferences.edit().putBoolean(str(R.string.pref_title_new_notification), true)
+                .apply();
+    }
     public boolean getAppDefaultNotification() {
         return defaultPreferences.getBoolean(str(R.string.pref_title_app_default_notification_sound),
                 true);

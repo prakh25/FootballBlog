@@ -45,7 +45,7 @@
         android:visibility="gone"/>
 
     <com.example.authlib.ui.SupportVectorDrawablesButton
-        android:id="@+id/login_button"
+        android:id="@+id/nav_header_button_login"
         style="@style/AppTheme.NavigationButton.Login"
         app:layout_constraintBottom_toBottomOf="@+id/nav_header_see_profile"
         app:layout_constraintEnd_toEndOf="parent"

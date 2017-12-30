@@ -2,6 +2,7 @@ package com.example.prakh.footballblog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +27,6 @@ import com.example.prakh.footballblog.search.RecentSuggestionsProvider;
  */
 // TODO: create new settings page and include settings to change theme accent colors
 public class SettingsActivity extends AppCompatPreferenceActivity {
-    private static final String TAG = SettingsActivity.class.getSimpleName();
 
     public static Intent createNewIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -49,12 +50,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment implements
+            SharedPreferences.OnSharedPreferenceChangeListener {
+
+        private SwitchPreference notificationPreference;
+
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_title_ringtone)));
+
+            notificationPreference = (SwitchPreference) findPreference(getString(
+                    R.string.pref_title_new_notification));
 
             findPreference(getString(R.string.pref_title_clear_search_history))
                     .setOnPreferenceClickListener(preference -> {
@@ -71,12 +79,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                     dialogInterface.dismiss();
                                 })
                                 .setNegativeButton(android.R.string.no, (dialogInterface, i) ->
-                                    dialogInterface.cancel())
+                                        dialogInterface.cancel())
                                 .show();
 
                         return true;
 
                     });
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+            if (s.equals(getString(R.string.pref_title_new_notification))) {
+                notificationPreference.setChecked(sharedPreferences
+                        .getBoolean(getString(R.string.pref_title_new_notification), false));
+            }
         }
     }
 

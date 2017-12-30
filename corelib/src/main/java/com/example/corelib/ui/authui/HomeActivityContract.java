@@ -12,6 +12,8 @@ public interface HomeActivityContract {
         void getCurrentUser();
 
         void registerDeviceFcm(String token);
+
+        void enableNotifications();
     }
 
     interface View {

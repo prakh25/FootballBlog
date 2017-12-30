@@ -40,5 +40,6 @@
     <string name="nav_title_send_feedback">Send Feedback</string>
     <string name="nav_title_categories">Categories</string>
     <string name="btn_login">Login</string>
+    <string name="nav_header_view_profile">View Profile</string>
 
 </resources>

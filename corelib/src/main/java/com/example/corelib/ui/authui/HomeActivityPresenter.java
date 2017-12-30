@@ -50,6 +50,11 @@ public class HomeActivityPresenter extends BasePresenter<HomeActivityContract.Vi
         registerDevice(token);
     }
 
+    @Override
+    public void enableNotifications() {
+        setNotifications();
+    }
+
     private void checkForLaunch() {
         if (!sharedPreferencesManager.isFirstLaunch()) {
             mView.notFirstLaunch();
@@ -117,5 +122,9 @@ public class HomeActivityPresenter extends BasePresenter<HomeActivityContract.Vi
                 mView.deviceRegistrationFailed();
             }
         });
+    }
+
+    private void setNotifications() {
+        sharedPreferencesManager.setNotifications();
     }
 }
