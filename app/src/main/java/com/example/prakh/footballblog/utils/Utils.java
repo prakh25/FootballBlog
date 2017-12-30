@@ -1,8 +1,10 @@
 package com.example.prakh.footballblog.utils;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 
 import com.example.prakh.footballblog.R;
 
@@ -17,10 +19,10 @@ import java.util.Locale;
 public class Utils {
 
     @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String html){
+    public static Spanned fromHtml(String html) {
         Spanned result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             result = Html.fromHtml(html);
         }
@@ -50,13 +52,17 @@ public class Utils {
         if (category != null && !category.isEmpty()) {
             switch (category) {
                 case "La Liga":
-                    return R.drawable.logo_la_liga;
+                    return R.drawable.ic_la_liga;
                 case "Premier League":
-                    return R.drawable.logo_premier_league_4;
+                    return R.drawable.ic_premier_league;
                 case "Bundesliga":
-                    return R.drawable.logo_bundesliga_2;
+                    return R.drawable.ic_bundesliga;
                 case "International":
-                    return R.drawable.logo_international;
+                    return R.drawable.ic_international;
+                case "Serie A":
+                    return R.drawable.ic_serie_a;
+                case "MLS":
+                    return R.drawable.ic_mls;
                 default:
                     return 0;
             }
@@ -91,5 +97,35 @@ public class Utils {
         sharingIntent.putExtra(Intent.EXTRA_TEXT, sb);
 
         return sharingIntent;
+    }
+
+    public static int getScreenDpi() {
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+
+        switch (displayMetrics.densityDpi) {
+            case 240:
+                return 36;
+            case 320:
+                return 48;
+            case 480:
+                return 72;
+            case 640:
+                return 96;
+            default:
+                return 24;
+        }
+    }
+
+    public static float getImageWidth() {
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+
+        return displayMetrics.widthPixels/displayMetrics.density;
+
+    }
+
+    public static float getImageHeight() {
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+        return displayMetrics.heightPixels/displayMetrics.density;
+
     }
 }

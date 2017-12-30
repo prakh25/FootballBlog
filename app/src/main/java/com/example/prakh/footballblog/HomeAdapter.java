@@ -1,5 +1,7 @@
 package com.example.prakh.footballblog;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -12,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.corelib.model.post_new.Post;
 import com.example.prakh.footballblog.utils.Utils;
 
@@ -73,7 +77,7 @@ public class HomeAdapter extends
 
     private RecyclerView.ViewHolder onIndicationViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_progress_bar, parent, false);
+                .inflate(R.layout.item_progress_bar_vertical, parent, false);
         return new ProgressViewHolder(view);
     }
 
@@ -95,9 +99,9 @@ public class HomeAdapter extends
 
         String featureImageUrl = "";
 
-        if(postList.get(position).getThumbnailImages() != null) {
+        if (postList.get(position).getThumbnailImages() != null) {
             featureImageUrl = postList.get(position).getThumbnailImages().getFull()
-                    .getUrl().replace("localhost","192.168.0.23");
+                    .getUrl().replace("localhost", "192.168.0.23");
         }
 
         String postTitle = postList.get(position).getTitle();
@@ -109,11 +113,13 @@ public class HomeAdapter extends
         String authorAvatarUrl = postList.get(position).getAuthor().getAvatarUrl();
         String publishDate = postList.get(position).getDate();
 
+        int height = (int) Utils.getImageHeight();
+        int width = (int) Utils.getImageWidth();
+
         GlideApp.with(holder.itemView.getContext())
                 .load(featureImageUrl)
-                .centerCrop()
+                .override(width, height)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .thumbnail(0.8f)
                 .into(holder.postFeatureImage);
 
         holder.postTitle.setText(Utils.fromHtml(postTitle));
@@ -124,9 +130,19 @@ public class HomeAdapter extends
                 holder.itemView.getContext().getResources()
                         .getDrawable(Utils.selectCategoryBackground(postCategory)));
 
-        holder.postCategory.setCompoundDrawablesWithIntrinsicBounds(
-                Utils.selectCategoryLogo(postCategory),
-                0, 0 ,0);
+        int size = Utils.getScreenDpi();
+
+        GlideApp.with(holder.itemView.getContext())
+                .asBitmap()
+                .load(Utils.selectCategoryLogo(postCategory))
+                .into(new SimpleTarget<Bitmap>(size, size) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        holder.postCategory.setCompoundDrawablesWithIntrinsicBounds(
+                                new BitmapDrawable(holder.postCategory.getResources(),
+                                        resource), null, null, null);
+                    }
+                });
         holder.postCategory.setCompoundDrawablePadding(8);
 
         holder.postCategory.setText(postCategory);
@@ -168,6 +184,25 @@ public class HomeAdapter extends
         }
         postList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public boolean addLoadingView() {
+        if (getItemViewType(postList.size() - 1) != VIEW_TYPE_LOADING) {
+            add(null);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeLoadingView() {
+        if (postList.size() > 1) {
+            int loadingViewPosition = postList.size() - 1;
+            if (getItemViewType(loadingViewPosition) == VIEW_TYPE_LOADING) {
+                remove(loadingViewPosition);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeAll() {

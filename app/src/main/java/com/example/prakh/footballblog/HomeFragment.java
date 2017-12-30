@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.example.corelib.realm.RealmManager;
 import com.example.corelib.ui.HomeContract;
 import com.example.corelib.ui.HomePresenter;
 import com.example.prakh.footballblog.post_detail.DetailActivity;
+import com.example.prakh.footballblog.utils.EndlessRecyclerViewOnScrollListener;
 
 import java.util.List;
 
@@ -83,8 +83,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
                     .getColor(android.R.color.transparent)));
         }
 
-        SnapHelper snapHelper = new PagerSnapHelper();
-        recyclerView.setMotionEventSplittingEnabled(false);
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
         recyclerView.setLayoutManager(setUpLayoutManager());
         snapHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
@@ -92,6 +91,8 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
 
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+
+        recyclerView.addOnScrollListener(setupScrollListener(recyclerView.getLayoutManager()));
     }
 
     private RecyclerView.LayoutManager setUpLayoutManager() {
@@ -99,6 +100,19 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
         layoutManager = new LinearLayoutManager(activity,
                 LinearLayoutManager.HORIZONTAL, false);
         return layoutManager;
+    }
+
+    private EndlessRecyclerViewOnScrollListener setupScrollListener(RecyclerView.LayoutManager layoutManager) {
+        return new EndlessRecyclerViewOnScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                view.post(() -> {
+                    if (adapter.addLoadingView()) {
+                        homePresenter.onListEndReached(page);
+                    }
+                });
+            }
+        };
     }
 
     @Override
@@ -111,6 +125,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
     @Override
     public void hideProgress() {
         swipeRefreshLayout.setRefreshing(false);
+        adapter.removeLoadingView();
     }
 
     @Override

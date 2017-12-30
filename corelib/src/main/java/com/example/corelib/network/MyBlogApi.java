@@ -33,7 +33,7 @@ public interface MyBlogApi {
 
     //recent posts
     @GET("?json=get_recent_posts")
-    Call<PostListResponse> getRecentPosts();
+    Call<PostListResponse> getRecentPosts(@Query("page") int page);
 
     @GET("wp-json/myFootballBlog/views/{id}")
     Call<PostViewCount> updatePostViewCount(@Path("id") Integer postId);

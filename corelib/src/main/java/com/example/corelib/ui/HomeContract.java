@@ -13,6 +13,8 @@ public interface HomeContract {
     interface ViewActions {
 
         void onRecentPostsRequested();
+
+        void onListEndReached(int pageNo);
     }
 
     interface HomeScreenView extends BaseView {

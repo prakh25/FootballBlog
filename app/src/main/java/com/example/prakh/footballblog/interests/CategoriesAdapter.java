@@ -72,7 +72,7 @@ public class CategoriesAdapter extends
 
     private RecyclerView.ViewHolder onIndicationViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_progress_bar_horizontal, parent, false);
+                .inflate(R.layout.item_progress_bar_vertical, parent, false);
         return new CategoriesAdapter.ProgressViewHolder(view);
     }
 

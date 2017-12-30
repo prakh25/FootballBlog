@@ -18,6 +18,7 @@ import java.util.List;
 public class HomePresenter extends BasePresenter<HomeContract.HomeScreenView>
         implements HomeContract.ViewActions {
 
+    private static final int INITIAL_PAGE_NO = 1;
     private final DataManager dataManager;
     private final RealmManager realmManager;
 
@@ -29,15 +30,21 @@ public class HomePresenter extends BasePresenter<HomeContract.HomeScreenView>
 
     @Override
     public void onRecentPostsRequested() {
-        getRecentPosts();
+        getRecentPosts(INITIAL_PAGE_NO);
     }
 
-    private void getRecentPosts() {
+    @Override
+    public void onListEndReached(int pageNo) {
+        getRecentPosts(pageNo);
+    }
+
+    private void getRecentPosts(int pageNo) {
         if (!isViewAttached()) return;
         mView.showMessageLayout(false);
         mView.showProgress();
 
-        dataManager.getRecentPosts(new RemoteCallback<PostListResponse>() {
+        dataManager.getRecentPosts(pageNo,
+                new RemoteCallback<PostListResponse>() {
             @Override
             public void onSuccess(PostListResponse response) {
                 if (!isViewAttached()) return;

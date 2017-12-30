@@ -39,8 +39,8 @@ public class DataManager {
         myBlogApi = NetworkService.provideBlogPost();
     }
 
-    public void getRecentPosts(RemoteCallback<PostListResponse> callback) {
-        myBlogApi.getRecentPosts().enqueue(callback);
+    public void getRecentPosts(int page, RemoteCallback<PostListResponse> callback) {
+        myBlogApi.getRecentPosts(page).enqueue(callback);
     }
 
     public void updatePostCount(Integer postId, RemoteCallback<PostViewCount> callback) {
