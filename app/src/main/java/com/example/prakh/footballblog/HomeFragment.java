@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,8 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
     private HomeAdapter adapter;
     private HomePresenter homePresenter;
     private AppCompatActivity activity;
+    private Toolbar toolbar;
+    private ActionBar actionBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +77,10 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
         unbinder = ButterKnife.bind(this, view);
         activity = (AppCompatActivity) getActivity();
 
-        ActionBar actionBar = null;
+        if(activity != null) {
+            toolbar = activity.findViewById(R.id.homeToolbar);
+        }
+
         if(activity != null) {
             actionBar = activity.getSupportActionBar();
         }
@@ -113,6 +119,15 @@ public class HomeFragment extends Fragment implements HomeContract.HomeScreenVie
                 });
             }
         };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolbar.setTitle(R.string.nav_home);
+        toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(android.R.color.transparent)));
     }
 
     @Override

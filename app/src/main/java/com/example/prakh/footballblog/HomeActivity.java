@@ -67,8 +67,6 @@ public class HomeActivity extends BaseActivity implements
     private TextView userSeeProfile;
     private Button loginButton;
 
-    private String toolbarTitle;
-
     private Stack<Fragment> fragmentStack;
     private FragmentManager fragmentManager;
     private HomeActivityPresenter presenter;
@@ -93,7 +91,7 @@ public class HomeActivity extends BaseActivity implements
 
         initToolbar();
         initDrawerMenu();
-        displayHome(getString(R.string.nav_home));
+        displayHome();
 
         presenter.checkLaunch();
     }
@@ -221,8 +219,7 @@ public class HomeActivity extends BaseActivity implements
 
         navigationView.setNavigationItemSelectedListener(
                 item -> {
-                    displayFragments(item.getItemId(),
-                            item.getTitle().toString());
+                    displayFragments(item.getItemId());
                     drawerLayout.closeDrawers();
                     return true;
                 }
@@ -241,9 +238,7 @@ public class HomeActivity extends BaseActivity implements
 
     }
 
-    private void displayHome(String title) {
-
-        toolbarTitle = title;
+    private void displayHome() {
 
         navigationView.setCheckedItem(R.id.nav_home);
 
@@ -251,27 +246,24 @@ public class HomeActivity extends BaseActivity implements
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.home_container, homeFragment);
+        ft.add(R.id.home_container, homeFragment);
         fragmentStack.push(homeFragment);
         ft.commit();
     }
 
-    private void displayFragments(int id, String title) {
+    private void displayFragments(int id) {
 
         Fragment fragment = null;
 
         switch (id) {
             case R.id.nav_home:
-                toolbarTitle = title;
                 fragmentStack.clear();
-                displayHome(title);
+                displayHome();
                 break;
             case R.id.nav_bookmarks:
-                toolbarTitle = title;
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_interests:
-                toolbarTitle = title;
                 fragment = new InterestsFragment();
                 break;
             case R.id.nav_settings:
@@ -281,16 +273,19 @@ public class HomeActivity extends BaseActivity implements
 
         if (fragment != null) {
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.home_container, fragment);
-            fragmentStack.push(fragment);
+            ft.add(R.id.home_container, fragment);
+            fragmentStack.lastElement().onPause();
+            ft.hide(fragmentStack.lastElement());
+
+            if(fragmentStack.size() >= 2) {
+                ft.remove(fragmentStack.pop());
+                fragmentStack.push(fragment);
+            } else {
+                fragmentStack.push(fragment);
+            }
+
             ft.commit();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        toolbar.setTitle(toolbarTitle);
-        super.onResume();
     }
 
     @Override
@@ -298,9 +293,14 @@ public class HomeActivity extends BaseActivity implements
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (fragmentStack.size() >= 2) {
-                fragmentStack.clear();
-                displayHome(getString(R.string.nav_home));
+            if (fragmentStack.size() == 2) {
+                navigationView.setCheckedItem(R.id.nav_home);
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                fragmentStack.lastElement().onPause();
+                ft.remove(fragmentStack.pop());
+                fragmentStack.lastElement().onResume();
+                ft.show(fragmentStack.lastElement());
+                ft.commit();
             } else {
                 super.onBackPressed();
             }

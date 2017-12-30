@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,13 @@ public class InterestsFragment extends Fragment {
 
     private Unbinder unbinder;
     private AppCompatActivity activity;
+    private Toolbar toolbar;
+    private ActionBar actionBar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interests, container, false);
-
         init(view);
         return view;
     }
@@ -44,8 +46,9 @@ public class InterestsFragment extends Fragment {
     private void init(View view) {
         unbinder = ButterKnife.bind(this, view);
         activity = (AppCompatActivity) getActivity();
-        ActionBar actionBar = null;
+
         if(activity != null) {
+            toolbar = activity.findViewById(R.id.homeToolbar);
             actionBar = activity.getSupportActionBar();
         }
         if(actionBar != null) {
@@ -60,6 +63,15 @@ public class InterestsFragment extends Fragment {
         viewPager.setOffscreenPageLimit(2);
 
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolbar.setTitle(R.string.nav_interests);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(R.color.colorPrimary)));
     }
 
     @Override
