@@ -9,19 +9,19 @@ import com.example.prakh.footballblog.R;
  * Created by prakh on 26-12-2017.
  */
 
-public class SearchResultItem implements Parcelable {
+public class SearchSuggestionItem implements Parcelable {
 
     private String title;
     private Integer leftIcon;
     private Integer rightIcon;
 
-    public SearchResultItem() {
+    public SearchSuggestionItem() {
         title = "Error";
         leftIcon = R.drawable.ic_restore_black_24dp;
         rightIcon = R.drawable.ic_submit_arrow_24dp;
     }
 
-    public SearchResultItem(String title, Integer leftIcon, Integer rightIcon) {
+    public SearchSuggestionItem(String title, Integer leftIcon, Integer rightIcon) {
         this.setTitle(title);
         this.setLeftIcon(leftIcon);
         this.setRightIcon(rightIcon);
@@ -64,21 +64,21 @@ public class SearchResultItem implements Parcelable {
         dest.writeValue(this.rightIcon);
     }
 
-    protected SearchResultItem(Parcel in) {
+    protected SearchSuggestionItem(Parcel in) {
         this.title = in.readString();
         this.leftIcon = (Integer) in.readValue(Integer.class.getClassLoader());
         this.rightIcon = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<SearchResultItem> CREATOR = new Parcelable.Creator<SearchResultItem>() {
+    public static final Parcelable.Creator<SearchSuggestionItem> CREATOR = new Parcelable.Creator<SearchSuggestionItem>() {
         @Override
-        public SearchResultItem createFromParcel(Parcel source) {
-            return new SearchResultItem(source);
+        public SearchSuggestionItem createFromParcel(Parcel source) {
+            return new SearchSuggestionItem(source);
         }
 
         @Override
-        public SearchResultItem[] newArray(int size) {
-            return new SearchResultItem[size];
+        public SearchSuggestionItem[] newArray(int size) {
+            return new SearchSuggestionItem[size];
         }
     };
 }

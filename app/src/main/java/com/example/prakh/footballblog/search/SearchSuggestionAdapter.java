@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
 public class SearchSuggestionAdapter extends
         RecyclerView.Adapter<SearchSuggestionAdapter.SuggestionViewHolder> {
 
-    private List<SearchResultItem> itemList;
+    private List<SearchSuggestionItem> itemList;
     private SuggestionInteractionListener listener;
 
-    public SearchSuggestionAdapter(List<SearchResultItem> itemList) {
+    public SearchSuggestionAdapter(List<SearchSuggestionItem> itemList) {
         this.itemList = new ArrayList<>();
         this.itemList.addAll(itemList);
     }
@@ -53,7 +53,7 @@ public class SearchSuggestionAdapter extends
         return itemList.size();
     }
 
-    public SearchResultItem getItem(Integer position) {
+    public SearchSuggestionItem getItem(Integer position) {
         return itemList.get(position);
     }
 
@@ -82,6 +82,6 @@ public class SearchSuggestionAdapter extends
     }
 
     public interface SuggestionInteractionListener {
-        void onSuggestionClicked(SearchResultItem item);
+        void onSuggestionClicked(SearchSuggestionItem item);
     }
 }

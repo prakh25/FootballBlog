@@ -94,7 +94,7 @@ public class SearchResultActivity extends BaseActivity {
         } else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
             Bundle bundle = this.getIntent().getExtras();
             if(bundle != null) {
-                SearchResultItem item = bundle.getParcelable(SearchActivity.EXTRA_CLICKED_SEARCH_ITEM);
+                SearchSuggestionItem item = bundle.getParcelable(SearchActivity.EXTRA_CLICKED_SEARCH_ITEM);
                 assert item != null;
                 query = item.getTitle();
             }

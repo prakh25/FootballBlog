@@ -207,7 +207,7 @@ public class SearchActivity extends BaseActivity implements
         finish();
     }
 
-    private void sendSuggestionIntent(SearchResultItem item) {
+    private void sendSuggestionIntent(SearchSuggestionItem item) {
         try {
             Bundle bundle = new Bundle();
             bundle.putParcelable(EXTRA_CLICKED_SEARCH_ITEM, item);
@@ -257,7 +257,7 @@ public class SearchActivity extends BaseActivity implements
     }
 
     private static class MapResultsFromRecentProviderList extends
-            AsyncTask<Void, Void, List<SearchResultItem>> {
+            AsyncTask<Void, Void, List<SearchSuggestionItem>> {
 
         private WeakReference<SearchActivity> activityWeakReference;
 
@@ -287,9 +287,9 @@ public class SearchActivity extends BaseActivity implements
         }
 
         @Override
-        protected List<SearchResultItem> doInBackground(Void... voids) {
+        protected List<SearchSuggestionItem> doInBackground(Void... voids) {
             Cursor results = queryRecentSuggestionsProvider();
-            List<SearchResultItem> itemList = new ArrayList<>();
+            List<SearchSuggestionItem> itemList = new ArrayList<>();
             Integer titleId = results.getColumnIndex("display1");
             Integer leftIconId = results.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1);
             Integer rightIconId = results.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_2);
@@ -299,7 +299,7 @@ public class SearchActivity extends BaseActivity implements
                 Integer leftIcon = (leftIconId == -1) ? R.drawable.ic_restore_black_24dp : results.getInt(leftIconId);
                 Integer rightIcon = (rightIconId == -1) ? R.drawable.ic_submit_arrow_24dp : results.getInt(rightIconId);
 
-                SearchResultItem aux = new SearchResultItem(title, leftIcon, rightIcon);
+                SearchSuggestionItem aux = new SearchSuggestionItem(title, leftIcon, rightIcon);
                 itemList.add(aux);
             }
             results.close();
@@ -307,7 +307,7 @@ public class SearchActivity extends BaseActivity implements
         }
 
         @Override
-        protected void onPostExecute(List<SearchResultItem> itemList) {
+        protected void onPostExecute(List<SearchSuggestionItem> itemList) {
             SearchActivity activity = activityWeakReference.get();
             SearchSuggestionAdapter adapter = new SearchSuggestionAdapter(itemList);
 
@@ -368,7 +368,7 @@ public class SearchActivity extends BaseActivity implements
      * @param item: Recent suggestion from list od recent suggestions
      */
     @Override
-    public void onSuggestionClicked(SearchResultItem item) {
+    public void onSuggestionClicked(SearchSuggestionItem item) {
         sendSuggestionIntent(item);
     }
 
