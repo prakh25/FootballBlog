@@ -34,7 +34,6 @@ import com.example.corelib.SharedPreferenceManager;
 import com.example.corelib.network.DataManager;
 import com.example.corelib.ui.authui.HomeActivityContract;
 import com.example.corelib.ui.authui.HomeActivityPresenter;
-import com.example.prakh.footballblog.interests.InterestsFragment;
 import com.example.prakh.footballblog.search.SearchActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -162,6 +161,8 @@ public class HomeActivity extends BaseActivity implements
 
         authorAvatar.setVisibility(View.VISIBLE);
 
+        navigationView.getMenu().setGroupVisible(R.id.group_3, true);
+
         GlideApp.with(this)
                 .load(avatarUrl)
                 .centerCrop()
@@ -259,12 +260,6 @@ public class HomeActivity extends BaseActivity implements
             case R.id.nav_home:
                 fragmentStack.clear();
                 displayHome();
-                break;
-            case R.id.nav_bookmarks:
-                fragment = new HomeFragment();
-                break;
-            case R.id.nav_interests:
-                fragment = new InterestsFragment();
                 break;
             case R.id.nav_settings:
                 startActivity(SettingsActivity.createNewIntent(this));

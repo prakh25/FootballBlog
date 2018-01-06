@@ -11,17 +11,48 @@
             android:checked="true"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/nav_home" />
-        <item android:id="@+id/nav_categories"
+        <item
+            android:id="@+id/nav_categories"
             android:icon="@drawable/ic_category"
-            android:title="@string/nav_title_categories"/>
+            android:title="@string/nav_title_categories" />
         <item
-            android:id="@+id/nav_bookmarks"
-            android:icon="@drawable/ic_bookmark_black_24dp"
-            android:title="@string/nav_bookmarks" />
+            android:id="@+id/nav_tags"
+            android:icon="@drawable/ic_tag"
+            android:title="@string/nav_title_tags" />
+    </group>
+
+    <group
+        android:id="@+id/group_3"
+        android:checkableBehavior="single"
+        android:visible="false">
         <item
-            android:id="@+id/nav_interests"
-            android:icon="@drawable/ic_star_black_24dp"
-            android:title="@string/nav_interests" />
+            android:checkable="false"
+            android:title="@string/nav_title_account">
+            <menu>
+                <item
+                    android:id="@+id/nav_user_posts"
+                    android:icon="@drawable/ic_user_posts"
+                    android:title="@string/nav_title_your_posts" />
+                <item
+                    android:id="@+id/nav_user_drafts"
+                    android:icon="@drawable/ic_user_drafts"
+                    android:title="@string/nav_title_your_drafts" />
+
+                <item
+                    android:id="@+id/nav_user_liked_posts"
+                    android:icon="@drawable/ic_posts_liked"
+                    android:title="@string/nav_title_posts_liked_by_you" />
+
+                <item
+                    android:id="@+id/nav_user_bookmarks"
+                    android:icon="@drawable/ic_bookmark_black_24dp"
+                    android:title="@string/nav_title_your_bookmarks" />
+                <item
+                    android:id="@+id/nav_user_interests"
+                    android:icon="@drawable/ic_user_interests"
+                    android:title="@string/nav_title_your_interests" />
+            </menu>
+        </item>
     </group>
 
     <group
