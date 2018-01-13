@@ -41,5 +41,13 @@
     <string name="nav_title_categories">Categories</string>
     <string name="btn_login">Login</string>
     <string name="nav_header_view_profile">View Profile</string>
+    <string name="nav_title_tags">Tags</string>
+    <string name="nav_title_your_posts">Your Posts</string>
+    <string name="nav_title_all_posts">All Posts</string>
+    <string name="nav_title_account">Account</string>
+    <string name="nav_title_your_drafts">Your Drafts</string>
+    <string name="nav_title_posts_liked_by_you">Posts Liked by You</string>
+    <string name="nav_title_your_bookmarks">Your Bookmarks</string>
+    <string name="nav_title_your_interests">Your Interests</string>
 
 </resources>

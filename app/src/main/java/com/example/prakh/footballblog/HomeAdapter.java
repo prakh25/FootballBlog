@@ -159,6 +159,12 @@ public class HomeAdapter extends
         holder.postDate.setText(Utils.getFormattedDateSimple(publishDate));
     }
 
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        PostViewHolder viewHolder = (PostViewHolder) holder;
+        GlideApp.with(viewHolder.itemView.getContext()).clear(viewHolder.postFeatureImage);
+    }
+
     public void add(Post item) {
         add(null, item);
     }

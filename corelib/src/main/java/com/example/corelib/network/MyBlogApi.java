@@ -132,6 +132,17 @@ public interface MyBlogApi {
     Call<UserObject> getCurrentUserData(@Query("insecure") String insecure,
                                         @Query("cookie") String cookie);
 
+    // User profile screen
+    @GET("?json=get_author_posts")
+    Call<PostListResponse> getPostsByAuthor(@Query("id") Integer authorId,
+                                            @Query("page") Integer pageNo);
+
+    @GET("?json=get_posts")
+    Call<PostListResponse> getPostsLikedByUser(@Query("meta_key") String metaKey,
+                                               @Query("meta_value") String metaValue,
+                                               @Query("meta_compare") String metaCompare,
+                                               @Query("page") Integer pageNo);
+
     @Headers({"Cache-Control: max-age=0", "User-Agent: Wordpress"})
     @POST("?api-fcm=register")
     Call<CallBackDevice> registerForFcm(@Body DeviceInfo deviceInfo);
